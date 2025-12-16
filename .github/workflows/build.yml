@@ -1,10 +1,14 @@
-name: Bikin APK Fish It
+name: Bikin APK & Release Sultan
 
 on:
   push:
     branches:
       - main
       - master
+
+# Izin wajib buat upload Release
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -29,24 +33,21 @@ jobs:
       # --- FITUR DETEKTIF ICON (AUTO SEARCH) ---
       - name: Generate Icons & Splash
         run: |
-          # Cari file icon.png (atau Icon.png) di seluruh folder, kecuali node_modules
           ICON_PATH=$(find . -type f -iname "icon.png" -not -path "*/node_modules/*" | head -n 1)
-
           if [ -z "$ICON_PATH" ]; then
-            echo "⚠️ WARNING: File icon.png GAK KETEMU! Pake icon default dulu ya."
+            echo "⚠️ WARNING: Icon gak ketemu. Pake default."
           else
             echo "✅ Icon ketemu di: $ICON_PATH"
             mkdir -p resources
             cp "$ICON_PATH" resources/icon.png
             cp "$ICON_PATH" resources/splash.png
-            # Generate aset android
             npx capacitor-assets generate --android --iconBackgroundColor '#0b1026' --splashBackgroundColor '#0b1026'
           fi
 
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Setup Java
+      - name: Setup Java (v21)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -55,28 +56,25 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # --- FITUR BUILD + RENAME + ANTI ERROR WINDOWS ---
+      # --- BUILD APK ---
       - name: Fix Permissions, Build, & Rename
         run: |
           cd android
-          # Ubah format baris Windows (CRLF) ke Linux (LF) biar mesin gak bingung
           sed -i 's/\r$//' gradlew
           chmod +x gradlew
-          
-          # Mulai Build
           bash ./gradlew assembleDebug
           
-          # Cek & Rename
-          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
-            mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
-            echo "✅ Rename SUKSES jadi FishIt-Ultra.apk"
-          else
-            echo "❌ Gawat, file APK gak kebentuk!"
-            exit 1
-          fi
+          # Rename jadi FishIt-Ultra.apk
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      # --- BAGIAN SULTAN: UPLOAD KE RELEASES ---
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: FishIt-Ultra-Installer
-          path: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
+          tag_name: latest
+          name: "Versi Terbaru (Live Update)"
+          body: "Ini adalah versi terbaru yang di-build otomatis dari GitHub. Download file .apk di bawah ini."
+          files: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
+          prerelease: false
+          overwrite: true 
+          token: ${{ secrets.GITHUB_TOKEN }}
