@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '22'
 
-      # Install dependencies + Tool pembuat icon
+      # Install dependencies & Tool Icon
       - name: Clean & Install Dependencies
         run: |
           rm -rf node_modules
@@ -26,16 +26,22 @@ jobs:
           npm install
           npm install @capacitor/assets --save-dev
 
-      # --- JURUS 1: BIKIN ICON OTOMATIS ---
+      # --- FITUR DETEKTIF ICON (AUTO SEARCH) ---
       - name: Generate Icons & Splash
         run: |
-          # Buat folder resources
-          mkdir -p resources
-          # Ambil icon.png lu, jadiin bahan buat icon & splash android
-          cp icon.png resources/icon.png
-          cp icon.png resources/splash.png
-          # Generate asset android (Background disesuaikan sama tema lu #0b1026)
-          npx capacitor-assets generate --android --iconBackgroundColor '#0b1026' --splashBackgroundColor '#0b1026'
+          # Cari file icon.png (atau Icon.png) di seluruh folder, kecuali node_modules
+          ICON_PATH=$(find . -type f -iname "icon.png" -not -path "*/node_modules/*" | head -n 1)
+
+          if [ -z "$ICON_PATH" ]; then
+            echo "⚠️ WARNING: File icon.png GAK KETEMU! Pake icon default dulu ya."
+          else
+            echo "✅ Icon ketemu di: $ICON_PATH"
+            mkdir -p resources
+            cp "$ICON_PATH" resources/icon.png
+            cp "$ICON_PATH" resources/splash.png
+            # Generate aset android
+            npx capacitor-assets generate --android --iconBackgroundColor '#0b1026' --splashBackgroundColor '#0b1026'
+          fi
 
       - name: Sync Capacitor
         run: npx cap sync android
@@ -49,18 +55,28 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # --- JURUS 2: GANTI NAMA FILE ---
+      # --- FITUR BUILD + RENAME + ANTI ERROR WINDOWS ---
       - name: Fix Permissions, Build, & Rename
         run: |
           cd android
+          # Ubah format baris Windows (CRLF) ke Linux (LF) biar mesin gak bingung
+          sed -i 's/\r$//' gradlew
           chmod +x gradlew
+          
+          # Mulai Build
           bash ./gradlew assembleDebug
-          # Ganti nama file app-debug.apk jadi FishIt-Ultra.apk
-          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
+          
+          # Cek & Rename
+          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+            mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
+            echo "✅ Rename SUKSES jadi FishIt-Ultra.apk"
+          else
+            echo "❌ Gawat, file APK gak kebentuk!"
+            exit 1
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FishIt-Ultra-Installer
-          # Upload file yang udah diganti namanya
           path: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
