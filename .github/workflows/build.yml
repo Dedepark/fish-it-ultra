@@ -13,39 +13,54 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Node.js tetep 22 biar Capacitor seneng
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
+      # Install dependencies + Tool pembuat icon
       - name: Clean & Install Dependencies
         run: |
           rm -rf node_modules
           rm -f package-lock.json
           npm install
+          npm install @capacitor/assets --save-dev
+
+      # --- JURUS 1: BIKIN ICON OTOMATIS ---
+      - name: Generate Icons & Splash
+        run: |
+          # Buat folder resources
+          mkdir -p resources
+          # Ambil icon.png lu, jadiin bahan buat icon & splash android
+          cp icon.png resources/icon.png
+          cp icon.png resources/splash.png
+          # Generate asset android (Background disesuaikan sama tema lu #0b1026)
+          npx capacitor-assets generate --android --iconBackgroundColor '#0b1026' --splashBackgroundColor '#0b1026'
 
       - name: Sync Capacitor
         run: npx cap sync android
 
-      # --- INI YANG KITA UBAH (17 -> 21) ---
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21' # Ganti ke 21 biar Gradle 8.14 seneng
+          java-version: '21'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Fix Permissions & Build APK
+      # --- JURUS 2: GANTI NAMA FILE ---
+      - name: Fix Permissions, Build, & Rename
         run: |
           cd android
           chmod +x gradlew
           bash ./gradlew assembleDebug
+          # Ganti nama file app-debug.apk jadi FishIt-Ultra.apk
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FishIt-Ultra-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: FishIt-Ultra-Installer
+          # Upload file yang udah diganti namanya
+          path: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
