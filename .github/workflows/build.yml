@@ -13,13 +13,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # INI YANG KITA UPDATE (Versi 22)
+      # Node.js tetep 22 biar Capacitor seneng
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # Hapus node_modules Windows & Install ulang versi Linux
       - name: Clean & Install Dependencies
         run: |
           rm -rf node_modules
@@ -29,11 +28,12 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      # --- INI YANG KITA UBAH (17 -> 21) ---
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21' # Ganti ke 21 biar Gradle 8.14 seneng
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
