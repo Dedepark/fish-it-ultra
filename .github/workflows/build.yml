@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # INI YANG KITA UPDATE (Versi 22)
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
-      # --- BAGIAN INI YANG GW PERBAIKI ---
-      # Kita paksa hapus node_modules Windows dan install baru versi Linux
+      # Hapus node_modules Windows & Install ulang versi Linux
       - name: Clean & Install Dependencies
         run: |
           rm -rf node_modules
@@ -30,7 +30,7 @@ jobs:
         run: npx cap sync android
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -44,7 +44,6 @@ jobs:
           chmod +x gradlew
           bash ./gradlew assembleDebug
 
-      # Pake versi v4 biar gak error deprecated
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
