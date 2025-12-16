@@ -1,7 +1,7 @@
 // ==========================================================================
 // #CONFIG & DATABASE
 // ==========================================================================
-export const CURRENT_APP_VERSION = '2.1.2';
+export const CURRENT_APP_VERSION = '2.1.3';
 export const SUPABASE_URL = 'https://neoknskpfhitqkoobxhu.supabase.co';
 export const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2tuc2twZmhpdHFrb29ieGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMDg1OTUsImV4cCI6MjA4MDY4NDU5NX0.9UQJcKAYDVUyQ4RgGRVogHRUSZ1V6DvHSSAIUjPJ62Q';
 
