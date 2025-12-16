@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FISH IT ULTRA</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>   
+    <div id="loading-screen" class="screen">
+        <div class="loader-content"><h1>FISH IT</h1><div class="loader">Memuat Data...</div></div>
+    </div>
+
+    <div id="floating-buttons" class="hidden">
+        <button onclick="app.mission.openDailyMissions()" class="float-btn mission-btn">
+    <i class="fa-solid fa-list-check" style="color:#00e5ff"></i>
+    <span class="float-label">Misi</span>
+</button>
+
+<button onclick="app.mission.openDailyLogin()" class="float-btn login-btn">
+    <i class="fa-solid fa-calendar-check" style="color:#ffc107"></i>
+    <span class="float-label">Login</span>
+</button>
+
+</div>
+
+    <div id="modal-enchant-rod" class="modal hidden">
+    <div class="modal-content">
+        <h3>ENCHANT JORAN</h3>
+        <div id="enchant-rod-info" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+            <div id="enchant-rod-name" style="font-size: 1.2rem; font-weight: bold;"></div>
+            <div id="enchant-rod-level" style="color: gold;">Level: 1</div>
+        </div>
+        
+        <h4 style="margin-top: 0; color: #00d2ff;">Pilih Batu Enchant:</h4>
+        <div id="enchant-stones-list" class="grid-list" style="max-height: 200px; overflow-y: auto;"></div>
+        
+        <button onclick="app.closeModal('modal-enchant-rod')" class="btn-close-modal">Tutup</button>
+    </div>
+</div>
+
+    <div id="modal-daily-login" class="modal hidden">
+        <div class="modal-content">
+            <h3>HADIAH LOGIN HARIAN</h3>
+            <div id="daily-grid"></div>
+            <button onclick="app.closeModal('modal-daily-login')" class="btn-close-modal">Tutup</button>
+        </div>
+    </div>
+
+    <div id="modal-missions" class="modal hidden">
+        <div class="modal-content" style="max-height:85vh; overflow-y:auto;">
+            <h3>MISI HARIAN</h3>
+            <div id="mission-progress-bar-container">
+                <div id="mission-progress-fill"></div>
+                <div class="chest-icon" style="left:25%" data-milestone="2"><i class="fa-solid fa-box"></i></div>
+                <div class="chest-icon" style="left:50%" data-milestone="4"><i class="fa-solid fa-box"></i></div>
+                <div class="chest-icon" style="left:75%" data-milestone="6"><i class="fa-solid fa-box"></i></div>
+                <div class="chest-icon" style="left:98%" data-milestone="8"><i class="fa-solid fa-gift"></i></div>
+            </div>
+            <div id="mission-list"></div>
+            <button onclick="app.closeModal('modal-missions')" class="btn-close-modal">Tutup</button>
+        </div>
+    </div>
+
+<div id="modal-settings" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="color:#fff; border-bottom:none; margin-bottom:10px;">PENGATURAN</h3>
+            <p style="font-size:0.7rem; color:#888; margin-top:0;">FISH IT ULTRA</p>
+            
+            <div class="settings-grid">
+                
+                <button onclick="app.showLatestNews()" class="setting-icon-btn btn-set-news" title="Info Update">
+                    <i class="fa-solid fa-scroll"></i>
+                </button>
+
+                <a href="mailto:zadpropc@gmail.com?subject=Support Fish It Ultra" style="text-decoration:none;">
+                    <button class="setting-icon-btn btn-set-help" title="Bantuan">
+                        <i class="fa-solid fa-headset"></i>
+                    </button>
+                </a>
+
+                <button onclick="app.manualCheckUpdate()" class="setting-icon-btn btn-set-update" title="Cek Update">
+                    <i class="fa-solid fa-sync"></i>
+                </button>
+                
+            </div>
+
+            <div style="border-top: 1px dashed #333; margin: 15px 0;"></div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button onclick="app.installPWA()" style="background:#222; color:#ccc; padding:10px; font-size:0.8rem;">
+                    <i class="fa-solid fa-download"></i> Install App
+                </button>
+                <button onclick="app.logout()" style="background:#300000; color:#ff5555; padding:10px; font-size:0.8rem;">
+                    <i class="fa-solid fa-power-off"></i> Logout
+                </button>
+            </div>
+
+            <div class="player-id-box">
+                <span id="setting-player-id">ID: Memuat...</span>
+                <button onclick="app.copyPlayerId()" class="btn-copy-id"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            
+            <p id="setting-version-text" style="font-size:0.7rem; color:#00ff88; margin-top:10px; font-weight:800; text-shadow:0 0 5px rgba(0, 255, 136, 0.5); letter-spacing:1px;">Ver: ...</p>
+            
+            <button onclick="app.closeModal('modal-settings')" class="btn-close-modal" style="margin-top:10px;">TUTUP</button>
+        </div>
+    </div>
+
+    <div id="modal-fish" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modal-fish-name" style="margin:0; font-size:1.5rem;">Nama Ikan</h3>
+            <div id="modal-fish-icon" class="fish-detail-icon">🐟</div>
+            <div class="fish-detail-info">
+                <div id="modal-fish-rarity">RARITY</div>
+                <div id="modal-fish-price" style="color:#00d2ff; font-weight:bold; font-size:1.2rem;">Rp 0</div>
+                <div id="modal-fish-count" style="font-size:0.9rem; margin-top:10px;"></div>
+            </div>
+            <div class="modal-actions">
+                <button onclick="app.actionLockFish()" id="btn-lock">KUNCI</button>
+                <button onclick="app.actionShareFish()" id="btn-share">SHARE</button>
+            </div>
+            <button onclick="app.closeModal('modal-fish')" class="btn-close-modal">Tutup</button>
+        </div>
+    </div>
+
+    <div id="modal-profile" class="modal hidden">
+        <div class="modal-content profile-card">
+            <h2 id="prof-username">Username</h2>
+            <div class="level-badge" id="prof-level-badge">LV. 1</div>
+            <div class="stats-row"><span>Uang:</span><span id="prof-money" style="color:#FFD700">Rp 0</span></div>
+            <div class="stats-row"><span>Berlian:</span><span id="prof-diamonds" style="color:#00d2ff">💎 0</span></div>
+            <div class="stats-row"><span>Pancingan:</span><span id="prof-rod" style="color:#00d2ff">-</span></div>
+            <div style="margin-top:15px; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+                <small>Tangkapan Terbaik:</small>
+                <div id="prof-best-fish">Belum ada data</div>
+            </div>
+            <div id="prof-actions" class="modal-actions hidden">
+                <button onclick="app.openGiveMoneyModal()" style="background:#2ecc71; color:white;"><i class="fa-solid fa-money-bill-wave"></i> BERI UANG</button>
+                <button onclick="app.openGiveFishModal()" style="background:#3498db; color:white;"><i class="fa-solid fa-gift"></i> BERI IKAN</button>
+            </div>
+            <button onclick="app.closeModal('modal-profile')" class="btn-close-modal">Tutup</button>
+        </div>
+    </div>
+
+    <div id="modal-give-money" class="modal hidden">
+        <div class="modal-content">
+            <h3>KIRIM UANG</h3>
+            <p>Ke: <b id="give-money-target" style="color:#00d2ff">Player</b></p>
+            <input type="number" id="input-give-money" placeholder="Min. 100" class="input-dark">
+            <div class="modal-actions">
+                <button onclick="app.processGiveMoney()" class="btn-confirm">KIRIM</button>
+                <button onclick="app.closeModal('modal-give-money')" class="btn-cancel">BATAL</button>
+            </div>
+        </div>
+    </div>
+
+<div id="modal-give-fish" class="modal hidden">
+    <div class="modal-content" style="display:flex; flex-direction:column; max-height:85vh; padding:0; overflow:hidden;">
+        
+        <div style="padding:20px 20px 10px 20px; flex-shrink:0; background:#111; border-bottom:1px solid #333;">
+            <h3 style="margin:0;">KIRIM IKAN</h3>
+            <p style="margin:5px 0 0 0;">Ke: <b id="give-fish-target" style="color:#00d2ff">Player</b></p>
+        </div>
+
+        <div id="give-fish-list" class="grid-list" style="flex-grow:1; overflow-y:auto; padding:15px; width:auto;"></div>
+
+        <div class="modal-actions" style="padding:15px; margin:0; background:#111; border-top:1px solid #333; flex-shrink:0; box-sizing:border-box;">
+            <button id="btn-give-fish-submit" onclick="app.processGiveFish()" class="btn-confirm">KIRIM</button>
+            <button onclick="app.closeModal('modal-give-fish')" class="btn-cancel">BATAL</button>
+        </div>
+    </div>
+</div>
+
+    <div id="modal-custom-alert" class="modal hidden">
+        <div class="modal-content custom-alert-content">
+            <div class="custom-alert-header"><i class="fa-solid fa-circle-exclamation"></i><h3 id="custom-alert-title">INFO</h3></div>
+            <p id="custom-alert-message">Pesan.</p>
+            <div class="custom-alert-actions">
+                <button id="custom-alert-cancel" class="btn-cancel hidden">Batal</button>
+                <button id="custom-alert-confirm" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-screen" class="screen hidden">
+        <div class="auth-box">
+            <h2>FISH IT <span style="color:#00d2ff;">ULTRA</span></h2>
+            <div class="auth-tabs">
+                <button onclick="app.switchAuthTab('login')" id="btn-tab-login" class="active">Masuk</button>
+                <button onclick="app.switchAuthTab('register')" id="btn-tab-register">Daftar</button>
+            </div>
+            <form id="form-login" onsubmit="event.preventDefault(); app.login();">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-pass" placeholder="Password" required>
+                <button type="submit" id="btn-login">LOGIN</button>
+            </form>
+            <form id="form-register" class="hidden" onsubmit="event.preventDefault(); app.register();">
+                <input type="text" id="reg-username" placeholder="Username" required>
+                <input type="email" id="reg-email" placeholder="Email" required>
+                <input type="password" id="reg-pass" placeholder="Password" required>
+                <button type="submit" id="btn-register">REGISTER</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="game-container" class="screen hidden">
+        <div id="event-overlay"></div>
+        <div id="global-notification-container"></div>
+        <div id="active-buff-container"></div> <header>
+              <div class="user-info" onclick="app.viewProfile()">
+                <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <i class="fa-solid fa-user-astronaut"></i> <b id="display-username">Player</b>
+                        <span id="header-level-badge" class="badge-mini">LV.1</span>
+                    </div>
+                    <div style="font-size:0.7rem; color:#aaa; width:100px; height:4px; background:#444; border-radius:2px; margin-top:2px;">
+                        <div id="header-exp-bar" style="width:0%; height:100%; background:#00d2ff; border-radius:2px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="currency-info">
+                <div class="curr-item"><i class="fa-solid fa-coins" style="color:gold;"></i> <span id="display-money">0</span></div>
+                <div class="curr-item"><i class="fa-solid fa-gem" style="color:#00d2ff;"></i> <span id="display-diamonds">0</span></div>
+            </div>
+            <button onclick="app.showModal('modal-settings')" class="btn-icon"><i class="fa-solid fa-gear"></i></button>
+        </header>
+
+        <button id="event-sidebar-toggle" onclick="app.toggleEventSidebar()"><i class="fa-solid fa-chevron-right"></i></button>
+        <div id="event-sidebar">
+            <button class="close-sidebar-btn" onclick="app.toggleEventSidebar()"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="event-content">
+                <h3 class="event-title">WINTER EVENT</h3>
+                <div class="event-fish-list">
+                    <div class="event-fish-item"><i class="fa-solid fa-fish"></i><span>Frozen Phoenix</span></div>
+                    <div class="event-fish-item"><i class="fa-solid fa-fish"></i><span>Frostjaw Titan</span></div>
+                </div>
+                <div class="event-timer"><small>Selesai:</small><div id="event-countdown">...</div></div>
+            </div>
+        </div>
+
+        <main id="fishing-area">
+            <div id="rod-info">
+                <span id="rod-name">Pancingan</span> <span style="color:gold" id="rod-power-display">Power: 1x</span>
+            </div>
+            <div id="game-visuals">
+                <div id="bobber" class="hidden"><i class="fa-solid fa-fish-fins"></i></div>
+                <div id="status-text">SIAP MANCING</div>
+            </div>
+            <div class="controls">
+                <button id="btn-cast" onclick="app.handleCastBtn()">CAST</button>
+                <button id="btn-auto" onclick="app.toggleAutoFishing()">AUTO: OFF</button>
+            </div>
+        </main>
+
+        <div id="panel-inventory" class="panel hidden">
+            <h3>TAS</h3>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="app.switchInvTab('fish')">IKAN</button>
+                <button class="tab-btn" onclick="app.switchInvTab('items')">ALAT</button>
+            </div>
+            
+            <div id="inv-tab-fish" class="tab-content">
+                <button onclick="app.sellAll()" class="btn-sell">JUAL SEMUA (Kecuali Terkunci)</button>
+                <div id="inventory-list" class="grid-list"></div>
+                <div id="inventory-list-sentinel" style="height:10px;"></div>
+            </div>
+
+            <div id="inv-tab-items" class="tab-content hidden">
+                <div id="items-list" class="grid-list"></div>
+            </div>
+        </div>
+
+        <div id="panel-index" class="panel hidden">
+            <h3>INDEX IKAN</h3>
+            <div id="fish-counter">0/0 ditemukan</div>
+            <div id="index-list"></div> </div>
+
+        <div id="panel-shop" class="panel hidden">
+            <h3>TOKO</h3>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="app.switchShopTab('rods')">JORAN</button>
+                <button class="tab-btn" onclick="app.switchShopTab('stones')">ENCHANT</button>
+                <button class="tab-btn" onclick="app.switchShopTab('potions')">RAMUAN</button>
+            </div>
+            <div id="shop-rods" class="shop-content"></div>
+            <div id="shop-stones" class="shop-content hidden"></div>
+            <div id="shop-potions" class="shop-content hidden"></div>
+        </div>
+
+        <div id="panel-chat" class="panel hidden">
+            <div id="chat-header">
+                <span>GLOBAL CHAT</span>
+                <div id="online-counter-wrapper">
+                    <div class="online-dot"></div>
+                    <span id="online-text">Online = <span id="online-count">0</span></span>
+                </div>
+            </div>
+            
+            <div id="chat-messages"></div>
+            <div class="chat-input-wrapper">
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="50">
+                    <button onclick="app.sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <button onclick="app.nav('fishing')"><i class="fa-solid fa-anchor"></i> Game</button>
+            <button onclick="app.nav('inventory')"><i class="fa-solid fa-bucket"></i> Tas <span id="inventory-badge" class="nav-badge hidden">0</span></button>
+            <button onclick="app.nav('index')"><i class="fa-solid fa-book-open"></i> Index</button>
+            <button onclick="app.nav('shop')"><i class="fa-solid fa-cart-shopping"></i> Toko</button>
+            <button onclick="app.nav('chat')"><i class="fa-solid fa-comments"></i> Chat <span id="chat-badge" class="nav-badge hidden">0</span></button>
+        </nav>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script>
+       if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+/* ==========================================================================
+   #_LAYOUT.CSS: HEADER, NAVIGASI, FLOATING, SIDEBAR, AUTH, MODAL LAYOUT
+   ========================================================================== */
+
+/* --- HEADER & NAVIGATION --- */
+header { 
+    padding: 15px;
+    background: rgba(0,0,0,0.6); 
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 2px solid rgba(255,255,255,0.1); flex-shrink: 0; 
+}
+.user-info { 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+    font-size: 0.9rem; 
+    cursor: pointer; 
+    text-shadow: 1px 1px 0 #000;
+    max-width: 140px; 
+    overflow: hidden;
+    white-space: nowrap; 
+}
+.user-info b {
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+}
+.btn-icon { background: transparent; color: #fff; font-size: 1.2rem; padding: 5px; }
+
+/* Currency & Level */
+.currency-info { display: flex; gap: 10px; font-size: 0.8rem; align-items: center; }
+.curr-item { 
+    display: flex; align-items: center; gap: 4px; 
+    background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 10px; 
+    border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 2px 0 rgba(0,0,0,0.5);
+}
+.badge-mini { 
+    background: #ff003c; 
+    padding: 2px 6px; font-size: 0.6rem; border-radius: 4px; font-weight: 800; margin-left: 5px; 
+    box-shadow: 0 2px 0 #990024; 
+}
+
+/* Nav Bar */
+nav {
+    flex-shrink: 0; height: 60px; background: #050505; border-top: 2px solid #333;
+    display: flex; justify-content: space-around;
+    align-items: center; z-index: 50;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    height: calc(60px + 10px + env(safe-area-inset-bottom));
+}
+nav button { 
+    background: transparent; 
+    color: #888; 
+    font-size: 0.7rem;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 4px; 
+    border: none;
+    position: relative;
+    transition: all 0.1s ease;
+    padding: 5px 10px;
+    box-shadow: none;
+    border-radius: 8px;
+    margin: 0 2px;
+}
+nav button:hover { transform: translateY(-2px); color: #fff; }
+nav button.active { 
+    color: #00e5ff; 
+    text-shadow: 0 0 5px #00e5ff;
+}
+nav button i { font-size: 1.2rem; margin-bottom: 3px; }
+.nav-badge { position: absolute; top: -5px; right: 20%; background: #ff0044; color: white; font-size: 0.8rem; font-weight: 900; min-width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; padding: 0 5px; z-index: 10; box-shadow: 0 2px 0 #990029; border: 2px solid #fff; }
+
+/* --- PANELS & TABS --- */
+.panel { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 15px; background: #0a0a0a; }
+.panel h3 { color: #00e5ff; border-bottom: 3px solid #333; padding-bottom: 10px; margin-top: 0; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+
+.tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+.tab-btn { flex: 1; padding: 12px; background: #222; border: none; color: #888; border-radius: 12px; font-size: 0.9rem; font-weight: 800; box-shadow: 0 4px 0 #000; }
+.tab-btn.active { background: #00d2ff; color: #000; box-shadow: 0 4px 0 #008cb3; }
+.tab-btn:active, .tab-btn.active:active { transform: translateY(4px); box-shadow: none; }
+.tab-content, .shop-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
+
+/* --- FLOATING BUTTONS --- */
+#floating-buttons { 
+    position: absolute; 
+    top: 50%; 
+    right: 15px; 
+    transform: translateY(-50%); 
+    bottom: auto; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    z-index: 60; 
+}
+.float-btn { 
+    width: 60px; height: 60px; border-radius: 15px; border: none; color: white; font-size: 1.5rem; 
+    box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; 
+    position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    border: 2px solid rgba(255,255,255,0.2);
+}
+.mission-btn { background: #f39c12; box-shadow: 0 6px 0 #d35400; }
+.login-btn { background: #2ecc71; box-shadow: 0 6px 0 #27ae60; }
+.mission-btn:hover { background: #f1c40f; }
+.login-btn:hover { background: #2dfc7d; }
+.float-btn:active { transform: translateY(6px); box-shadow: none; }
+
+.float-label { 
+    position: absolute; bottom: -22px; font-size: 0.7rem; font-weight: 900; 
+    text-shadow: 1px 1px 0 #000; white-space: nowrap; background: #000; 
+    padding: 2px 6px; border-radius: 4px; border: 1px solid #555;
+}
+@keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+
+/* --- SIDEBAR & EVENT OVERLAY --- */
+#event-sidebar-toggle { position: fixed; top: 50%; left: 0; transform: translateY(-50%); background: #00d2ff; color: #000; border: none; border-top-right-radius: 12px; border-bottom-right-radius: 12px; padding: 15px 8px; cursor: pointer; z-index: 1001; font-size: 1.2rem; transition: all 0.2s ease; box-shadow: 4px 0 0 #008cb3; }
+#event-sidebar-toggle:hover { padding-left: 15px; box-shadow: 6px 0 0 #008cb3; }
+#event-sidebar-toggle:active { transform: translateY(-50%) translateX(4px); box-shadow: 0 0 0 #008cb3; }
+#event-sidebar { 
+    position: fixed; top: 0; left: 0; width: 280px; height: 100%; 
+    background: #0b1026; 
+    border-right: 4px solid #00d2ff;
+    transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    z-index: 1000; display: flex; flex-direction: column; 
+    box-shadow: 10px 0 50px rgba(0,0,0,0.8); 
+}
+#event-sidebar.active { transform: translateX(0); }
+.close-sidebar-btn { align-self: flex-end; background: #333; border: none; color: #fff; font-size: 1.5rem; padding: 10px 15px; margin: 10px; cursor: pointer; box-shadow: 0 4px 0 #000; border-radius: 8px; }
+.close-sidebar-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #000; }
+
+.event-content { padding: 20px; color: #fff; display: flex; flex-direction: column; height: 100%; }
+.event-title { font-size: 2rem; font-weight: 900; color: #00d2ff; text-shadow: 0 0 10px #00d2ff; margin-bottom: 30px; text-align: center; letter-spacing: 2px; text-transform: uppercase; }
+.event-fish-list { margin-bottom: 30px; }
+.event-fish-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 15px; background: #1a1a1a; border-radius: 12px; border: 2px solid #333; border-left: 5px solid #00d2ff; }
+.event-fish-item i { font-size: 1.8rem; color: #00d2ff; }
+.event-fish-item span { font-size: 1.1rem; font-weight: 800; }
+.event-timer { margin-top: auto; text-align: center; padding: 20px; background: #111; border: 2px solid #00d2ff; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+.event-timer small { font-size: 0.9rem; color: #00d2ff; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+#event-countdown { font-size: 1.5rem; font-weight: 900; color: #fff; margin-top: 5px; }
+#event-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 5; }
+
+
+/* --- AUTHENTICATION (Form & Tabs) --- */
+#auth-screen { 
+    justify-content: center; 
+    align-items: center; 
+    background: linear-gradient(180deg, #0b1026 0%, #2b32b2 100%); 
+    padding: 20px;
+    display: flex;
+}
+.auth-box { 
+    width: 100% !important; 
+    max-width: 380px !important; 
+    min-height: 450px; 
+    background: #111; 
+    border: 3px solid #00d2ff; 
+    border-radius: 25px; 
+    padding: 30px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column; 
+    transition: all 0.3s ease;
+    box-sizing: border-box !important; 
+}
+.auth-box h2 { 
+    color: #fff; 
+    margin-top: 0; 
+    margin-bottom: 25px; 
+    font-weight: 900; 
+    text-shadow: 0 0 10px #00d2ff; 
+    font-size: 2rem; 
+}
+.auth-tabs { display: flex; background: #000; border-radius: 12px; padding: 5px; margin-bottom: 25px; border: 1px solid #333; }
+.auth-tabs button { flex: 1; background: transparent; border: none; color: #555; padding: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.9rem; box-shadow: none; }
+.auth-tabs button:hover { color: #fff; }
+.auth-tabs button.active { background: #00d2ff; color: #000; box-shadow: 0 4px 0 #008cb3; }
+#form-login, #form-register { display: flex; flex-direction: column; gap: 15px; transition: all 0.3s ease; width: 100%; }
+.auth-box input { width: 100% !important; padding: 15px; margin: 5px 0; background: #222; border: 2px solid #444; color: white; border-radius: 12px; font-weight: 600; box-sizing: border-box !important; }
+.auth-box input:focus { outline: none; border-color: #00d2ff; background: #000; box-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+#btn-login, #btn-register { width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 900; background: #00d2ff; color: #000; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; box-shadow: 0 6px 0 #008cb3; }
+#btn-login:hover, #btn-register:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #008cb3; }
+#btn-login:active, #btn-register:active { transform: translateY(6px); box-shadow: 0 0 0 #008cb3; }
+@media (max-width: 360px) { 
+    .auth-box { padding: 20px; max-width: 95% !important; } 
+    .auth-box h2 { font-size: 1.8rem; }
+}
+
+
+/* --- PROFILE MODAL (POLISHED & WRAPPED) --- */
+.profile-card {
+    padding: 30px !important;
+    border: 4px solid #00d2ff !important; /* Border neon yang lebih kuat */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0, 210, 255, 0.5) !important;
+}
+
+.profile-card h2 {
+    color: #fff;
+    text-shadow: 0 0 10px #00d2ff;
+    margin-bottom: 15px;
+}
+
+.level-badge { 
+    background: #ff0044; 
+    padding: 8px 15px; 
+    border-radius: 15px; 
+    display: inline-block; 
+    margin-bottom: 25px !important; 
+    font-weight: 900 !important; 
+    font-size: 1.1rem !important; 
+    box-shadow: 0 4px 0 #990029; 
+    border: 2px solid #fff;
+}
+
+/* Kunci: Membuat setiap data field menjadi kotak terpisah */
+.stats-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin: 10px 0; 
+    padding: 12px; 
+    background: #1a1a1a; /* Background untuk setiap baris data */
+    border-radius: 8px;
+    border-bottom: none !important; 
+    font-weight: 600; 
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.stats-row span:first-child {
+    color: #ccc; 
+    font-weight: 500;
+}
+
+/* Kotak Best Fish */
+/* Ini menargetkan div di modal profile yang berisi data best fish */
+.profile-card > div[style*="margin-top:15px"] {
+    margin-top: 25px !important;
+    background: #000 !important; 
+    padding: 15px !important;
+    border-radius: 12px !important;
+    border: 1px solid #00d2ff; 
+    box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.2);
+}
+
+.profile-card > div[style*="margin-top:15px"] small {
+    color: #00d2ff; 
+    font-weight: 800;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+#prof-actions button { 
+    font-size: 0.9rem !important;
+    padding: 12px !important;
+}

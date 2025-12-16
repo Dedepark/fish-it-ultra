@@ -1,0 +1,91 @@
+/* ==========================================================================
+   #_UTILITY.CSS: BUTTONS, ALERTS, MODALS DASAR (FIXED INPUT)
+   ========================================================================== */
+button { 
+    font-family: 'Poppins', sans-serif; font-weight: 800; border: none; border-radius: 12px; 
+    cursor: pointer; transition: all 0.1s ease; text-transform: uppercase; padding: 12px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; outline: none;
+}
+button:active { transform: translateY(4px) !important; box-shadow: 0 0 0 !important; }
+button:hover { transform: translateY(-2px); }
+
+/* RESET ELEMEN */
+.btn-icon, #event-sidebar-toggle, .close-sidebar-btn, .user-info, .fish-item, .chat-bubble {
+    outline: none;
+}
+* { outline: none; }
+
+.btn-sell { 
+    width: 100%; background: #ff0055; color: white; margin-bottom: 15px; 
+    box-shadow: 0 5px 0 #a30036; 
+}
+.btn-sell:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #a30036; }
+.btn-sell:active { transform: translateY(5px); box-shadow: 0 0 0 #a30036; }
+
+/* --- MODALS --- */
+.modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+.modal-content { 
+    background: #111; padding: 25px; border-radius: 20px; width: 85%; text-align: center; 
+    border: 3px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; width: 100%; justify-content: center; }
+.modal-actions button { flex: 1; padding: 12px; font-weight: 800; border-radius: 10px; }
+
+.btn-close-modal { margin-top: 20px; width: 100%; padding: 12px; background: #e74c3c; color: white; border: none; border-radius: 10px; box-shadow: 0 5px 0 #c0392b; }
+.btn-close-modal:active { transform: translateY(5px); box-shadow: none; }
+
+/* --- CUSTOM ALERT --- */
+#modal-custom-alert { z-index: 1000; }
+.custom-alert-content { background: #111; padding: 0; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 3px solid #e74c3c; box-shadow: 0 10px 40px rgba(0,0,0,0.8); overflow: hidden; }
+.custom-alert-header { background: #e74c3c; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 3px solid #c0392b; }
+.custom-alert-header i, .custom-alert-header h3 { color: #fff; font-weight: 900; }
+#custom-alert-message { padding: 25px; color: #fff; font-size: 1rem; line-height: 1.5; margin: 0; font-weight: 600; }
+.custom-alert-actions { display: flex; padding: 0 20px 20px 20px; gap: 10px; }
+.custom-alert-actions button { flex: 1; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+
+.btn-confirm { background: #2ecc71; color: white; border: none; box-shadow: 0 5px 0 #219150; }
+.btn-confirm:hover { background: #2ecc71; transform: translateY(-2px); box-shadow: 0 7px 0 #219150; }
+.btn-confirm:active { transform: translateY(5px); box-shadow: 0 0 0 #219150; }
+
+.btn-cancel { background: #95a5a6; color: white; border: none; box-shadow: 0 5px 0 #7f8c8d; }
+.btn-cancel:hover { background: #95a5a6; box-shadow: 0 7px 0 #7f8c8d; }
+.btn-cancel:active { transform: translateY(5px); box-shadow: 0 0 0 #7f8c8d; }
+
+.alert-success .custom-alert-content { border-color: #2ecc71 !important; }
+.alert-success .custom-alert-header { background: #2ecc71 !important; border-bottom: 3px solid #27ae60 !important; }
+.alert-success .custom-alert-header i, .alert-success .custom-alert-header h3 { color: #fff !important; }
+
+/* --- INPUT FIELD STYLING (Digunakan di Modal Kirim Uang) --- */
+.input-dark {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0 20px 0; /* Margin bawah lebih besar untuk jarak dengan tombol */
+    background: #222;
+    border: 2px solid #444;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    box-sizing: border-box;
+    font-size: 1rem; /* Ukuran font standar */
+    text-align: center; /* Teks di tengah agar terlihat rapi */
+}
+
+.input-dark:focus { 
+    outline: none; 
+    border-color: #00d2ff; 
+    background: #000; 
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+}
+
+/* --- SETTINGS MODAL --- */
+.setting-icon-btn:active { transform: scale(0.9); }
+.setting-icon-btn:hover { transform: translateY(-5px); }
+.btn-set-update { background: #e74c3c; box-shadow: 0 5px 0 #c0392b; border: 2px solid #fff; }
+.btn-set-help { background: #f39c12; box-shadow: 0 5px 0 #d35400; border: 2px solid #fff; }
+.btn-set-news { background: #00d2ff; box-shadow: 0 5px 0 #008cb3; border: 2px solid #fff; }
+.btn-set-privacy { background: #9b59b6; box-shadow: 0 5px 0 #8e44ad; border: 2px solid #fff; }
+.setting-label { position: absolute; bottom: -20px; font-size: 0.7rem; font-weight: 800; color: #ccc; white-space: nowrap; text-shadow: 1px 1px 0 #000; }
+.player-id-box { background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; font-family: monospace; color: #00ff88; font-size: 0.85rem; }
+.btn-copy-id { background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; margin-left: 10px; }
+.btn-copy-id:active { background: #555; }

@@ -1,0 +1,102 @@
+/* ==========================================================================
+   #_CHAT.CSS: CHAT LAYOUT, MESSAGES, NOTIFICATIONS
+   ========================================================================== */
+#panel-chat { padding: 0; display: flex; flex-direction: column; height: 100%; overflow: hidden; background: transparent; }
+#chat-header { 
+    padding: 15px; 
+    background: rgba(0,0,0,0.8); 
+    color: #00e5ff; 
+    border-bottom: 2px solid #333; 
+    flex-shrink: 0; 
+    font-weight: 900; 
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Online Counter */
+#online-counter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+    font-size: 0.8rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.online-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #00ff00; 
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; 
+    animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 15px #00ff00; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+#online-count { color: #00ff00; font-weight: bold; }
+
+/* Messages */
+#chat-messages { flex-grow: 1; overflow-y: auto; padding: 15px; padding-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+.chat-row { display: flex; width: 100%; }
+.row-me { justify-content: flex-end; }
+.row-other { justify-content: flex-start; }
+.chat-bubble { 
+    padding: 12px 16px; border-radius: 12px; max-width: 75%; word-wrap: break-word; position: relative; font-size: 0.9rem; cursor: pointer; 
+    font-weight: 600;
+}
+.bubble-me { background: #00e5ff; color: #000; border-bottom-right-radius: 0; box-shadow: 0 4px 0 #008cb3; }
+.bubble-me .chat-meta { color: rgba(0,0,0,0.6); }
+.bubble-other { background: #fff; color: #000; border-bottom-left-radius: 0; box-shadow: 0 4px 0 #bdc3c7; }
+.bubble-other .chat-meta { color: #555; }
+.chat-meta { font-size: 0.7rem; margin-bottom: 3px; font-weight: 800; display: block; text-transform: uppercase; }
+
+/* System & Shared Card */
+.system-bubble { background: #e67e22 !important; color: white !important; border: 3px solid #d35400 !important; box-shadow: 0 4px 0 #a04000 !important; }
+.system-bubble .chat-meta { color: #fff !important; font-weight: 900 !important; }
+.chat-shared-card {
+    display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important;
+    padding: 8px !important; border-radius: 8px !important; margin-top: 5px !important; max-width: 120px !important; 
+    min-height: 100px !important; background: #1a1a1a !important; border: 2px solid transparent !important; color: #ecf0f1 !important;
+}
+.chat-shared-card i.fa-fish { font-size: 1.5rem !important; margin-bottom: 3px !important; filter: drop-shadow(0 2px 1px rgba(0,0,0,0.3)); }
+.chat-shared-card div div { font-size: 0.8rem !important; line-height: 1.1 !important; }
+
+/* Chat Input */
+.chat-input-wrapper { flex-shrink: 0; background: rgba(0,0,0,0.9); border-top: 2px solid #333; z-index: 20; }
+.chat-input-area { display: flex; gap: 10px; padding: 10px; }
+.chat-input-area input { 
+    flex-grow: 1; padding: 12px; border-radius: 12px; background: #222; 
+    border: 2px solid #444; color: white; font-weight: 600;
+}
+.chat-input-area button { 
+    width: 48px; height: 48px; border-radius: 12px; background: #00e5ff; color: black; 
+    display: flex; align-items: center; justify-content: center; border: none;
+    box-shadow: 0 4px 0 #008cb3; transition: all 0.1s ease;
+}
+.chat-input-area button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #008cb3; }
+.chat-input-area button:active { transform: translateY(4px); box-shadow: 0 0 0 #008cb3; }
+
+/* Global Notifications */
+#global-notification-container { 
+    position: fixed; top: 80px; left: 0; width: 100%; height: 35px; z-index: 9999; 
+    pointer-events: none; overflow: hidden; background: rgba(0, 0, 0, 0.9);
+    border-top: 2px solid #ffd700; border-bottom: 2px solid #ffd700;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: none; 
+}
+.global-notif-banner {
+    position: absolute; top: 0; left: 100%; height: 100%; white-space: nowrap;
+    color: #ffd700; font-weight: 900; font-size: 1rem; text-shadow: 2px 2px 0 #000;
+    display: flex; align-items: center; 
+    animation: runningText 15s linear forwards; 
+}
+@keyframes runningText {
+    0% { left: 100%; transform: translateX(0); }
+    100% { left: 0; transform: translateX(-100%); }
+}

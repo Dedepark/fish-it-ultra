@@ -1,0 +1,102 @@
+/* ==========================================================================
+   #_MISSIONS.CSS: DAILY MISSIONS & LOGIN REWARDS
+   ========================================================================== */
+
+/* --- MISSIONS MODAL --- */
+#modal-missions .modal-content {
+    width: 90%;
+    max-width: 450px;
+    padding: 20px;
+    max-height: 80vh; 
+    display: flex;
+    flex-direction: column;
+}
+#mission-progress-bar-container { 
+    height: 15px; 
+    background: #111; 
+    border-radius: 10px; 
+    position: relative; 
+    margin: 25px 0 20px 0; 
+    border: 1px solid #444; 
+    box-shadow: inset 0 2px 5px #000; 
+    flex-shrink: 0;
+}
+#mission-progress-fill { 
+    height: 100%; 
+    background: linear-gradient(90deg, #00d2ff, #00ff88); 
+    border-radius: 8px; 
+    width: 0%; 
+    transition: width 0.5s ease; 
+    box-shadow: 0 0 10px #00ff88; 
+}
+.chest-icon { 
+    position: absolute; 
+    top: -18px; 
+    transform: translateX(-50%); 
+    font-size: 1.5rem; 
+    color: #555; 
+    transition: all 0.3s; 
+    cursor: pointer; 
+    z-index: 5; 
+    filter: drop-shadow(0 2px 2px #000); 
+}
+.chest-icon.unlocked { color: #ffd700; animation: bounce 1s infinite; filter: drop-shadow(0 0 5px gold); }
+.chest-icon.claimed { color: #2ecc71; transform: translateX(-50%) scale(0.8); opacity: 0.5; }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+
+#mission-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 8px;
+    overflow-y: auto; 
+    padding: 5px;
+}
+.mission-row { 
+    display: flex; 
+    flex-direction: column; 
+    background: #222; 
+    padding: 8px 10px; 
+    border-radius: 8px; 
+    border: 1px solid #333; 
+    box-shadow: 0 2px 0 #111;
+    position: relative;
+}
+.mission-row.done { 
+    border-color: #2ecc71; 
+    background: rgba(46, 204, 113, 0.1); 
+}
+.mission-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ccc;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.mission-row.done .mission-title { color: #2ecc71; }
+.mission-mini-bar {
+    width: 100%;
+    height: 6px;
+    background: #000;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.mission-mini-fill {
+    height: 100%;
+    background: #f39c12;
+    border-radius: 3px;
+}
+.mission-row.done .mission-mini-fill { background: #2ecc71; }
+.mission-count {
+    font-size: 0.65rem;
+    color: #888;
+    text-align: right;
+    margin-top: 2px;
+}
+
+/* --- DAILY LOGIN MODAL --- */
+#daily-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.daily-day { background: #222; border: 2px solid #444; border-radius: 12px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.5; box-shadow: 0 4px 0 #111; }
+.daily-day.active { border-color: #00d2ff; opacity: 1; background: #0b2a3a; transform: scale(1.05); box-shadow: 0 6px 0 #005f73; z-index: 5; }
+.daily-day.claimed { border-color: #2ecc71; opacity: 0.4; background: #0f2b1a; }
+.daily-day i { font-size: 1.5rem; }

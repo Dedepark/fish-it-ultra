@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Fish It Ultra</string>
+    <string name="title_activity_main">Fish It Ultra</string>
+    <string name="package_name">com.fishit.ultra</string>
+    <string name="custom_url_scheme">com.fishit.ultra</string>
+</resources>

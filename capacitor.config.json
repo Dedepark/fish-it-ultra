@@ -1,0 +1,13 @@
+{
+  "appId": "com.fishit.ultra",
+  "appName": "Fish It Ultra",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

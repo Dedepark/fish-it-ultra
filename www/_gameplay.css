@@ -1,0 +1,94 @@
+/* ==========================================================================
+   #_GAMEPLAY.CSS: FISHING AREA, CONTROLS, BUFFS, EVENT PARTICLES (FIXED)
+   ========================================================================== */
+#fishing-area { 
+    flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; 
+    padding: 15px; background: transparent; align-items: stretch; 
+}
+#game-visuals { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#bobber { 
+    font-size: 5rem; color: #ff3d00; 
+    filter: drop-shadow(0 4px 0 #b32a00); 
+    animation: float 2s infinite ease-in-out; 
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+#status-text { 
+    margin-top: 20px; 
+    font-size: 1.2rem; 
+    font-weight: 900; 
+    text-shadow: 2px 2px 0 #000; 
+    background: #111; 
+    color: #00d2ff; 
+    padding: 8px 25px; 
+    border-radius: 30px; 
+    border: 3px solid #00d2ff; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+}
+#rod-info { 
+    text-align: center; font-size: 1rem; margin-bottom: 10px; 
+    background: #0b1026; 
+    color: #fff; border: 2px solid #00d2ff; 
+    display: inline-block; padding: 10px 25px; border-radius: 30px; align-self: center; 
+    font-weight: bold; box-shadow: 0 4px 0 #008cb3;
+}
+
+/* Controls */
+.controls { display: flex; gap: 10px; height: 70px; margin-bottom: 20px; flex-shrink: 0; }
+#btn-cast { 
+    flex: 2; font-size: 1.5rem; font-weight: 900;
+    background: #ff0044; 
+    color: white;
+    border: none;
+    box-shadow: 0 6px 0 #990029; 
+    border-radius: 12px; transition: all 0.1s ease;
+}
+#btn-cast:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #990029; }
+#btn-cast:active { transform: translateY(6px); box-shadow: 0 0 0 #990029; }
+
+#btn-auto { 
+    flex: 1; font-weight: 800;
+    background: #2c3e50; 
+    color: #fff; border: 2px solid #444;
+    box-shadow: 0 6px 0 #1a252f; 
+    border-radius: 12px; transition: all 0.1s ease;
+}
+#btn-auto:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #1a252f; }
+#btn-auto:active { transform: translateY(6px); box-shadow: 0 0 0 #1a252f; }
+
+.btn-pull { 
+    background: #ff0000 !important; 
+    color: white !important; 
+    box-shadow: 0 6px 0 #990000 !important; 
+    animation: pulsePull 0.5s infinite alternate;
+}
+@keyframes pulsePull { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+
+/* Buff Timers */
+#active-buff-container { position: absolute; top: 130px; left: 15px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; z-index: 50; }
+.buff-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-weight: 900; text-shadow: 0 0 2px black; background: #2ecc71; color: #fff; }
+
+/* --- EVENT PARTICLES (FIXED) --- */
+
+.event-crystal { 
+    position: absolute; 
+    top: -50px; 
+    color: #fff; 
+    text-shadow: 0 0 5px #00d2ff; 
+    opacity: 0.8; 
+    animation-name: fall; 
+    animation-timing-function: linear; 
+    animation-iteration-count: infinite; 
+}
+
+/* Variasi Ukuran & Kecepatan */
+.crystal-small { font-size: 0.8rem; opacity: 0.5; z-index: 1; filter: blur(1px); } 
+.crystal-medium { font-size: 1.5rem; opacity: 0.8; z-index: 2; } 
+.crystal-large { font-size: 2.5rem; opacity: 1; z-index: 3; text-shadow: 0 0 15px #00d2ff; }
+
+/* Animation Keyframes Didefinisikan Sekali */
+@keyframes fall { 
+    from { transform: translateY(0) rotate(0deg); } 
+    to { transform: translateY(110vh) rotate(360deg); } 
+}
