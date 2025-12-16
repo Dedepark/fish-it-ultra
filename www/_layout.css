@@ -4,7 +4,13 @@
 
 /* --- HEADER & NAVIGATION --- */
 header { 
-    padding: 15px;
+    /* Padding atas ditambah safe-area biar gak kena kamera/poni */
+    padding-top: calc(15px + env(safe-area-inset-top)); 
+    
+    /* Sisanya sama kayak yang lama */
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
     background: rgba(0,0,0,0.6); 
     display: flex; justify-content: space-between; align-items: center; 
     border-bottom: 2px solid rgba(255,255,255,0.1); flex-shrink: 0; 
@@ -42,11 +48,21 @@ header {
 
 /* Nav Bar */
 nav {
-    flex-shrink: 0; height: 60px; background: #050505; border-top: 2px solid #333;
-    display: flex; justify-content: space-around;
-    align-items: center; z-index: 50;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-    height: calc(60px + 10px + env(safe-area-inset-bottom));
+    flex-shrink: 0; 
+    background: #050505; 
+    border-top: 2px solid #333;
+    display: flex; 
+    justify-content: space-around;
+    align-items: center; 
+    z-index: 50;
+    
+    /* --- BAGIAN INI YANG DIUBAH (DITIPISIN) --- */
+    
+    /* Hapus tambahan +10px, cukup andalkan env(safe-area) aja */
+    padding-bottom: env(safe-area-inset-bottom);
+    
+    /* Tinggi dasar dikurangi dikit jadi 55px (tadinya 60px) + area gesture */
+    height: calc(55px + env(safe-area-inset-bottom));
 }
 nav button { 
     background: transparent; 
