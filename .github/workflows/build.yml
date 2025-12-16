@@ -76,5 +76,4 @@ jobs:
           body: "Ini adalah versi terbaru yang di-build otomatis dari GitHub. Download file .apk di bawah ini."
           files: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
           prerelease: false
-          overwrite: true 
           token: ${{ secrets.GITHUB_TOKEN }}

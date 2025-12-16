@@ -186,11 +186,25 @@ function showMaintenanceScreen(msg) {
     document.body.appendChild(div);
 }
 
-function showUpdateNotification(msg) {
+function showUpdateNotification(msg, url) {
     if (document.getElementById('update-bubble')) return;
+    
+    // Default URL kalau dari database kosong
+    const downloadUrl = url || "https://github.com/Dedepark/fish-it-ultra/releases/download/latest/FishIt-Ultra.apk";
+    
     const div = document.createElement('div');
     div.id = 'update-bubble';
-    div.innerHTML = `<div class="update-content"><div class="update-header"><div class="update-title">UPDATE!</div></div><div class="update-msg">${msg}</div><button onclick="app.clearAllCaches()" class="btn-update-comic">UPDATE</button></div>`;
+    div.innerHTML = `
+        <div class="update-content">
+            <div class="update-header">
+                <div class="update-title">UPDATE TERSEDIA!</div>
+            </div>
+            <div class="update-msg">${msg}</div>
+            <button onclick="window.open('${downloadUrl}', '_system')" class="btn-update-comic">
+                DOWNLOAD APK
+            </button>
+        </div>
+    `;
     document.body.appendChild(div);
 }
 
@@ -198,17 +212,36 @@ async function checkAppVersion() {
     try {
         const { data, error } = await DatabaseManager.client.from('app_config').select('*').eq('id', 1).single();
         if (error || !data) return false;
-        if (data.is_maintenance) { showMaintenanceScreen(data.update_message); return true; }
-        if (data.latest_version !== CURRENT_APP_VERSION) { showUpdateNotification(data.update_message); }
+        
+        if (data.is_maintenance) { 
+            showMaintenanceScreen(data.update_message); 
+            return true; 
+        }
+        
+        // Cek beda versi
+        if (data.latest_version !== CURRENT_APP_VERSION) { 
+            // Masukin URL dari database ke fungsi notifikasi
+            showUpdateNotification(data.update_message, data.download_url); 
+        }
         return false; 
     } catch (err) { return false; }
 }
 
 function setupVersionListener() {
-    DatabaseManager.client.channel('public:app_config').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_config', filter: 'id=eq.1' }, (payload) => {
-        if (payload.new.is_maintenance) showMaintenanceScreen(payload.new.update_message);
-        else if (payload.new.latest_version !== CURRENT_APP_VERSION) showUpdateNotification(payload.new.update_message);
-    }).subscribe();
+    DatabaseManager.client.channel('public:app_config')
+    .on('postgres_changes', 
+        { event: 'UPDATE', schema: 'public', table: 'app_config', filter: 'id=eq.1' }, 
+        (payload) => {
+            const newData = payload.new;
+            if (newData.is_maintenance) {
+                showMaintenanceScreen(newData.update_message);
+            }
+            else if (newData.latest_version !== CURRENT_APP_VERSION) {
+                // Realtime update trigger
+                showUpdateNotification(newData.update_message, newData.download_url);
+            }
+        }
+    ).subscribe();
 }
 
 const initializeApp = async () => {
