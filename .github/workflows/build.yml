@@ -18,8 +18,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Dependencies
-        run: npm install
+      # --- BAGIAN INI YANG GW PERBAIKI ---
+      # Kita paksa hapus node_modules Windows dan install baru versi Linux
+      - name: Clean & Install Dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
 
       - name: Sync Capacitor
         run: npx cap sync android
@@ -39,6 +44,7 @@ jobs:
           chmod +x gradlew
           bash ./gradlew assembleDebug
 
+      # Pake versi v4 biar gak error deprecated
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
