@@ -9,5 +9,9 @@
     "SplashScreen": {
       "launchShowDuration": 0
     }
+  },
+  "android": {
+    "versionName": "2.1.2",
+    "versionCode": 20102
   }
 }
