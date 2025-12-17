@@ -11,6 +11,7 @@
 @import url('_inventory.css');
 @import url('_missions.css');
 @import url('_chat.css');
+@import url('_leaderboard.css');
 
 /* --- UPDATE NOTIFICATION (Harus tetap di sini agar tidak diimpor ganda) --- */
 

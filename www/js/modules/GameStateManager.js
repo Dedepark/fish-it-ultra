@@ -1,6 +1,6 @@
 import { DatabaseManager } from './DatabaseManager.js';
 import { UIManager } from './UIManager.js';
-import { getRank } from '../config.js'; // Pastikan import ini sesuai file asli lu
+import { getRank } from '../config.js'; 
 
 export const GameStateManager = {
     state: {
@@ -138,17 +138,23 @@ export const GameStateManager = {
     },
         
     async saveState() {
-        // --- PERBAIKAN LOGOUT ERROR DI SINI ---
-        // Kalau user null (sudah logout), STOP. Jangan lanjut save.
         if (!this.state.user || !this.state.user.id) {
             return; 
         }
-        // --------------------------------------
 
         try {
             this.state.gameData.activeBuffs = this.state.activeBuffs;
-            // console.log("Saving..."); // Optional debug
+            
+            // 1. Simpan Data Game Utama (JSON)
             await DatabaseManager.saveGameData(this.state.user.id, this.state.gameData);
+
+            // 2. 🔥 UPDATE LEADERBOARD (SYNC PROFILES) 🔥
+            // Ini yang bikin Leaderboard lu gak error lagi
+            await DatabaseManager.client.from('profiles').update({
+                money: this.state.gameData.money,
+                level: this.state.gameData.level
+            }).eq('id', this.state.user.id);
+
         } catch (error) {
             console.error("GameStateManager: Failed to save game data.", error);
         }
@@ -186,7 +192,6 @@ export const GameStateManager = {
             if (a.isAllLocked && !b.isAllLocked) return -1;
             if (!a.isAllLocked && b.isAllLocked) return 1;
     
-            // Pastikan getRank diimport atau didefinisikan
             const rankA = typeof getRank === 'function' ? getRank(a.rarity) : 0;
             const rankB = typeof getRank === 'function' ? getRank(b.rarity) : 0;
     
@@ -213,6 +218,9 @@ export const GameStateManager = {
                 [{text: "MANTAP"}], 
                 'success'
             );
+            
+            // Trigger save biar level baru langsung update di leaderboard
+            this.saveState();
         }
         
         UIManager.updateUI();

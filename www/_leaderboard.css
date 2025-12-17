@@ -1,0 +1,174 @@
+/* ==========================================================================
+   #_LEADERBOARD.CSS: PODIUM & RANKING STYLES (NUCLEAR FIX)
+   ========================================================================== */
+
+/* --- PODIUM AREA (DIPAKSA BARIS) --- */
+.podium-container {
+    display: flex !important;
+    flex-direction: row !important; /* Paksa Horizontal */
+    flex-wrap: nowrap !important;   /* DILARANG TURUN BARIS */
+    align-items: flex-end !important; /* Rata Bawah */
+    justify-content: center !important;
+    height: 250px;
+    gap: 8px; /* Gap dikecilin dikit biar gak mepet */
+    margin-bottom: 20px;
+    padding-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* Jaga-jaga biar gak scroll samping */
+}
+
+.podium-item {
+    /* MAGIC FORMULA: Biar ukurannya bagi rata & gak numpuk */
+    flex: 1 1 0px !important; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0; /* PENTING: Biar text panjang gak bikin layout pecah */
+}
+
+/* Avatar/Name Box Floating */
+.podium-avatar-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+    animation: bounceFloat 3s infinite ease-in-out;
+}
+
+.p-name {
+    font-size: 0.7rem; /* Kecilin dikit biar muat */
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 0 #000;
+    margin-top: 5px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Kalo nama kepanjangan jadi ... */
+    white-space: nowrap;
+    display: block;
+}
+
+.p-val {
+    font-size: 0.6rem;
+    color: #39ff14; /* Hijau Neon */
+    background: rgba(0,0,0,0.8);
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-top: 2px;
+    white-space: nowrap;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); /* Glow Hijau */
+}
+
+/* Mahkota Neon */
+.fa-crown { font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); margin-bottom: 2px; }
+.gold-crown { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+.silver-crown { color: #c0c0c0; text-shadow: 0 0 10px #c0c0c0; }
+.bronze-crown { color: #cd7f32; text-shadow: 0 0 10px #cd7f32; }
+
+/* Podium Blocks (Balok Pijakan) */
+.podium-block {
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10px;
+    font-size: 1.5rem; /* Kecilin angka juara */
+    font-weight: 900;
+    color: rgba(255,255,255,0.3);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Tinggi Podium */
+.p-first { z-index: 2; }
+.p-first .podium-block { 
+    height: 130px; 
+    background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%); 
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+.p-second .podium-block { 
+    height: 90px; 
+    background: linear-gradient(180deg, #c0c0c0 0%, #7f8c8d 100%); 
+    border-color: #c0c0c0;
+}
+.p-third .podium-block { 
+    height: 70px; 
+    background: linear-gradient(180deg, #cd7f32 0%, #8b4513 100%); 
+    border-color: #cd7f32;
+}
+
+/* Animasi */
+@keyframes bounceFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+
+/* --- LIST RANKING (DIPAKSA RATA KIRI) --- */
+.lb-list-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    width: 100%;
+}
+
+.lb-row {
+    display: flex;
+    flex-direction: row !important; /* Pastikan baris */
+    align-items: center; 
+    justify-content: flex-start !important; /* RATA KIRI */
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.lb-rank {
+    width: 35px;
+    font-weight: 900;
+    color: #666;
+    text-align: center;
+    font-size: 1rem;
+    flex-shrink: 0; /* Jangan nyusut */
+}
+
+.lb-info { 
+    flex: 1; 
+    margin-left: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    text-align: left !important; /* TEXT RATA KIRI */
+    overflow: hidden; /* Biar gak jebol */
+}
+
+.lb-name { 
+    font-weight: 800; 
+    color: #fff; 
+    font-size: 0.9rem; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lb-value { 
+    font-size: 0.8rem; 
+    color: #39ff14; /* Hijau Neon */
+    font-family: monospace;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+    font-weight: bold;
+}
+
+.lb-row.is-me {
+    background: rgba(57, 255, 20, 0.1); /* Hijau transparan */
+    border: 1px solid #39ff14;
+}

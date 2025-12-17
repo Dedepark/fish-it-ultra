@@ -11,37 +11,46 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>   
+    
     <div id="loading-screen" class="screen">
-        <div class="loader-content"><h1>FISH IT</h1><div class="loader">Memuat Data...</div></div>
+        <div class="loader-content">
+            <h1 class="loader-title">FISH IT <span style="color:#00d2ff">ULTRA</span></h1>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill"></div>
+                <div class="loading-glare"></div>
+            </div>
+            
+            <div class="loader-text">MEMUAT DATA...</div>
+        </div>
     </div>
 
     <div id="floating-buttons" class="hidden">
         <button onclick="app.mission.openDailyMissions()" class="float-btn mission-btn">
-    <i class="fa-solid fa-list-check" style="color:#00e5ff"></i>
-    <span class="float-label">Misi</span>
-</button>
+            <i class="fa-solid fa-list-check" style="color:#00e5ff"></i>
+            <span class="float-label">Misi</span>
+        </button>
 
-<button onclick="app.mission.openDailyLogin()" class="float-btn login-btn">
-    <i class="fa-solid fa-calendar-check" style="color:#ffc107"></i>
-    <span class="float-label">Login</span>
-</button>
-
-</div>
+        <button onclick="app.mission.openDailyLogin()" class="float-btn login-btn">
+            <i class="fa-solid fa-calendar-check" style="color:#ffc107"></i>
+            <span class="float-label">Login</span>
+        </button>
+    </div>
 
     <div id="modal-enchant-rod" class="modal hidden">
-    <div class="modal-content">
-        <h3>ENCHANT JORAN</h3>
-        <div id="enchant-rod-info" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-            <div id="enchant-rod-name" style="font-size: 1.2rem; font-weight: bold;"></div>
-            <div id="enchant-rod-level" style="color: gold;">Level: 1</div>
+        <div class="modal-content">
+            <h3>ENCHANT JORAN</h3>
+            <div id="enchant-rod-info" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <div id="enchant-rod-name" style="font-size: 1.2rem; font-weight: bold;"></div>
+                <div id="enchant-rod-level" style="color: gold;">Level: 1</div>
+            </div>
+            
+            <h4 style="margin-top: 0; color: #00d2ff;">Pilih Batu Enchant:</h4>
+            <div id="enchant-stones-list" class="grid-list" style="max-height: 200px; overflow-y: auto;"></div>
+            
+            <button onclick="app.closeModal('modal-enchant-rod')" class="btn-close-modal">Tutup</button>
         </div>
-        
-        <h4 style="margin-top: 0; color: #00d2ff;">Pilih Batu Enchant:</h4>
-        <div id="enchant-stones-list" class="grid-list" style="max-height: 200px; overflow-y: auto;"></div>
-        
-        <button onclick="app.closeModal('modal-enchant-rod')" class="btn-close-modal">Tutup</button>
     </div>
-</div>
 
     <div id="modal-daily-login" class="modal hidden">
         <div class="modal-content">
@@ -66,13 +75,12 @@
         </div>
     </div>
 
-<div id="modal-settings" class="modal hidden">
+    <div id="modal-settings" class="modal hidden">
         <div class="modal-content">
             <h3 style="color:#fff; border-bottom:none; margin-bottom:10px;">PENGATURAN</h3>
             <p style="font-size:0.7rem; color:#888; margin-top:0;">FISH IT ULTRA</p>
             
             <div class="settings-grid">
-                
                 <button onclick="app.showLatestNews()" class="setting-icon-btn btn-set-news" title="Info Update">
                     <i class="fa-solid fa-scroll"></i>
                 </button>
@@ -86,7 +94,6 @@
                 <button onclick="app.manualCheckUpdate()" class="setting-icon-btn btn-set-update" title="Cek Update">
                     <i class="fa-solid fa-sync"></i>
                 </button>
-                
             </div>
 
             <div style="border-top: 1px dashed #333; margin: 15px 0;"></div>
@@ -114,7 +121,8 @@
     <div id="modal-fish" class="modal hidden">
         <div class="modal-content">
             <h3 id="modal-fish-name" style="margin:0; font-size:1.5rem;">Nama Ikan</h3>
-            <div id="modal-fish-icon" class="fish-detail-icon">🐟</div>
+            <div id="modal-fish-icon" class="fish-detail-icon"><i class="fa-solid fa-fish"></i></div>
+            
             <div class="fish-detail-info">
                 <div id="modal-fish-rarity">RARITY</div>
                 <div id="modal-fish-price" style="color:#00d2ff; font-weight:bold; font-size:1.2rem;">Rp 0</div>
@@ -133,7 +141,8 @@
             <h2 id="prof-username">Username</h2>
             <div class="level-badge" id="prof-level-badge">LV. 1</div>
             <div class="stats-row"><span>Uang:</span><span id="prof-money" style="color:#FFD700">Rp 0</span></div>
-            <div class="stats-row"><span>Berlian:</span><span id="prof-diamonds" style="color:#00d2ff">💎 0</span></div>
+            <div class="stats-row"><span>Berlian:</span><span id="prof-diamonds" style="color:#00d2ff"><i class="fa-solid fa-gem"></i> 0</span></div>
+            
             <div class="stats-row"><span>Pancingan:</span><span id="prof-rod" style="color:#00d2ff">-</span></div>
             <div style="margin-top:15px; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
                 <small>Tangkapan Terbaik:</small>
@@ -159,22 +168,21 @@
         </div>
     </div>
 
-<div id="modal-give-fish" class="modal hidden">
-    <div class="modal-content" style="display:flex; flex-direction:column; max-height:85vh; padding:0; overflow:hidden;">
-        
-        <div style="padding:20px 20px 10px 20px; flex-shrink:0; background:#111; border-bottom:1px solid #333;">
-            <h3 style="margin:0;">KIRIM IKAN</h3>
-            <p style="margin:5px 0 0 0;">Ke: <b id="give-fish-target" style="color:#00d2ff">Player</b></p>
-        </div>
+    <div id="modal-give-fish" class="modal hidden">
+        <div class="modal-content" style="display:flex; flex-direction:column; max-height:85vh; padding:0; overflow:hidden;">
+            <div style="padding:20px 20px 10px 20px; flex-shrink:0; background:#111; border-bottom:1px solid #333;">
+                <h3 style="margin:0;">KIRIM IKAN</h3>
+                <p style="margin:5px 0 0 0;">Ke: <b id="give-fish-target" style="color:#00d2ff">Player</b></p>
+            </div>
 
-        <div id="give-fish-list" class="grid-list" style="flex-grow:1; overflow-y:auto; padding:15px; width:auto;"></div>
+            <div id="give-fish-list" class="grid-list" style="flex-grow:1; overflow-y:auto; padding:15px; width:auto;"></div>
 
-        <div class="modal-actions" style="padding:15px; margin:0; background:#111; border-top:1px solid #333; flex-shrink:0; box-sizing:border-box;">
-            <button id="btn-give-fish-submit" onclick="app.processGiveFish()" class="btn-confirm">KIRIM</button>
-            <button onclick="app.closeModal('modal-give-fish')" class="btn-cancel">BATAL</button>
+            <div class="modal-actions" style="padding:15px; margin:0; background:#111; border-top:1px solid #333; flex-shrink:0; box-sizing:border-box;">
+                <button id="btn-give-fish-submit" onclick="app.processGiveFish()" class="btn-confirm">KIRIM</button>
+                <button onclick="app.closeModal('modal-give-fish')" class="btn-cancel">BATAL</button>
+            </div>
         </div>
     </div>
-</div>
 
     <div id="modal-custom-alert" class="modal hidden">
         <div class="modal-content custom-alert-content">
@@ -183,6 +191,60 @@
             <div class="custom-alert-actions">
                 <button id="custom-alert-cancel" class="btn-cancel hidden">Batal</button>
                 <button id="custom-alert-confirm" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-leaderboard" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px; max-height: 90vh; height: 90vh; display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+            <div style="padding: 20px 20px 0 20px; flex-shrink: 0; background: #0a0a0a;">
+                <div class="custom-alert-header" style="background: transparent; border: none; padding-bottom: 0; margin-bottom: 10px;">
+                    <h3 style="margin: 0;"><i class="fa-solid fa-trophy" style="color: gold;"></i> GLOBAL RANKING</h3>
+                </div>
+
+                <div class="tabs" style="margin-bottom: 10px;">
+                    <button class="tab-btn active" onclick="app.leaderboard.switchTab('money')">SULTAN</button>
+                    <button class="tab-btn" onclick="app.leaderboard.switchTab('level')">LEVEL</button>
+                    <button class="tab-btn" onclick="app.leaderboard.switchTab('fish')">FISH</button>
+                </div>
+            </div>
+
+            <div id="lb-podium" class="podium-container" style="flex-shrink: 0; background: #0a0a0a; margin-bottom: 0; padding-top: 10px; border-bottom: 2px solid #333; z-index: 10;">
+                <div class="podium-item p-second">
+                    <div class="podium-avatar-box">
+                        <i class="fa-solid fa-crown silver-crown"></i>
+                        <span class="p-name">Loading...</span>
+                        <div class="p-val">0</div>
+                    </div>
+                    <div class="podium-block p-block-2">2</div>
+                </div>
+                <div class="podium-item p-first">
+                    <div class="podium-avatar-box">
+                        <i class="fa-solid fa-crown gold-crown"></i>
+                        <span class="p-name">Loading...</span>
+                        <div class="p-val">0</div>
+                    </div>
+                    <div class="podium-block p-block-1">1</div>
+                </div>
+                <div class="podium-item p-third">
+                    <div class="podium-avatar-box">
+                        <i class="fa-solid fa-crown bronze-crown"></i>
+                        <span class="p-name">Loading...</span>
+                        <div class="p-val">0</div>
+                    </div>
+                    <div class="podium-block p-block-3">3</div>
+                </div>
+            </div>
+
+            <div id="leaderboard-container" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.3);">
+                <div id="lb-list" class="lb-list-container"></div>
+                <div style="text-align: center; color: #ff0000; font-size: 0.7rem; margin-top: 20px; padding-bottom: 20px;">
+                    • Leaderboard Live
+                </div>
+            </div>
+
+            <div style="padding: 15px; background: #0a0a0a; border-top: 1px solid #333; flex-shrink: 0;">
+                <button class="btn-close-modal" onclick="app.leaderboard.close(); app.closeModal('modal-leaderboard')" style="width: 100%; margin: 0;">TUTUP</button>
             </div>
         </div>
     </div>
@@ -211,8 +273,10 @@
     <div id="game-container" class="screen hidden">
         <div id="event-overlay"></div>
         <div id="global-notification-container"></div>
-        <div id="active-buff-container"></div> <header>
-              <div class="user-info" onclick="app.viewProfile()">
+        <div id="active-buff-container"></div>
+        
+        <header>
+            <div class="user-info" onclick="app.viewProfile()">
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
                     <div style="display:flex; align-items:center; gap:5px;">
                         <i class="fa-solid fa-user-astronaut"></i> <b id="display-username">Player</b>
@@ -278,7 +342,8 @@
         <div id="panel-index" class="panel hidden">
             <h3>INDEX IKAN</h3>
             <div id="fish-counter">0/0 ditemukan</div>
-            <div id="index-list"></div> </div>
+            <div id="index-list"></div>
+        </div>
 
         <div id="panel-shop" class="panel hidden">
             <h3>TOKO</h3>
@@ -295,10 +360,12 @@
         <div id="panel-chat" class="panel hidden">
             <div id="chat-header">
                 <span>GLOBAL CHAT</span>
-                <div id="online-counter-wrapper">
+                
+                <div id="online-counter-wrapper" onclick="app.leaderboard.open()" style="cursor: pointer;" title="Klik untuk lihat Leaderboard">
                     <div class="online-dot"></div>
                     <span id="online-text">Online = <span id="online-count">0</span></span>
                 </div>
+
             </div>
             
             <div id="chat-messages"></div>

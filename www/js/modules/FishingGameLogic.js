@@ -80,12 +80,31 @@ export const FishingGameLogic = {
             }
         }
         
+        // --- LOGIKA LEADERBOARD (UPDATE OTOMATIS) ---
+        // Cek rekor lokal dulu
         const currentBest = GameStateManager.state.gameData.best_fish || { price: 0 };
-        if (fish.price > currentBest.price) GameStateManager.state.gameData.best_fish = fish;
+        
+        if (fish.price > currentBest.price) {
+            // 1. Update State Lokal (Biar gak bolak-balik DB)
+            GameStateManager.state.gameData.best_fish = fish;
+            
+            // 2. Lapor ke Supabase (Kolom best_fish_price)
+            // Ini yang bikin nama player naik di Leaderboard Tab "FISH"
+            if (GameStateManager.state.user && GameStateManager.state.user.id) {
+                DatabaseManager.client.from('profiles')
+                    .update({ best_fish_price: fish.price })
+                    .eq('id', GameStateManager.state.user.id)
+                    .then(({ error }) => {
+                        if (error) console.error("❌ Gagal update leaderboard:", error);
+                        else console.log(`🏆 New Best Fish Record: Rp ${fish.price}`);
+                    });
+            }
+        }
+        // ---------------------------------------------
+
         MissionManager.updateMissionProgress(fish);
 
-        // --- SIMPAN KE DB SAJA ---
-        // JANGAN PUSH KE INVENTORY DI SINI. BIARKAN LISTENER DI InventoryManager YANG KERJA.
+        // --- SIMPAN KE DB (INVENTORY) ---
         const { data, error } = await DatabaseManager.addFishToInventory(
             GameStateManager.state.user.id,
             fish

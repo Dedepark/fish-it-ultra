@@ -1,42 +1,125 @@
 /* ==========================================================================
-   #_BASE.CSS: RESET & GLOBAL STYLES
+   #_BASE.CSS: RESET & GLOBAL STYLES (DYNAMIC THEME)
    ========================================================================== */
+:root {
+    --bg-gradient: linear-gradient(180deg, #0b1026 0%, #2b32b2 100%);
+    --accent-color: #00d2ff;
+    --accent-glow: rgba(0, 210, 255, 0.5);
+    --panel-bg: rgba(0, 0, 0, 0.6);
+    --text-primary: #ffffff;
+}
+
 html {
     height: 100%;
     -webkit-overflow-scrolling: touch;
 }
 
 body {
-    /* Latar belakang global diperbarui dengan tema "Sunrise in Winter" */
-    background: linear-gradient(180deg, #0b1026 0%, #2b32b2 40%, #ff9a9e 70%, #fecfef 100%);
-    color: #fff; font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    color: var(--text-primary); 
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     height: 100%;
     min-height: 100%;
     overflow: hidden;
     overscroll-behavior-y: none;
     display: flex; justify-content: center; align-items: center;
+    transition: background 3s ease;
 }
 
 .screen {
     width: 100%; max-width: 450px; height: 100%;
-    background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px);
+    background: var(--panel-bg); 
+    backdrop-filter: blur(5px);
     display: flex;
     flex-direction: column; position: relative;
     box-shadow: 0 0 30px #000;
+    transition: background 3s ease;
 }
 
 .hidden { display: none !important; }
 
 /* Scrollbar Hidden */
-*::-webkit-scrollbar {
-    display: none;
-}
+*::-webkit-scrollbar { display: none; }
 * {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     -webkit-tap-highlight-color: transparent; 
     -webkit-touch-callout: none; 
     -webkit-user-select: none; 
     user-select: none; 
 }
+
+/* ==========================================================================
+   #LOADING SCREEN (PREMIUM FADE EFFECT)
+   ========================================================================== */
+
+#loading-screen {
+    /* Posisi FIXED agar mengambang di atas layar utama */
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 10000; /* Paling atas */
+    
+    background: #0b1026; /* Background solid agar belakangnya tidak terlihat dulu */
+    
+    justify-content: center;
+    align-items: center;
+    
+    /* TRANSISI 2 DETIK SESUAI REQUEST */
+    transition: opacity 2s ease-out, visibility 2s ease-out;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Kelas untuk memudarkan loading screen */
+#loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Agar klik tembus ke game saat pudar */
+}
+
+.loader-content {
+    display: flex; flex-direction: column; align-items: center; gap: 25px; width: 80%;
+}
+
+.loader-title {
+    font-size: 2.5rem; font-weight: 900; margin: 0; letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+}
+
+.loading-bar-container {
+    width: 100%; height: 12px; background: #000; border: 2px solid #333;
+    border-radius: 20px; padding: 2px; box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 5%; /* Mulai dari kecil */
+    background: linear-gradient(90deg, #00d2ff, #2ecc71);
+    border-radius: 20px;
+    box-shadow: 0 0 10px #00d2ff;
+    position: relative; z-index: 1;
+    
+    /* Transisi halus saat bar bertambah */
+    transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.loading-glare {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg) translateX(-150%);
+    animation: glareMove 2s infinite linear;
+    z-index: 2;
+}
+
+.loader-text {
+    font-size: 0.8rem; font-weight: 800; color: #888; letter-spacing: 3px;
+    animation: blinkText 1.5s infinite;
+}
+
+@keyframes glareMove { 0% { transform: skewX(-20deg) translateX(-150%); } 100% { transform: skewX(-20deg) translateX(150%); } }
+@keyframes blinkText { 0%, 100% { opacity: 1; color: #fff; } 50% { opacity: 0.5; color: #888; } }

@@ -10,7 +10,29 @@ import { MissionManager } from './modules/MissionManager.js';
 import { EventManager } from './modules/EventManager.js';
 import { ChatManager } from './modules/ChatManager.js';
 import { CURRENT_APP_VERSION } from './config.js';
+import ThemeManager from './modules/ThemeManager.js'; 
+import LeaderboardManager from './modules/LeaderboardManager.js';
 
+// --- 🔥 KODE PEMBUNUH CACHE (UPDATE INI) ---
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister().then(() => {
+                console.log("💀 Service Worker DIBUNUH. Cache dihapus.");
+            });
+        }
+    });
+    if ('caches' in window) {
+        caches.keys().then((names) => {
+            names.forEach((name) => {
+                caches.delete(name);
+            });
+            console.log("🧹 Cache Storage DIBERSIHKAN.");
+        });
+    }
+}
+
+// ---------------------------------------------
 // PWA TRAP
 window.deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -24,10 +46,11 @@ window.app = {
     fishing: FishingGameLogic,
     inventory: InventoryManager,
     shop: ShopManager,
-    mission: MissionManager, // MissionManager diekspos sebagai 'mission'
+    mission: MissionManager,
     event: EventManager,
     chat: ChatManager,
     ui: UIManager,
+    leaderboard: LeaderboardManager,
 
     login: () => AuthenticationManager.login(),
     register: () => AuthenticationManager.register(),
@@ -55,12 +78,6 @@ window.app = {
     closeModal: (modalId) => UIManager.closeModal(modalId),
     viewProfile: (userId) => UIManager.viewProfile(userId),
     showCustomAlert: (title, message, buttons, type) => UIManager.showCustomAlert(title, message, buttons, type),
-    
-    // openDailyMissions: () => MissionManager.openDailyMissions(), // Dihapus (Redundant)
-    // openDailyLogin: () => MissionManager.openDailyLogin(), // Dihapus (Redundant)
-    // openDailyLoginClaim: () => MissionManager.claimDailyLoginLogic(), // Dihapus (Redundant)
-    
-    // Fungsi-fungsi di atas dipanggil langsung dari app.mission di HTML
     
     switchInvTab: (tab) => InventoryManager.switchInvTab(tab),
     sellAll: () => InventoryManager.sellAll(),
@@ -92,48 +109,76 @@ window.app = {
             window.deferredPrompt = null;
             return;
         }
-
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        
         if (isIOS) {
-            UIManager.showCustomAlert(
-                "CARA INSTALL (iOS)", 
-                "1. Tekan tombol 'Share' (Panah Kotak).\n2. Pilih 'Add to Home Screen'.", 
-                [{ text: "SIAP" }]
-            );
+            UIManager.showCustomAlert("CARA INSTALL (iOS)", "1. Tekan tombol 'Share'.\n2. Pilih 'Add to Home Screen'.", [{ text: "SIAP" }]);
         } else {
-            UIManager.showCustomAlert("INSTALL MANUAL", "Otomatis gagal. Klik menu browser (titik tiga) > Install App.", [{ text: "OK" }]);
+            UIManager.showCustomAlert("INSTALL MANUAL", "Otomatis gagal. Klik menu browser > Install App.", [{ text: "OK" }]);
         }
     },
     
+    // --- PERBAIKAN: FUNGSI CEK UPDATE ---
     manualCheckUpdate: async () => {
-        UIManager.showCustomAlert("CEK UPDATE", "Sedang memeriksa...", [], 'info');
+        // Tampilkan loading agar user tahu sedang memproses
+        UIManager.showCustomAlert("CEK UPDATE", "Menghubungi server...", [], 'info');
+        
         try {
+            // Coba ambil data dari tabel 'app_config'
             const { data, error } = await DatabaseManager.client.from('app_config').select('*').eq('id', 1).single();
+            
+            // Tutup loading dulu
             UIManager.closeModal('modal-custom-alert');
 
-            if (error || !data) {
-                UIManager.showCustomAlert("ERROR", "Gagal koneksi.", [{text:"OK"}]);
+            if (error) {
+                // Jika tabel tidak ada atau error koneksi, beri info fallback
+                console.warn("Update check warning:", error.message);
+                UIManager.showCustomAlert("INFO", "Gagal cek server (Offline/Config Missing).\nVersi lokal: " + CURRENT_APP_VERSION, [{text:"OK"}]);
                 return;
             }
 
+            if (!data) {
+                UIManager.showCustomAlert("AMAN", "Data config kosong. Versi: " + CURRENT_APP_VERSION, [{text:"OK"}]);
+                return;
+            }
+
+            // Logika cek versi
             if (data.latest_version === CURRENT_APP_VERSION) {
-                UIManager.showCustomAlert("AMAN", "Versi sudah terbaru.", [{text:"MANTAP"}], 'success');
+                UIManager.showCustomAlert("AMAN", "Versi Anda sudah paling baru!", [{text:"MANTAP"}], 'success');
             } else {
-                app.clearAllCaches(); 
+                app.clearAllCaches(); // Tawarkan update
             }
         } catch (e) {
+            // Jika crash total (misal DatabaseManager null)
+            console.error(e);
             UIManager.closeModal('modal-custom-alert');
+            UIManager.showCustomAlert("ERROR", "Terjadi kesalahan sistem: " + e.message, [{text:"Tutup"}]);
         }
     },
 
+    // --- PERBAIKAN: FUNGSI INFO UPDATE ---
     showLatestNews: async () => {
+        // Beri feedback visual sedikit (opsional, tapi bagus untuk UX)
+        // UIManager.showCustomAlert("MEMUAT", "Mengambil berita...", [], 'info');
+
         try {
-            const { data } = await DatabaseManager.client.from('app_config').select('news_content, update_message').eq('id', 1).single();
+            const { data, error } = await DatabaseManager.client.from('app_config').select('news_content, update_message').eq('id', 1).single();
+            
+            // Jika error, tampilkan pesan default (jangan diam saja)
+            if (error || !data) {
+                // UIManager.closeModal('modal-custom-alert'); // Jika tadi pakai loading
+                UIManager.showCustomAlert("INFO UPDATE", "Selamat datang di Fish It Ultra!\n(Belum ada berita server)", [{text:"SIAP!"}], 'success');
+                return;
+            }
+
+            // UIManager.closeModal('modal-custom-alert'); // Tutup loading
             const msg = (data && data.news_content) ? data.news_content : (data ? data.update_message : "Tidak ada berita.");
             UIManager.showCustomAlert("INFO UPDATE", msg, [{text:"SIAP!"}], 'success');
+            
         } catch(e) {
             console.log(e);
+            // UIManager.closeModal('modal-custom-alert');
+            // Fallback terakhir jika crash
+            UIManager.showCustomAlert("INFO", "Gagal memuat berita dari server.", [{text:"OK"}]);
         }
     },
 
@@ -144,15 +189,16 @@ window.app = {
             navigator.clipboard.writeText(fullId).then(() => {
                 const btn = document.querySelector('.btn-copy-id');
                 btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                setTimeout(() => btn.innerHTML = '<i class="fa-regular fa-copy"></i>', 2000);
             });
         }
     },
 
     clearAllCaches: async () => {
-        UIManager.showCustomAlert("UPDATE TERSEDIA", "Update sekarang?", [
+        UIManager.showCustomAlert("UPDATE TERSEDIA", "Versi baru ditemukan! Update sekarang?", [
             { text: "Nanti", isCancel: true },
             {
-                text: "GAS",
+                text: "GAS UPDATE",
                 isConfirm: true,
                 onClick: async () => {
                     if ('caches' in window) {
@@ -169,6 +215,8 @@ window.app = {
         ]);
     }
 };
+
+// --- HELPER FUNCTIONS ---
 
 function hideAllScreens() {
     document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
@@ -188,8 +236,6 @@ function showMaintenanceScreen(msg) {
 
 function showUpdateNotification(msg, url) {
     if (document.getElementById('update-bubble')) return;
-    
-    // Default URL kalau dari database kosong
     const downloadUrl = url || "https://github.com/Dedepark/fish-it-ultra/releases/download/latest/FishIt-Ultra.apk";
     
     const div = document.createElement('div');
@@ -217,10 +263,7 @@ async function checkAppVersion() {
             showMaintenanceScreen(data.update_message); 
             return true; 
         }
-        
-        // Cek beda versi
         if (data.latest_version !== CURRENT_APP_VERSION) { 
-            // Masukin URL dari database ke fungsi notifikasi
             showUpdateNotification(data.update_message, data.download_url); 
         }
         return false; 
@@ -237,38 +280,92 @@ function setupVersionListener() {
                 showMaintenanceScreen(newData.update_message);
             }
             else if (newData.latest_version !== CURRENT_APP_VERSION) {
-                // Realtime update trigger
                 showUpdateNotification(newData.update_message, newData.download_url);
             }
         }
     ).subscribe();
 }
 
+// --- INITIALIZATION ---
+
 const initializeApp = async () => {
-    UIManager.showScreen('loading-screen');
+    // 1. Setup Awal: Pastikan Loading Screen Muncul & Bar 0%
+    const progressBar = document.querySelector('.loading-bar-fill');
+    const loadingText = document.querySelector('.loader-text');
+    const loadingScreen = document.getElementById('loading-screen');
+    
+    if(progressBar) progressBar.style.width = '5%';
+
+    ThemeManager.init();
+    
+    // Resume Listener
+    document.addEventListener('resume', () => {
+        ThemeManager.updateTheme();
+        UIManager.updateBuffTimers();
+    });
+    
+    // Visibility Listener
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) ThemeManager.updateTheme();
+    });
+    
     SoundManager.init();
+    
+    if(progressBar) progressBar.style.width = '20%';
     await DatabaseManager.init();
     
-    const isMaintenance = await checkAppVersion();
+    // Cek Version & Maintenance
     setupVersionListener(); 
-    if (isMaintenance) return;
     
+    if(progressBar) progressBar.style.width = '50%';
+    
+    // Cek Session User
     const { data: { session } } = await DatabaseManager.getSession();
+    let targetScreen = 'auth-screen'; 
     
     if (session) {
-        await AuthenticationManager.handleLoginSuccess(session.user);
-    } else {
-        UIManager.showScreen('auth-screen');
-        document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('game-container').classList.add('hidden');
+        if(progressBar) progressBar.style.width = '80%';
+        // Pass TRUE ke skipUI agar layar tidak langsung ganti
+        await AuthenticationManager.handleLoginSuccess(session.user, true);
+        targetScreen = 'game-container';
+    }
+
+    // 2. FINISHING TOUCH: Penuhi Bar ke 100%
+    if(progressBar) progressBar.style.width = '100%';
+    if(loadingText) loadingText.textContent = "MEMBUKA GERBANG...";
+
+    // 3. TAHAN SEBENTAR
+    await new Promise(r => setTimeout(r, 800));
+
+    // 4. PERSIAPAN TRANSISI
+    document.querySelectorAll('.screen').forEach(el => {
+        if(el.id !== 'loading-screen') el.classList.add('hidden');
+    });
+    
+    const targetEl = document.getElementById(targetScreen);
+    if(targetEl) targetEl.classList.remove('hidden');
+    
+    if (targetScreen === 'game-container') {
+        UIManager.updateUI(); 
+        const floatBtns = document.getElementById('floating-buttons');
+        if (floatBtns) floatBtns.classList.remove('hidden');
+    }
+
+    // 5. FADE OUT
+    if(loadingScreen) {
+        loadingScreen.classList.add('fade-out');
+        setTimeout(() => loadingScreen.classList.add('hidden'), 2000); 
     }
     
+    // Auth Listener
     DatabaseManager.client.auth.onAuthStateChange((event, session) => { 
-        if (event === 'SIGNED_IN') AuthenticationManager.handleLoginSuccess(session.user); 
+        if (event === 'SIGNED_IN' && !GameStateManager.state.user) {
+            AuthenticationManager.handleLoginSuccess(session.user); 
+        }
     });
-
+    
     EventManager.init();
-    // MissionManager.init() DIPINDAH KE handleLoginSuccess BIAR GAK ERROR
+    LeaderboardManager.init();
     setInterval(UIManager.updateBuffTimers, 1000);
 };
 
