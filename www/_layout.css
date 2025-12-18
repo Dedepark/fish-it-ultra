@@ -10,13 +10,13 @@ header {
     padding-left: 15px;
     padding-right: 15px;
     
-    /* GANTI: Background & Border Dinamis */
+    /* GANTI: Background Transparan & HAPUS Border */
     background: var(--panel-bg, rgba(0,0,0,0.6)); 
-    border-bottom: 1px solid var(--accent-glow, rgba(255,255,255,0.1)); 
+    border: none; /* Hapus border bottom */
     
     display: flex; justify-content: space-between; align-items: center; 
     flex-shrink: 0; 
-    transition: background 1s ease, border-color 1s ease;
+    transition: background 1s ease;
 }
 
 .user-info { 
@@ -77,9 +77,9 @@ nav {
     /* Background agak gelap dikit */
     background: rgba(5, 5, 10, 0.95);
     
-    /* GANTI: Border Top & Shadow Glow Dinamis */
-    border-top: 2px solid var(--accent-color, #333);
-    box-shadow: 0 -5px 20px var(--accent-glow, rgba(0,0,0,0));
+    /* GANTI: HAPUS Border Top & Shadow Garis */
+    border: none; /* Hapus border top */
+    box-shadow: none; /* Hapus shadow yang terlihat seperti garis */
     
     display: flex; 
     justify-content: space-around;
@@ -88,7 +88,7 @@ nav {
     
     padding-bottom: env(safe-area-inset-bottom);
     height: calc(55px + env(safe-area-inset-bottom));
-    transition: border-color 1s ease, box-shadow 1s ease;
+    transition: background 1s ease;
 }
 
 nav button { 

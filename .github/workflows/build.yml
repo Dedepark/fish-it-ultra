@@ -89,7 +89,7 @@ jobs:
           body: |
             **Versi ${{ env.VERSION }} (Signed)**
             
-            ⚠️ **PENTING:** Jika sebelumnya install versi Debug atau versi lama, WAJIB UNINSTALL dulu.
+            ✅ **RELEASE:** VERSI TERBARU TELAH TERSEDIA!!.
           files: android/app/build/outputs/apk/release/FishIt-Ultra-v${{ env.VERSION }}.apk
           prerelease: false
         env:

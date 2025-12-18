@@ -79,8 +79,10 @@ body {
 header, nav {
     background: rgba(10, 10, 10, 0.85) !important;
     backdrop-filter: blur(10px); 
-    /* GANTI: Border Navbar/Header Dinamis */
-    border: 1px solid var(--accent-glow, rgba(255,255,255,0.1));
+    
+    /* GANTI: Hapus border sepenuhnya agar tidak ada garis di tepi layar */
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* Area Tengah BENING */

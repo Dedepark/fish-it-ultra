@@ -230,7 +230,7 @@ function showUpdateNotification(msg, url) {
             </div>
             <div class="update-msg">${msg}</div>
             <button onclick="window.open('${downloadUrl}', '_system')" class="btn-update-comic">
-                DOWNLOAD APK
+                UPDATE SEKARANG
             </button>
         </div>
     `;
