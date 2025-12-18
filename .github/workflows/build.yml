@@ -1,4 +1,4 @@
-name: Bikin APK & Release (Signed)
+name: Bikin APK & Release Sultan (Signed)
 
 on:
   push:
@@ -28,6 +28,14 @@ jobs:
           npm install
           npm install @capacitor/assets --save-dev
 
+      # --- FITUR BARU: BACA VERSI DARI PACKAGE.JSON ---
+      - name: Get Version from package.json
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "✅ Versi terdeteksi: $VERSION"
+
       - name: Generate Icons & Splash
         run: |
           ICON_PATH=$(find . -type f -iname "icon.png" -not -path "*/node_modules/*" | head -n 1)
@@ -52,12 +60,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # --- BAGIAN PENTING: MENGAMBIL KUNCI DARI SECRET ---
       - name: Decode Keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/release.jks
 
-      # --- BUILD RELEASE SIGNED ---
       - name: Build Release APK
         run: |
           cd android
@@ -69,20 +75,22 @@ jobs:
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
 
-          # Rename hasil build release
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/FishIt-Ultra-Signed.apk
+      # --- RENAME FILE SESUAI VERSI ---
+      - name: Rename APK with Version
+        run: |
+          mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/FishIt-Ultra-v${{ env.VERSION }}.apk
 
       # --- UPLOAD KE GITHUB RELEASES ---
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v${{ github.run_number }}"
-          name: "Fish It Ultra v2.1.7 (Official Signed)"
+          tag_name: "v${{ env.VERSION }}"  # Tag otomatis jadi v2.1.7
+          name: "Fish It Ultra v${{ env.VERSION }}"
           body: |
-            **PENTING:** Karena ini update sistem keamanan (Signed APK), kamu **HARUS UNINSTALL** versi lama sebelum install yang ini.
+            **Versi ${{ env.VERSION }} (Signed)**
             
-            Untuk update berikutnya (v2.1.8 dst), tidak perlu uninstall lagi.
-          files: android/app/build/outputs/apk/release/FishIt-Ultra-Signed.apk
+            ⚠️ **PENTING:** Jika sebelumnya install versi Debug atau versi lama, WAJIB UNINSTALL dulu.
+          files: android/app/build/outputs/apk/release/FishIt-Ultra-v${{ env.VERSION }}.apk
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

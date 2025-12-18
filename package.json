@@ -1,6 +1,6 @@
 {
-  "name": "fish-it-ultra-2.1.7-try-to-apk",
-  "version": "2.1.7",
+  "name": "fish-it-ultra-2.1.8-try-to-apk",
+  "version": "2.1.8",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
