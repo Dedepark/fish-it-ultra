@@ -12,6 +12,7 @@ import { ChatManager } from './modules/ChatManager.js';
 import { CURRENT_APP_VERSION } from './config.js';
 import ThemeManager from './modules/ThemeManager.js'; 
 import LeaderboardManager from './modules/LeaderboardManager.js';
+import WeeklyEventManager from './modules/WeeklyEventManager.js';
 
 // --- 🔥 KODE PEMBUNUH CACHE (UPDATE INI) ---
 if ('serviceWorker' in navigator) {
@@ -51,6 +52,7 @@ window.app = {
     chat: ChatManager,
     ui: UIManager,
     leaderboard: LeaderboardManager,
+    weeklyEvent: WeeklyEventManager,
 
     login: () => AuthenticationManager.login(),
     register: () => AuthenticationManager.register(),

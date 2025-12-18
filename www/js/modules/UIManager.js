@@ -164,12 +164,26 @@ export const UIManager = {
         document.getElementById('display-money').textContent = formatMoney(GameStateManager.state.gameData.money);
         document.getElementById('display-diamonds').textContent = GameStateManager.state.gameData.diamonds;
         
-        // Rod Info
-        const rod = RODS_DB[GameStateManager.state.gameData.current_rod] || RODS_DB[0];
+        // --- FIX: AMBIL DATA JORAN BY ID UNTUK TAMPILAN HEADER ---
+        const currentRodId = GameStateManager.state.gameData.current_rod;
+        const rod = RODS_DB.find(r => r.id === currentRodId) || RODS_DB[0];
+        // --------------------------------------------------------
+
         const rodLvl = GameStateManager.state.gameData.rod_levels[rod.id] || 0;
         const totalPower = rod.power + (rodLvl * 0.5);
         
-        document.getElementById('rod-name').textContent = rod.name;
+        const rodNameEl = document.getElementById('rod-name');
+        rodNameEl.textContent = rod.name;
+        
+        // Efek Visual untuk Joran Event
+        if (rod.id >= 100) {
+            rodNameEl.style.color = rod.color || '#00ff88';
+            rodNameEl.style.textShadow = `0 0 5px ${rod.color}`;
+        } else {
+            rodNameEl.style.color = '#fff';
+            rodNameEl.style.textShadow = 'none';
+        }
+
         document.getElementById('rod-power-display').textContent = `Power: ${totalPower.toFixed(1)}x`;
     },
     
@@ -327,7 +341,11 @@ export const UIManager = {
             money.textContent = formatMoney(GameStateManager.state.gameData.money);
             diamonds.textContent = `💎 ${GameStateManager.state.gameData.diamonds}`;
             
-            const currentRod = RODS_DB[GameStateManager.state.gameData.current_rod] || RODS_DB[0];
+            // --- FIX: AMBIL JORAN BY ID ---
+            const currentRodId = GameStateManager.state.gameData.current_rod;
+            const currentRod = RODS_DB.find(r => r.id === currentRodId) || RODS_DB[0];
+            // -----------------------------
+
             const rodLvl = GameStateManager.state.gameData.rod_levels[currentRod.id] || 0;
             rod.textContent = `${currentRod.name} (Lv.${rodLvl})`;
             

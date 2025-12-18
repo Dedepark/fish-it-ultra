@@ -35,27 +35,29 @@ export const MissionManager = {
     },
     
     checkDailyMissionsReset() {
-        // Pengaman: User harus ada
-        if (!GameStateManager.state.user) return;
+    if (!GameStateManager.state.user) return;
 
-        const today = new Date().toDateString();
-        
-        if (!GameStateManager.state.gameData.mission_data) {
-            GameStateManager.state.gameData.mission_data = { date: null, progress: {}, claimed: [] };
-        }
+    const now = new Date();
+    // Mendapatkan string tanggal unik (contoh: "2023-12-25")
+    const todayStr = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    
+    if (!GameStateManager.state.gameData.mission_data) {
+        GameStateManager.state.gameData.mission_data = { date: null, progress: {}, claimed: [] };
+    }
 
-        if (GameStateManager.state.gameData.mission_data.date !== today) {
-            console.log("Resetting Daily Missions...");
-            GameStateManager.state.gameData.mission_data = {
-                date: today,
-                progress: {
-                    common: 0, rare: 0, epic: 0, legendary: 0, mistis: 0, astral: 0 
-                },
-                claimed: []
-            };
-            GameStateManager.saveState();
-        }
-    },
+    // Jika tanggal di data berbeda dengan tanggal hari ini, reset total
+    if (GameStateManager.state.gameData.mission_data.date !== todayStr) {
+        console.log("🌙 Jam 00:00 Terlewati: Resetting Daily Missions...");
+        GameStateManager.state.gameData.mission_data = {
+            date: todayStr,
+            progress: {
+                common: 0, rare: 0, epic: 0, legendary: 0, mistis: 0, astral: 0 
+            },
+            claimed: [] // Mengosongkan daftar hadiah yang sudah diklaim agar bisa diklaim lagi
+        };
+        GameStateManager.saveState();
+    }
+},
     
     updateMissionProgress(fish) {
         if (!GameStateManager.state.gameData.mission_data.progress) {

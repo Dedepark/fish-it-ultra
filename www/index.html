@@ -26,6 +26,11 @@
     </div>
 
     <div id="floating-buttons" class="hidden">
+        <button onclick="app.weeklyEvent.openEvent()" class="float-btn" style="background:#005f73; margin-bottom:10px;">
+           <i class="fa-solid fa-star" style="color:gold"></i>
+           <span class="float-label">EVENT</span>
+        </button>
+
         <button onclick="app.mission.openDailyMissions()" class="float-btn mission-btn">
             <i class="fa-solid fa-list-check" style="color:#00e5ff"></i>
             <span class="float-label">Misi</span>
@@ -180,17 +185,6 @@
             <div class="modal-actions" style="padding:15px; margin:0; background:#111; border-top:1px solid #333; flex-shrink:0; box-sizing:border-box;">
                 <button id="btn-give-fish-submit" onclick="app.processGiveFish()" class="btn-confirm">KIRIM</button>
                 <button onclick="app.closeModal('modal-give-fish')" class="btn-cancel">BATAL</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-custom-alert" class="modal hidden">
-        <div class="modal-content custom-alert-content">
-            <div class="custom-alert-header"><i class="fa-solid fa-circle-exclamation"></i><h3 id="custom-alert-title">INFO</h3></div>
-            <p id="custom-alert-message">Pesan.</p>
-            <div class="custom-alert-actions">
-                <button id="custom-alert-cancel" class="btn-cancel hidden">Batal</button>
-                <button id="custom-alert-confirm" class="btn-confirm">OK</button>
             </div>
         </div>
     </div>
@@ -384,6 +378,26 @@
             <button onclick="app.nav('shop')"><i class="fa-solid fa-cart-shopping"></i> Toko</button>
             <button onclick="app.nav('chat')"><i class="fa-solid fa-comments"></i> Chat <span id="chat-badge" class="nav-badge hidden">0</span></button>
         </nav>
+    </div>
+
+    <div id="modal-custom-alert" class="modal hidden" style="position:fixed !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; transform:none !important; background-color:rgba(0,0,0,0.6) !important; z-index:2147483647 !important; display:flex; align-items:center; justify-content:center;">
+        
+        <div class="modal-content custom-alert-content" style="background:#1a1a1a; width:90%; max-width:400px; border: 3px solid #e74c3c; padding:0; overflow:hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8); border-radius:12px; position:relative;">
+            
+            <div class="custom-alert-header" style="background:#e74c3c; padding:15px; color:white; font-weight:900; display:flex; align-items:center; gap:10px;">
+                <i class="fa-solid fa-circle-exclamation"></i> 
+                <span id="custom-alert-title">INFO</span>
+            </div>
+            
+            <div style="padding:25px 20px;">
+                <p id="custom-alert-message" style="color:#eee; margin:0; text-align:center; font-size:1rem; line-height:1.5;">Pesan</p>
+            </div>
+            
+            <div class="custom-alert-actions" style="padding:0 20px 20px 20px; display:flex; gap:10px;">
+                <button id="custom-alert-cancel" class="btn-cancel hidden" style="flex:1; padding:12px; border-radius:8px; border:1px solid #555; background:transparent; color:#ccc; font-weight:bold; cursor:pointer;">BATAL</button>
+                <button id="custom-alert-confirm" class="btn-confirm" style="flex:1; padding:12px; border-radius:8px; border:none; background:linear-gradient(to right, #e74c3c, #c0392b); color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(231, 76, 60, 0.4);">OK</button>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="js/main.js"></script>

@@ -1,11 +1,18 @@
 // ==========================================================================
 // #CONFIG & DATABASE
 // ==========================================================================
-export const CURRENT_APP_VERSION = '2.1.4';
+export const CURRENT_APP_VERSION = '2.1.5';
 export const SUPABASE_URL = 'https://neoknskpfhitqkoobxhu.supabase.co';
 export const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2tuc2twZmhpdHFrb29ieGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMDg1OTUsImV4cCI6MjA4MDY4NDU5NX0.9UQJcKAYDVUyQ4RgGRVogHRUSZ1V6DvHSSAIUjPJ62Q';
 
-export const formatMoney = (n) => new Intl.NumberFormat('id-ID').format(n);
+export const formatMoney = (n) => {
+    if (n < 1e3) return n.toString(); // Di bawah 1.000 tampilkan angka asli
+    if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K"; // Ribuan
+    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M"; // Jutaan
+    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B"; // Miliaran (Billion)
+    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T"; // Triliunan
+};
+export const formatDiamond = (n) => formatMoney(n);
 export const getRank = (rarity) => { 
     const ranks = { 'ASTRAL': 6, 'MISTIS': 5, 'LEGENDARY': 4, 'EPIC': 3, 'RARE': 2, 'COMMON': 1 }; 
     return ranks[rarity] || 0; 
@@ -49,7 +56,49 @@ export const RODS_DB = [
     { id: 31, name: "Omega Protocol", price: 500000000000000, power: 2200 },
     { id: 32, name: "Genesis Reel", price: 1500000000000000, power: 2600 },
     { id: 33, name: "Excalibur Cast", price: 5000000000000000, power: 3000 },
-    { id: 34, name: "The Final Angler", price: 9999999999999999, power: 3500 }
+    { id: 34, name: "The Final Angler", price: 9999999999999999, power: 3500 },
+
+// --- EVENT EXCLUSIVE RODS (Power 1000, Speed 2x Final Angler) ---
+{ 
+    id: 101, 
+    name: "Zephyr Strike", 
+    price: -1, 
+    power: 7000, 
+    cooldown: 1000, // Sangat Cepat
+    icon: "fa-wind", 
+    color: "#aaffff", 
+    desc: "Event Exclusive: Ringan seperti angin!" 
+},
+{ 
+    id: 102, 
+    name: "Crimson Blitz", 
+    price: -1, 
+    power: 7000, 
+    cooldown: 1000, 
+    icon: "fa-bolt", 
+    color: "#ff0044", 
+    desc: "Event Exclusive: Secepat kilat merah!" 
+},
+{ 
+    id: 103, 
+    name: "Azure Flow", 
+    price: -1, 
+    power: 7000, 
+    cooldown: 1000, 
+    icon: "fa-water", 
+    color: "#00d2ff", 
+    desc: "Event Exclusive: Mengalir deras!" 
+},
+{ 
+    id: 104, 
+    name: "Golden Flash", 
+    price: -1, 
+    power: 7000, 
+    cooldown: 1000, 
+    icon: "fa-star", 
+    color: "#ffd700", 
+    desc: "Event Exclusive: Kilauan emas tercepat!" 
+}
 ];
 
 export const FISH_MASTER = {

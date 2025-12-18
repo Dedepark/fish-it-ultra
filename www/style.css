@@ -12,6 +12,7 @@
 @import url('_missions.css');
 @import url('_chat.css');
 @import url('_leaderboard.css');
+@import url('_weekly_event.css');
 
 /* --- UPDATE NOTIFICATION (Harus tetap di sini agar tidak diimpor ganda) --- */
 
@@ -66,4 +67,21 @@
     50% { opacity: 1; transform: scale(1.05) translateY(10px); }
     70% { transform: scale(0.9) translateY(-5px); }
     100% { transform: scale(1) translateY(0); }
+}
+
+/* FORCE ALERT DI ATAS SEGALANYA */
+#modal-custom-alert {
+    z-index: 2147483647 !important; /* Nilai maksimal z-index 32-bit */
+    position: fixed !important;
+}
+
+#modal-custom-alert .custom-alert-content {
+    z-index: 2147483647 !important;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(231, 76, 60, 0.5) !important;
+}
+
+/* Pastikan latar belakang gelapnya juga ikut naik */
+#modal-custom-alert.modal {
+    background: rgba(0, 0, 0, 0.9) !important;
 }

@@ -70,8 +70,10 @@ const LeaderboardManager = {
         } else if (this.currentTab === 'level') {
             query = query.order('level', { ascending: false }).order('money', { ascending: false });
         } else if (this.currentTab === 'fish') {
-            query = query.order('best_fish_price', { ascending: false });
-        }
+    query = query
+        .order('best_fish_price', { ascending: false })
+        .order('updated_at', { ascending: false }); // Yang terbaru dapat harga tinggi akan di atas
+}
 
         // Ambil Top 50 biar seru, tapi nanti kita potong di render
         const { data, error } = await query.limit(50); 
