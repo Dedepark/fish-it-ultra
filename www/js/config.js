@@ -1,7 +1,7 @@
 // ==========================================================================
 // #CONFIG & DATABASE
 // ==========================================================================
-export const CURRENT_APP_VERSION = '2.1.6';
+export const CURRENT_APP_VERSION = '2.1.7';
 export const SUPABASE_URL = 'https://neoknskpfhitqkoobxhu.supabase.co';
 export const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2tuc2twZmhpdHFrb29ieGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMDg1OTUsImV4cCI6MjA4MDY4NDU5NX0.9UQJcKAYDVUyQ4RgGRVogHRUSZ1V6DvHSSAIUjPJ62Q';
 
@@ -106,7 +106,7 @@ export const FISH_MASTER = {
         { name: "Frozen Phoenix", price: 450000000, class: "fish-astral" }, 
         { name: "Naga Kosmik", price: 315000000, class: "fish-astral" }, 
         { name: "Leviathan Void", price: 180000000, class: "fish-astral" }, 
-        { name: "Frostjaw Titan", price: 250000000, class: "fish-astral" }
+        { name: "Frostjaw Titan", price: 250000000, class: "fish-astral" },
     ],
     
     MISTIS: [
@@ -430,7 +430,8 @@ export const FISH_MASTER = {
         { name: "Moluska Putih", price: 80, class: "fish-common" },
         { name: "Kodok Putih", price: 250, class: "fish-common" },
         { name: "Jangkrik Putih", price: 40, class: "fish-common" },
-        { name: "Lumba-lumba Putih", price: 6000, class: "fish-common" }
+        { name: "Lumba-lumba Putih", price: 6000, class: "fish-common" },
+        { name: "Lumba-lumba Biru", price: 6000, class: "fish-common" }
     ]
 };
 

@@ -6,32 +6,51 @@
     padding: 15px; background: transparent; align-items: stretch; 
 }
 #game-visuals { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
 #bobber { 
     font-size: 5rem; color: #ff3d00; 
     filter: drop-shadow(0 4px 0 #b32a00); 
     animation: float 2s infinite ease-in-out; 
 }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
 #status-text { 
     margin-top: 20px; 
     font-size: 1.2rem; 
     font-weight: 900; 
-    text-shadow: 2px 2px 0 #000; 
-    background: #111; 
-    color: #00d2ff; 
+    
+    /* GANTI: Status Text Dinamis */
+    background: rgba(0, 0, 0, 0.8); 
+    color: var(--accent-color, #00d2ff); 
+    border: 3px solid var(--accent-color, #00d2ff); 
+    box-shadow: 0 0 15px var(--accent-glow, rgba(0,210,255,0.4)); 
+    text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
+    
     padding: 8px 25px; 
     border-radius: 30px; 
-    border: 3px solid #00d2ff; 
     text-transform: uppercase; 
     letter-spacing: 1px;
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    
+    /* Transisi Halus */
+    transition: all 1s ease;
 }
+
 #rod-info { 
     text-align: center; font-size: 1rem; margin-bottom: 10px; 
-    background: #0b1026; 
-    color: #fff; border: 2px solid #00d2ff; 
+    background: rgba(11, 16, 38, 0.9); 
+    
+    /* GANTI: Rod Info Dinamis */
+    color: #fff; 
+    border: 2px solid var(--accent-color, #00d2ff); 
+    box-shadow: 0 4px 10px var(--accent-glow, rgba(0,0,0,0.5));
+    
     display: inline-block; padding: 10px 25px; border-radius: 30px; align-self: center; 
-    font-weight: bold; box-shadow: 0 4px 0 #008cb3;
+    font-weight: bold; 
+    transition: border-color 1s ease, box-shadow 1s ease;
+}
+#rod-info span#rod-name {
+    color: var(--accent-color, #00d2ff);
+    transition: color 1s ease;
 }
 
 /* Controls */

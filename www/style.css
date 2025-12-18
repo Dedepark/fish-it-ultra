@@ -78,8 +78,9 @@ body {
 /* Header & Navigasi tetap estetik */
 header, nav {
     background: rgba(10, 10, 10, 0.85) !important;
-    backdrop-filter: blur(10px); /* UI boleh blur biar teks jelas */
-    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px); 
+    /* GANTI: Border Navbar/Header Dinamis */
+    border: 1px solid var(--accent-glow, rgba(255,255,255,0.1));
 }
 
 /* Area Tengah BENING */
@@ -89,6 +90,51 @@ header, nav {
     border: none !important;
 }
 
-/* Panel & Modal */
-.panel { background: rgba(15, 15, 20, 0.95) !important; border: 1px solid rgba(255,255,255,0.05); }
-.modal-content { background: #111 !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+/* Panel */
+.panel { 
+    background: rgba(15, 15, 20, 0.95) !important; 
+    border: 1px solid rgba(255,255,255,0.05); 
+}
+
+/* GANTI: Semua Modal Content jadi Dinamis */
+.modal-content {
+    background: #111 !important;
+    border-radius: 20px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    
+    /* BORDER DINAMIS SESUAI JAM */
+    border: 2px solid var(--accent-color, #333);
+    box-shadow: 0 0 30px var(--accent-glow, rgba(0,0,0,0.5));
+    
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: border-color 1s ease, box-shadow 1s ease;
+}
+
+/* Tombol Tutup Modal Dinamis */
+.btn-close-modal {
+    margin-top: 15px;
+    background: transparent;
+    border: 2px solid #333;
+    color: #888;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-close-modal:hover {
+    border-color: var(--accent-color, #00d2ff);
+    color: var(--accent-color, #00d2ff);
+    box-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}

@@ -1,4 +1,4 @@
-name: Bikin APK & Release Sultan
+name: Bikin APK & Release (Signed)
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
       - main
       - master
 
-# Izin wajib buat upload Release
 permissions:
   contents: write
 
@@ -22,7 +21,6 @@ jobs:
         with:
           node-version: '22'
 
-      # Install dependencies & Tool Icon
       - name: Clean & Install Dependencies
         run: |
           rm -rf node_modules
@@ -30,14 +28,12 @@ jobs:
           npm install
           npm install @capacitor/assets --save-dev
 
-      # --- FITUR DETEKTIF ICON (AUTO SEARCH) ---
       - name: Generate Icons & Splash
         run: |
           ICON_PATH=$(find . -type f -iname "icon.png" -not -path "*/node_modules/*" | head -n 1)
           if [ -z "$ICON_PATH" ]; then
             echo "⚠️ WARNING: Icon gak ketemu. Pake default."
           else
-            echo "✅ Icon ketemu di: $ICON_PATH"
             mkdir -p resources
             cp "$ICON_PATH" resources/icon.png
             cp "$ICON_PATH" resources/splash.png
@@ -47,33 +43,46 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Setup Java (v21)
+      - name: Setup Java (v17)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # --- BUILD APK ---
-      - name: Fix Permissions, Build, & Rename
+      # --- BAGIAN PENTING: MENGAMBIL KUNCI DARI SECRET ---
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/release.jks
+
+      # --- BUILD RELEASE SIGNED ---
+      - name: Build Release APK
         run: |
           cd android
           sed -i 's/\r$//' gradlew
           chmod +x gradlew
-          bash ./gradlew assembleDebug
-          
-          # Rename jadi FishIt-Ultra.apk
-          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/FishIt-Ultra.apk
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/release.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
 
-      # --- BAGIAN SULTAN: UPLOAD KE RELEASES ---
+          # Rename hasil build release
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/FishIt-Ultra-Signed.apk
+
+      # --- UPLOAD KE GITHUB RELEASES ---
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: latest
-          name: "Versi Terbaru (Live Update)"
-          body: "Ini adalah versi terbaru yang di-build otomatis dari GitHub. Download file .apk di bawah ini."
-          files: android/app/build/outputs/apk/debug/FishIt-Ultra.apk
+          tag_name: "v${{ github.run_number }}"
+          name: "Fish It Ultra v2.1.7 (Official Signed)"
+          body: |
+            **PENTING:** Karena ini update sistem keamanan (Signed APK), kamu **HARUS UNINSTALL** versi lama sebelum install yang ini.
+            
+            Untuk update berikutnya (v2.1.8 dst), tidak perlu uninstall lagi.
+          files: android/app/build/outputs/apk/release/FishIt-Ultra-Signed.apk
           prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

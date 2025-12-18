@@ -158,7 +158,7 @@ export const FishingGameLogic = {
         let roll = Math.random() * 100;
         
         // --- PERBAIKAN 2: LUCK ---
-        let luckBonus = totalPower * 0.002; 
+        let luckBonus = totalPower * 0.003; 
         
         const now = Date.now();
         GameStateManager.state.activeBuffs = GameStateManager.state.activeBuffs.filter(b => b.endTime > now);
