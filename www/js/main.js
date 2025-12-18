@@ -13,6 +13,7 @@ import { CURRENT_APP_VERSION } from './config.js';
 import ThemeManager from './modules/ThemeManager.js'; 
 import LeaderboardManager from './modules/LeaderboardManager.js';
 import WeeklyEventManager from './modules/WeeklyEventManager.js';
+import { Fish3DManager } from './modules/Fish3DManager.js'; // IMPORT BARU
 
 // --- 🔥 KODE PEMBUNUH CACHE (UPDATE INI) ---
 if ('serviceWorker' in navigator) {
@@ -53,6 +54,7 @@ window.app = {
     ui: UIManager,
     leaderboard: LeaderboardManager,
     weeklyEvent: WeeklyEventManager,
+    fish3d: Fish3DManager, // EXPOSE KE CONSOLE
 
     login: () => AuthenticationManager.login(),
     register: () => AuthenticationManager.register(),
@@ -119,20 +121,13 @@ window.app = {
         }
     },
     
-    // --- PERBAIKAN: FUNGSI CEK UPDATE ---
     manualCheckUpdate: async () => {
-        // Tampilkan loading agar user tahu sedang memproses
         UIManager.showCustomAlert("CEK UPDATE", "Menghubungi server...", [], 'info');
-        
         try {
-            // Coba ambil data dari tabel 'app_config'
             const { data, error } = await DatabaseManager.client.from('app_config').select('*').eq('id', 1).single();
-            
-            // Tutup loading dulu
             UIManager.closeModal('modal-custom-alert');
 
             if (error) {
-                // Jika tabel tidak ada atau error koneksi, beri info fallback
                 console.warn("Update check warning:", error.message);
                 UIManager.showCustomAlert("INFO", "Gagal cek server (Offline/Config Missing).\nVersi lokal: " + CURRENT_APP_VERSION, [{text:"OK"}]);
                 return;
@@ -143,43 +138,29 @@ window.app = {
                 return;
             }
 
-            // Logika cek versi
             if (data.latest_version === CURRENT_APP_VERSION) {
                 UIManager.showCustomAlert("AMAN", "Versi Anda sudah paling baru!", [{text:"MANTAP"}], 'success');
             } else {
-                app.clearAllCaches(); // Tawarkan update
+                app.clearAllCaches();
             }
         } catch (e) {
-            // Jika crash total (misal DatabaseManager null)
             console.error(e);
             UIManager.closeModal('modal-custom-alert');
             UIManager.showCustomAlert("ERROR", "Terjadi kesalahan sistem: " + e.message, [{text:"Tutup"}]);
         }
     },
 
-    // --- PERBAIKAN: FUNGSI INFO UPDATE ---
     showLatestNews: async () => {
-        // Beri feedback visual sedikit (opsional, tapi bagus untuk UX)
-        // UIManager.showCustomAlert("MEMUAT", "Mengambil berita...", [], 'info');
-
         try {
             const { data, error } = await DatabaseManager.client.from('app_config').select('news_content, update_message').eq('id', 1).single();
-            
-            // Jika error, tampilkan pesan default (jangan diam saja)
             if (error || !data) {
-                // UIManager.closeModal('modal-custom-alert'); // Jika tadi pakai loading
                 UIManager.showCustomAlert("INFO UPDATE", "Selamat datang di Fish It Ultra!\n(Belum ada berita server)", [{text:"SIAP!"}], 'success');
                 return;
             }
-
-            // UIManager.closeModal('modal-custom-alert'); // Tutup loading
             const msg = (data && data.news_content) ? data.news_content : (data ? data.update_message : "Tidak ada berita.");
             UIManager.showCustomAlert("INFO UPDATE", msg, [{text:"SIAP!"}], 'success');
-            
         } catch(e) {
             console.log(e);
-            // UIManager.closeModal('modal-custom-alert');
-            // Fallback terakhir jika crash
             UIManager.showCustomAlert("INFO", "Gagal memuat berita dari server.", [{text:"OK"}]);
         }
     },
@@ -300,6 +281,9 @@ const initializeApp = async () => {
 
     ThemeManager.init();
     
+    // Init 3D Fish (Load di background)
+    Fish3DManager.init();
+
     // Resume Listener
     document.addEventListener('resume', () => {
         ThemeManager.updateTheme();

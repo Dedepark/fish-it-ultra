@@ -2,8 +2,6 @@
    #STYLE.CSS: MAIN IMPORT (Modular Version)
    ========================================================================== */
 
-/* Pastikan semua file CSS modular di atas disimpan di folder yang sama (atau sesuaikan path-nya) */
-
 @import url('_base.css');
 @import url('_utility.css');
 @import url('_layout.css');
@@ -14,41 +12,24 @@
 @import url('_leaderboard.css');
 @import url('_weekly_event.css');
 
-/* --- UPDATE NOTIFICATION (Harus tetap di sini agar tidak diimpor ganda) --- */
-
+/* --- UPDATE NOTIFICATION --- */
 #update-bubble {
-    position: fixed;
-    top: 75px; 
-    right: 15px; 
-    width: 260px;
-    background: #fff;
-    color: #000;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    z-index: 9999;
-    border: 4px solid #00d2ff; 
+    position: fixed; top: 75px; right: 15px; width: 260px;
+    background: #fff; color: #000; padding: 20px;
+    border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 9999; border: 4px solid #00d2ff; 
     animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     font-family: 'Poppins', sans-serif;
 }
 #update-bubble::after {
-    content: '';
-    position: absolute;
-    top: -16px; 
-    right: 18px; 
-    border-width: 0 12px 16px 12px;
-    border-style: solid;
+    content: ''; position: absolute; top: -16px; right: 18px; 
+    border-width: 0 12px 16px 12px; border-style: solid;
     border-color: transparent transparent #00d2ff transparent; 
 }
 #update-bubble::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    right: 21px;
-    border-width: 0 9px 12px 9px;
-    border-style: solid;
-    border-color: transparent transparent #fff transparent;
-    z-index: 1;
+    content: ''; position: absolute; top: -10px; right: 21px;
+    border-width: 0 9px 12px 9px; border-style: solid;
+    border-color: transparent transparent #fff transparent; z-index: 1;
 }
 .update-content { display: flex; flex-direction: column; gap: 12px; text-align: left; }
 .update-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 5px; }
@@ -70,18 +51,44 @@
 }
 
 /* FORCE ALERT DI ATAS SEGALANYA */
-#modal-custom-alert {
-    z-index: 2147483647 !important; /* Nilai maksimal z-index 32-bit */
-    position: fixed !important;
-}
-
+#modal-custom-alert { z-index: 2147483647 !important; position: fixed !important; }
 #modal-custom-alert .custom-alert-content {
-    z-index: 2147483647 !important;
-    position: relative;
+    z-index: 2147483647 !important; position: relative;
     box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(231, 76, 60, 0.5) !important;
 }
+#modal-custom-alert.modal { background: rgba(0, 0, 0, 0.9) !important; }
 
-/* Pastikan latar belakang gelapnya juga ikut naik */
-#modal-custom-alert.modal {
-    background: rgba(0, 0, 0, 0.9) !important;
+/* ================================================================= */
+/* 🔥 LIVE WALLPAPER 3D (VERSI FINAL - SUPER BENING) 🔥 */
+/* ================================================================= */
+
+/* Body Transparan */
+body {
+    background-color: transparent !important;
+    background-image: none !important; 
 }
+
+/* Container Game: HILANGKAN BLUR DISINI */
+#game-container {
+    background: rgba(0, 0, 0, 0.15) !important; /* Cuma gelap dikit */
+    backdrop-filter: none !important; /* 🚫 MATIKAN BLUR 🚫 */
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Header & Navigasi tetap estetik */
+header, nav {
+    background: rgba(10, 10, 10, 0.85) !important;
+    backdrop-filter: blur(10px); /* UI boleh blur biar teks jelas */
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Area Tengah BENING */
+#game-visuals {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Panel & Modal */
+.panel { background: rgba(15, 15, 20, 0.95) !important; border: 1px solid rgba(255,255,255,0.05); }
+.modal-content { background: #111 !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
