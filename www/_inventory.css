@@ -1,14 +1,12 @@
 /* ==========================================================================
-   #_INVENTORY.CSS: INVENTORY, SHOP, FISH CARDS & ITEM CARDS (POLISHED)
+   #_INVENTORY.CSS: INVENTORY, SHOP, FISH CARDS & ITEM CARDS (FIXED TAB THEME)
    ========================================================================== */
 
-/* --- GENERAL LAYOUT & TABS (REFINED) --- */
-
-/* Tab Container */
+/* --- GENERAL LAYOUT & TABS --- */
 .tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-shrink: 0; }
+
 .tab-btn { 
-    flex: 1; 
-    padding: 12px 0; 
+    flex: 1; padding: 12px 0; 
     background: #222; 
     border: 2px solid #444; 
     color: #888; 
@@ -17,40 +15,44 @@
     font-weight: 800; 
     box-shadow: 0 4px 0 #000; 
     text-transform: uppercase;
+    transition: all 0.3s ease;
 }
+
 .tab-btn.active { 
-    background: #00d2ff; 
+    background: var(--accent-color, #00d2ff); 
     color: #000; 
-    box-shadow: 0 4px 0 #008cb3; 
-    border-color: #00d2ff;
+    box-shadow: 0 4px 10px var(--accent-glow, rgba(0,210,255,0.5)); 
+    border-color: var(--accent-color, #00d2ff);
 }
+
 .tab-content, .shop-content { 
-    flex: 1; 
-    overflow-y: auto; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 10px; 
-    padding-bottom: 100px; 
-    padding: 0 5px;
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; 
+    gap: 10px; padding-bottom: 100px; padding: 0 5px;
 }
+#panel-inventory { padding: 15px 10px 0 10px; }
 
-/* Panel Inventory Padding */
-#panel-inventory { 
-    padding: 15px 10px 0 10px;
+/* --- WARNING BANNER (NEW) --- */
+.inventory-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px dashed #ffc107; /* Border Mencolok */
+    color: #ffc107;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.65rem; /* Tulisan Kecil */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
-
-
-/* --- FISH TAB CONTENT (INVENTORY IKAN) --- */
+.inventory-warning i { font-size: 1rem; margin-bottom: 2px; }
 
 .btn-sell { 
-    width: 100%; 
-    background: #ff0055; 
-    color: white; 
-    margin-bottom: 15px; 
-    box-shadow: 0 6px 0 #a30036; 
-    padding: 14px;
-    font-size: 1rem;
-    font-weight: 900;
+    width: 100%; background: #ff0055; color: white; margin-bottom: 15px; 
+    box-shadow: 0 6px 0 #a30036; padding: 14px; font-size: 1rem; font-weight: 900;
 }
 .btn-sell:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #a30036; }
 
@@ -58,163 +60,82 @@
 .grid-list { 
     display: grid; 
     grid-template-columns: repeat(2, 1fr); 
-    gap: 10px; 
-    grid-auto-rows: 1fr; 
+    gap: 10px; grid-auto-rows: 1fr; 
 }
 
-
-/* --- ITEM TAB, SHOP, & INDEX HEADERS --- */
-
+/* Headers */
 .rarity-header { 
-    grid-column: span 2; 
-    background: #111; 
-    color: #00d2ff; 
-    padding: 6px 15px; /* FIXED: Padding vertikal diperkecil */
-    font-size: 0.8rem; /* FIXED: Font size diperkecil */
-    font-weight: 900; 
-    border-radius: 8px; 
-    margin: 10px 0 8px 0; /* FIXED: Margin diperkecil */
-    text-align: center; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-    border: 1px solid #00d2ff;
+    grid-column: span 2; background: #111; 
+    color: var(--accent-color, #00d2ff); 
+    border: 1px solid var(--accent-color, #00d2ff);
+    padding: 6px 15px; 
+    font-size: 0.8rem; font-weight: 900; border-radius: 8px; margin: 10px 0 8px 0; 
+    text-align: center; text-transform: uppercase; letter-spacing: 1px; 
 }
 
-/* --- KARTU ITEM (IKAN, JORAN, BATU) - GLOBAL GRID FIX --- */
-
-/* Kunci konsistensi ukuran untuk SEMUA item card */
-.shop-item-card, 
-.fish-item {
-    height: 175px !important;      
-    min-height: 175px !important;  
-    max-height: 175px !important;  
-    width: 100% !important;
-    
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important; 
-    align-items: center !important;
-    
-    padding: 8px !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important; 
-    position: relative !important;
-    flex-shrink: 0 !important;
-    
-    background: #1a1a1a; 
-    border-radius: 12px;
-    border: 2px solid transparent; 
-    box-shadow: 0 4px 0 #111; 
-    transition: transform 0.1s ease;
+/* --- KARTU ITEM (IKAN, JORAN, BATU) --- */
+.shop-item-card, .fish-item {
+    height: 175px !important; min-height: 175px !important; max-height: 175px !important;  
+    width: 100% !important; display: flex !important; flex-direction: column !important;
+    justify-content: space-between !important; align-items: center !important;
+    padding: 8px !important; box-sizing: border-box !important; overflow: hidden !important; 
+    position: relative !important; flex-shrink: 0 !important;
+    background: #1a1a1a; border-radius: 12px; border: 2px solid transparent; 
+    box-shadow: 0 4px 0 #111; transition: transform 0.1s ease;
 }
 .fish-item:hover { transform: translateY(-2px); }
 
-/* KONTEN KARTU */
-.shop-item-card i, 
-.fish-item .fish-icon {
-    font-size: 2.2rem !important; 
-    margin: 2px 0 !important;
-    height: 50px !important; 
+.shop-item-card i, .fish-item .fish-icon {
+    font-size: 2.2rem !important; margin: 2px 0 !important; height: 50px !important; 
     filter: drop-shadow(0 4px 2px rgba(0,0,0,0.3));
 }
-
-.shop-item-card b, 
-.fish-item .fish-name {
-    font-size: 0.8rem !important; 
-    line-height: 1.1 !important;
-    font-weight: 800;
-    text-align: center !important;
-    /* Multiline ellipsis fix */
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2;
-    line-clamp: 2; 
-    -webkit-box-orient: vertical;
-    overflow: hidden !important;
+.shop-item-card b, .fish-item .fish-name {
+    font-size: 0.8rem !important; line-height: 1.1 !important; font-weight: 800; text-align: center !important;
+    display: -webkit-box !important; -webkit-line-clamp: 2; line-clamp: 2; 
+    -webkit-box-orient: vertical; overflow: hidden !important;
+}
+.shop-item-card small, .fish-item .fish-price, .fish-item .fish-count {
+    font-size: 0.7rem !important; line-height: 1 !important; white-space: nowrap !important; 
+    overflow: hidden !important; text-overflow: ellipsis !important;
 }
 
-.shop-item-card small,
-.fish-item .fish-price,
-.fish-item .fish-count {
-    font-size: 0.7rem !important; 
-    line-height: 1 !important;
-    white-space: nowrap !important; 
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
-/* --- AKSI ITEM (JORAN/ENCHANT/POTION) --- */
-
-.item-actions {
-    display: flex; gap: 6px; margin-top: auto !important; width: 100%;
-}
+/* Item Actions */
+.item-actions { display: flex; gap: 6px; margin-top: auto !important; width: 100%; }
 .btn-equip, .btn-enchant, .status-equipped {
-    flex: 1;
-    height: 35px !important; 
-    padding: 0 5px !important;
-    font-size: 0.75rem !important;
-    border-radius: 6px !important;
+    flex: 1; height: 35px !important; padding: 0 5px !important;
+    font-size: 0.75rem !important; border-radius: 6px !important;
 }
 .item-count { 
-    /* Badge count item konsumsi */
-    position: absolute; 
-    bottom: 40px; 
-    right: 8px; 
-    background: #000; 
-    color: white; 
-    font-size: 0.8rem; 
-    font-weight: 900; 
-    padding: 2px 6px; 
-    border-radius: 6px; 
-    border: 1px solid #555; 
-    z-index: 5;
+    position: absolute; bottom: 40px; right: 8px; background: #000; color: white; 
+    font-size: 0.8rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; 
+    border: 1px solid #555; z-index: 5;
 }
-
-/* Lock Overlay */
 .lock-overlay {
     position: absolute; top: 0; left: 0; width: 100%; padding: 6px 0;
-    background-color: #e74c3c; color: white;
-    display: flex; justify-content: center; align-items: center;
-    font-weight: 900; font-size: 0.8rem; z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    letter-spacing: 1px;
+    background-color: #e74c3c; color: white; display: flex; justify-content: center; align-items: center;
+    font-weight: 900; font-size: 0.8rem; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 .lock-overlay i { margin-right: 5px; animation: lockPulse 2s infinite; }
 @keyframes lockPulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
-
-/* --- MODAL ENCHANT ROD (NEW POLISH) --- */
+/* Modal Enchant */
 #modal-enchant-rod #enchant-rod-info {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; 
-    padding: 20px; 
-    border: 2px solid #00d2ff;
-    border-radius: 15px;
-    background: #000;
-    box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    display: flex; flex-direction: column; gap: 8px; padding: 20px; 
+    border: 2px solid var(--accent-color, #00d2ff);
+    box-shadow: 0 0 10px var(--accent-glow, rgba(0, 210, 255, 0.5));
+    border-radius: 15px; background: #000;
     margin-bottom: 25px !important;
 }
-
-#modal-enchant-rod #enchant-rod-name {
-    font-size: 1.5rem !important; 
-    font-weight: 900 !important;
-    color: #fff;
-    text-shadow: 0 0 5px #00d2ff;
+#modal-enchant-rod #enchant-rod-name { 
+    font-size: 1.5rem !important; font-weight: 900 !important; color: #fff; 
+    text-shadow: 0 0 5px var(--accent-color, #00d2ff); 
 }
-
 #modal-enchant-rod #enchant-rod-level {
-    font-size: 1rem !important;
-    font-weight: 800 !important;
-    color: gold !important;
-    background: #1a1a1a;
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: 1px solid #555;
+    font-size: 1rem !important; font-weight: 800 !important; color: gold !important;
+    background: #1a1a1a; padding: 8px 15px; border-radius: 8px; border: 1px solid #555;
 }
 
-
-/* --- RARITY COLORS & ANIMATIONS (Dipertahankan) --- */
-
+/* Rarity Colors */
 .fish-common { background: #34495e !important; border: 2px solid #7f8c8d !important; box-shadow: 0 4px 0 #2c3e50 !important; color: #ecf0f1 !important; }
 .fish-rare { background: #7209b7 !important; border: 2px solid #b5179e !important; box-shadow: 0 4px 0 #3a0ca3 !important; color: #f72585 !important; }
 .fish-epic { background: #0077b6 !important; border: 2px solid #00b4d8 !important; box-shadow: 0 4px 0 #023e8a !important; color: #caf0f8 !important; }
@@ -225,71 +146,69 @@
 @keyframes mistisPulse { 0% {box-shadow: 0 0 10px #ff0000;} 100% {box-shadow: 0 0 25px #ff0000;} } 
 @keyframes astralShine { 0% {top: -150%; left: -150%;} 100% {top: 150%; left: 150%;} }
 
-/* --- INDEX SPECIFIC (Dipertahankan) --- */
-
+/* Index & Shop Default (Mobile) */
 #panel-index:not(.hidden) { display: flex !important; flex-direction: column !important; overflow: hidden !important; padding: 0 !important; height: 100% !important; max-height: 100% !important; }
 #panel-index h3 { flex-shrink: 0; margin: 0; padding: 15px; background: #0a0a0a; border-bottom: 2px solid #333; z-index: 10; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 #fish-counter { flex-shrink: 0; text-align: center; padding: 8px; background: #111; font-size: 0.8rem; font-weight: bold; color: #888; border-bottom: 1px solid #333; z-index: 9; }
 #index-list { 
-    display: grid !important; 
-    grid-template-columns: repeat(2, 1fr) !important; 
-    gap: 10px !important; 
-    grid-auto-rows: 1fr !important;
-    
-    flex-grow: 1; 
-    overflow-y: auto !important; 
-    padding: 15px; 
-    padding-bottom: 100px; 
-    height: auto !important; 
+    display: grid !important; grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 10px !important; grid-auto-rows: 1fr !important; flex-grow: 1; 
+    overflow-y: auto !important; padding: 15px; padding-bottom: 100px; height: auto !important; 
 }
-
-/* --- SHOP SPECIFIC (Dipertahankan) --- */
 
 .shop-content.hidden { display: none !important; }
 #shop-rods:not(.hidden), #shop-stones:not(.hidden), #shop-potions:not(.hidden) {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
-    gap: 8px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 10px !important;
-    padding-bottom: 100px !important;
-    overflow-x: hidden !important; 
-    overflow-y: auto !important;
-    align-content: start !important;
+    display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
+    gap: 8px !important; width: 100% !important; box-sizing: border-box !important;
+    padding: 10px !important; padding-bottom: 100px !important; overflow-x: hidden !important; 
+    overflow-y: auto !important; align-content: start !important;
 }
 
-/* --- MODAL GIVE FISH (Dipertahankan) --- */
-
-#give-fish-list .fish-item {
-    height: 140px !important;
-    min-height: 140px !important;
-    max-height: 140px !important;
-}
-#give-fish-list .fish-item .fish-icon {
-    font-size: 1.8rem !important;
-    height: 40px !important;
-}
+/* Modal Give Fish */
+#give-fish-list .fish-item { height: 140px !important; min-height: 140px !important; max-height: 140px !important; }
+#give-fish-list .fish-item .fish-icon { font-size: 1.8rem !important; height: 40px !important; }
 #give-fish-list .fish-item.selected {
-    border: 3px solid #2ecc71 !important;
-    box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
-    transform: scale(1.05);
-    z-index: 5;
-    background: #0f2b1a !important;
+    border: 3px solid #2ecc71 !important; box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
+    transform: scale(1.05); z-index: 5; background: #0f2b1a !important;
 }
 
-/* --- FISH DETAIL MODAL (Dipertahankan) --- */
-
+/* Fish Detail */
 .fish-detail-content { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 10px 0; }
 .fish-detail-icon { font-size: 5rem; margin: 15px 0; filter: drop-shadow(0 5px 0 rgba(0,0,0,0.5)); }
 .fish-detail-info { 
-    background: #222; 
-    padding: 15px; 
-    border-radius: 12px; 
-    width: 100%; 
-    box-sizing: border-box; 
-    border: 2px solid #333; 
-    text-align: center; 
-    color: #fff; 
-    margin-bottom: 15px; 
+    background: #222; padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; 
+    border: 2px solid #333; text-align: center; color: #fff; margin-bottom: 15px; 
+}
+
+/* ==========================================================================
+   #PC / DESKTOP MODE (GRID DENSE PACKING)
+   ========================================================================== */
+@media (min-width: 768px) {
+    .grid-list, #inventory-list, #index-list, #items-list, 
+    #shop-rods:not(.hidden), 
+    #shop-stones:not(.hidden), 
+    #shop-potions:not(.hidden) {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important; 
+        gap: 15px !important;
+        padding: 20px !important;
+    }
+    
+    .rarity-header { grid-column: 1 / -1; margin: 15px 0 10px 0; }
+
+    .fish-item, .item-card, .shop-item-card { 
+        height: 200px !important; 
+        max-height: 200px !important;
+    }
+    .fish-icon, .shop-item-card i { font-size: 3rem !important; height: 60px !important; }
+
+    /* Tombol Jual & Warning di Tengah pada PC */
+    .btn-sell { width: 300px; display: block; margin: 0 auto 20px auto; }
+    
+    /* Warning Banner khusus PC agar tidak terlalu lebar */
+    .inventory-warning {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto 15px auto;
+    }
 }

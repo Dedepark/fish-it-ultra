@@ -4,117 +4,127 @@
 
 /* --- HEADER & NAVIGATION --- */
 header { 
-    /* Padding Safe Area */
     padding-top: calc(15px + env(safe-area-inset-top)); 
     padding-bottom: 15px;
     padding-left: 15px;
     padding-right: 15px;
-    
-    /* GANTI: Background Transparan & HAPUS Border */
     background: var(--panel-bg, rgba(0,0,0,0.6)); 
-    border: none; /* Hapus border bottom */
-    
+    border: none; 
     display: flex; justify-content: space-between; align-items: center; 
     flex-shrink: 0; 
     transition: background 1s ease;
+    z-index: 50; 
 }
 
+/* --- UPDATE: STRUKTUR USERNAME RUNNING TEXT --- */
+
+/* Wrapper Utama Tombol Profil */
 .user-info { 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-    font-size: 0.9rem; 
-    cursor: pointer; 
-    text-shadow: 1px 1px 0 #000;
-    max-width: 140px; 
-    overflow: hidden;
-    white-space: nowrap; 
-}
-.user-info b {
-    overflow: hidden;
-    text-overflow: ellipsis; 
-    white-space: nowrap;
+    display: flex; gap: 8px; align-items: center; font-size: 0.9rem; 
+    cursor: pointer; text-shadow: 1px 1px 0 #000;
+    overflow: visible; /* Biarkan container dalam yang mengatur overflow */
 }
 
-/* GANTI: Tombol Icon Header ikut warna tema */
+/* Container Baris Header (Membatasi Lebar & Mengatur Posisi) */
+.user-header-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 130px; /* Lebar tetap agar tidak mendorong elemen lain */
+    max-width: 130px;
+    overflow: hidden; 
+    position: relative;
+}
+
+/* Ikon User (Diam) */
+.user-icon {
+    flex-shrink: 0; /* Mencegah ikon mengecil */
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+/* Topeng Nama (Area pembatas teks berjalan) */
+.name-ticker-mask {
+    flex: 1; /* Mengisi ruang sisa antara Ikon dan Badge */
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    /* Efek Fade Out di kiri-kanan agar rapi */
+    mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* Teks Nama (Yang Bergerak) */
+.name-ticker-mask b {
+    display: inline-block;
+    white-space: nowrap;
+    color: #fff;
+    
+    /* Animasi Jalan: Durasi 4s, Bolak-Balik, Selamanya */
+    animation: textScroll 4s ease-in-out infinite alternate;
+    padding-left: 0;
+}
+
+/* Logika Animasi Gerak */
+@keyframes textScroll {
+    0%, 20% { 
+        transform: translateX(0); /* Diam sebentar di awal */
+    }
+    80%, 100% { 
+        transform: translateX(-50%); /* Geser ke kiri */
+    }
+}
+
 .btn-icon { 
-    background: transparent; 
-    color: var(--accent-color, #fff); 
-    font-size: 1.2rem; 
-    padding: 5px; 
+    background: transparent; color: var(--accent-color, #fff); 
+    font-size: 1.2rem; padding: 5px; 
     text-shadow: 0 0 5px var(--accent-glow, rgba(0,0,0,0));
     transition: color 1s ease, text-shadow 1s ease;
 }
 
-/* Currency & Level */
 .currency-info { display: flex; gap: 10px; font-size: 0.8rem; align-items: center; }
-
 .curr-item { 
     display: flex; align-items: center; gap: 4px; 
-    background: rgba(0,0,0,0.4); 
-    padding: 4px 10px; border-radius: 10px; 
-    
-    /* GANTI: Border Dinamis */
+    background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 10px; 
     border: 1px solid var(--accent-glow, rgba(255,255,255,0.2)); 
     box-shadow: 0 2px 0 rgba(0,0,0,0.5);
     transition: border-color 1s ease;
 }
-/* Ikon Mata Uang ikut warna tema */
-.curr-item i {
-    color: var(--accent-color, gold) !important;
-    transition: color 1s ease;
-}
+.curr-item i { color: var(--accent-color, gold) !important; transition: color 1s ease; }
 
 .badge-mini { 
-    background: #ff003c; 
-    padding: 2px 6px; font-size: 0.6rem; border-radius: 4px; font-weight: 800; margin-left: 5px; 
-    box-shadow: 0 2px 0 #990024; 
+    background: #ff003c; padding: 2px 6px; font-size: 0.6rem; border-radius: 4px; font-weight: 800; margin-left: auto; 
+    box-shadow: 0 2px 0 #990024;
+    
+    /* FIX: Agar Badge Keras Kepala (Tidak Mengecil/Terdorong) */
+    flex-shrink: 0; 
+    z-index: 2;
 }
 
 /* Nav Bar */
 nav {
     flex-shrink: 0; 
-    /* Background agak gelap dikit */
     background: rgba(5, 5, 10, 0.95);
-    
-    /* GANTI: HAPUS Border Top & Shadow Garis */
-    border: none; /* Hapus border top */
-    box-shadow: none; /* Hapus shadow yang terlihat seperti garis */
-    
-    display: flex; 
-    justify-content: space-around;
-    align-items: center; 
+    border: none; box-shadow: none;
+    display: flex; justify-content: space-around; align-items: center; 
     z-index: 50;
-    
     padding-bottom: env(safe-area-inset-bottom);
     height: calc(55px + env(safe-area-inset-bottom));
     transition: background 1s ease;
 }
 
 nav button { 
-    background: transparent; 
-    color: #666; 
-    font-size: 0.7rem;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 4px; 
-    border: none;
-    position: relative;
-    transition: all 0.3s ease;
-    padding: 5px 10px;
-    box-shadow: none;
-    border-radius: 8px;
-    margin: 0 2px;
+    background: transparent; color: #666; font-size: 0.7rem;
+    display: flex; flex-direction: column; align-items: center; 
+    gap: 4px; border: none; position: relative;
+    transition: all 0.3s ease; padding: 5px 10px;
+    box-shadow: none; border-radius: 8px; margin: 0 2px;
 }
 nav button:hover { transform: translateY(-2px); color: #fff; }
-
 nav button.active { 
-    /* GANTI: Warna Aktif Dinamis */
     color: var(--accent-color, #00d2ff); 
     text-shadow: 0 0 10px var(--accent-glow, rgba(0,210,255,0.5));
 }
-
 nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 .nav-badge { position: absolute; top: -5px; right: 20%; background: #ff0044; color: white; font-size: 0.8rem; font-weight: 900; min-width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; padding: 0 5px; z-index: 10; box-shadow: 0 2px 0 #990029; border: 2px solid #fff; }
 
@@ -122,46 +132,32 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 .panel { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 15px; background: transparent; }
 
 .panel h3 { 
-    /* GANTI: Judul Panel Dinamis */
     color: var(--accent-color, #00d2ff); 
     border-bottom: 3px solid var(--accent-glow, #333); 
     text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
-    
     padding-bottom: 10px; margin-top: 0; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; 
     transition: all 1s ease;
 }
 
 .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-
 .tab-btn { 
     flex: 1; padding: 12px; background: #222; border: 1px solid transparent; 
     color: #888; border-radius: 12px; font-size: 0.9rem; font-weight: 800; 
-    box-shadow: 0 4px 0 #000; 
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 #000; transition: all 0.3s ease;
 }
-
 .tab-btn.active { 
-    /* GANTI: Tab Aktif Dinamis */
-    background: var(--accent-color, #00d2ff); 
-    color: #000; 
+    background: var(--accent-color, #00d2ff); color: #000; 
     box-shadow: 0 0 15px var(--accent-glow, rgba(0,210,255,0.5)); 
     border-color: var(--accent-color, #00d2ff);
 }
-
 .tab-btn:active, .tab-btn.active:active { transform: translateY(4px); box-shadow: none; }
 .tab-content, .shop-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
 
 /* --- FLOATING BUTTONS --- */
 #floating-buttons { 
-    position: absolute; 
-    top: 50%; 
-    right: 15px; 
-    transform: translateY(-50%); 
-    bottom: auto; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px; 
-    z-index: 60; 
+    position: absolute; top: 50%; right: 15px; 
+    transform: translateY(-50%); bottom: auto; 
+    display: flex; flex-direction: column; gap: 20px; z-index: 60; 
 }
 .float-btn { 
     width: 60px; height: 60px; border-radius: 15px; border: none; color: white; font-size: 1.5rem; 
@@ -174,7 +170,6 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 .mission-btn:hover { background: #f1c40f; }
 .login-btn:hover { background: #2dfc7d; }
 .float-btn:active { transform: translateY(6px); box-shadow: none; }
-
 .float-label { 
     position: absolute; bottom: -22px; font-size: 0.7rem; font-weight: 900; 
     text-shadow: 1px 1px 0 #000; white-space: nowrap; background: #000; 
@@ -182,17 +177,12 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 }
 @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
-
 /* --- SIDEBAR & EVENT OVERLAY --- */
 #event-sidebar-toggle { 
     position: fixed; top: 50%; left: 0; transform: translateY(-50%); 
-    
-    /* GANTI: Toggle Sidebar Dinamis */
     background: var(--accent-color, #00d2ff); 
     box-shadow: 0 0 15px var(--accent-glow, rgba(0,0,0,0));
-    color: #000; 
-    
-    border: none; border-top-right-radius: 12px; border-bottom-right-radius: 12px; padding: 15px 8px; cursor: pointer; z-index: 1001; font-size: 1.2rem; transition: all 0.2s ease; 
+    color: #000; border: none; border-top-right-radius: 12px; border-bottom-right-radius: 12px; padding: 15px 8px; cursor: pointer; z-index: 1001; font-size: 1.2rem; transition: all 0.2s ease; 
 }
 #event-sidebar-toggle:hover { padding-left: 15px; }
 #event-sidebar-toggle:active { transform: translateY(-50%) translateX(4px); box-shadow: 0 0 0 #008cb3; }
@@ -200,40 +190,30 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 #event-sidebar { 
     position: fixed; top: 0; left: 0; width: 280px; height: 100%; 
     background: #0b1026; 
-    
-    /* GANTI: Border Kanan Sidebar Dinamis */
     border-right: 4px solid var(--accent-color, #00d2ff);
     box-shadow: 10px 0 50px var(--accent-glow, rgba(0,0,0,0.8)); 
-    
     transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     z-index: 1000; display: flex; flex-direction: column; 
 }
 #event-sidebar.active { transform: translateX(0); }
 .close-sidebar-btn { align-self: flex-end; background: #333; border: none; color: #fff; font-size: 1.5rem; padding: 10px 15px; margin: 10px; cursor: pointer; box-shadow: 0 4px 0 #000; border-radius: 8px; }
 .close-sidebar-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #000; }
-
 .event-content { padding: 20px; color: #fff; display: flex; flex-direction: column; height: 100%; }
-
 .event-title { 
     font-size: 2rem; font-weight: 900; 
-    /* GANTI: Judul Event Dinamis */
     color: var(--accent-color, #00d2ff); 
     text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0)); 
     margin-bottom: 30px; text-align: center; letter-spacing: 2px; text-transform: uppercase; 
 }
-
 .event-fish-list { margin-bottom: 30px; }
 .event-fish-item { 
     display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 15px; background: #1a1a1a; border-radius: 12px; border: 2px solid #333; 
-    /* GANTI: Border Item Event Dinamis */
     border-left: 5px solid var(--accent-color, #00d2ff); 
 }
 .event-fish-item i { font-size: 1.8rem; color: var(--accent-color, #00d2ff); }
 .event-fish-item span { font-size: 1.1rem; font-weight: 800; }
-
 .event-timer { 
     margin-top: auto; text-align: center; padding: 20px; background: #111; 
-    /* GANTI: Timer Border Dinamis */
     border: 2px solid var(--accent-color, #00d2ff); 
     border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); 
 }
@@ -241,139 +221,121 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 #event-countdown { font-size: 1.5rem; font-weight: 900; color: #fff; margin-top: 5px; }
 #event-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 5; }
 
-
-/* --- AUTHENTICATION (Form & Tabs) --- */
+/* --- AUTHENTICATION --- */
 #auth-screen { 
-    justify-content: center; 
-    align-items: center; 
-    background: transparent; 
-    padding: 20px;
-    display: flex;
+    justify-content: center; align-items: center; background: transparent; padding: 20px; display: flex;
 }
 .auth-box { 
-    width: 100% !important; 
-    max-width: 380px !important; 
-    min-height: 450px; 
+    width: 100% !important; max-width: 380px !important; min-height: 450px; 
     background: #111; 
-    
-    /* GANTI: Border Auth Dinamis */
     border: 3px solid var(--accent-color, #00d2ff); 
     box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px var(--accent-glow, rgba(0,0,0,0)); 
-    
-    border-radius: 25px; 
-    padding: 30px; 
-    text-align: center; 
-    display: flex; 
-    flex-direction: column; 
-    transition: all 1s ease;
-    box-sizing: border-box !important; 
+    border-radius: 25px; padding: 30px; text-align: center; display: flex; flex-direction: column; 
+    transition: all 1s ease; box-sizing: border-box !important; 
 }
 .auth-box h2 { 
-    color: #fff; 
-    margin-top: 0; 
-    margin-bottom: 25px; 
-    font-weight: 900; 
-    text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0)); 
-    font-size: 2rem; 
+    color: #fff; margin-top: 0; margin-bottom: 25px; font-weight: 900; 
+    text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0)); font-size: 2rem; 
 }
 .auth-tabs { display: flex; background: #000; border-radius: 12px; padding: 5px; margin-bottom: 25px; border: 1px solid #333; }
 .auth-tabs button { flex: 1; background: transparent; border: none; color: #555; padding: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.9rem; box-shadow: none; }
 .auth-tabs button:hover { color: #fff; }
-
 .auth-tabs button.active { 
-    /* GANTI: Tab Auth Dinamis */
-    background: var(--accent-color, #00d2ff); 
-    color: #000; 
+    background: var(--accent-color, #00d2ff); color: #000; 
     box-shadow: 0 4px 0 var(--accent-glow, rgba(0,0,0,0)); 
 }
-
 #form-login, #form-register { display: flex; flex-direction: column; gap: 15px; transition: all 0.3s ease; width: 100%; }
 .auth-box input { width: 100% !important; padding: 15px; margin: 5px 0; background: #222; border: 2px solid #444; color: white; border-radius: 12px; font-weight: 600; box-sizing: border-box !important; }
 .auth-box input:focus { outline: none; border-color: var(--accent-color); background: #000; box-shadow: 0 0 10px var(--accent-glow); }
-
 #btn-login, #btn-register { 
     width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 900; 
-    /* GANTI: Tombol Login Dinamis */
-    background: var(--accent-color, #00d2ff); 
-    color: #000; 
-    
+    background: var(--accent-color, #00d2ff); color: #000; 
     border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; box-shadow: 0 6px 0 rgba(0,0,0,0.5); 
 }
 #btn-login:hover, #btn-register:hover { transform: translateY(-2px); }
 #btn-login:active, #btn-register:active { transform: translateY(6px); box-shadow: 0 0 0; }
-@media (max-width: 360px) { 
-    .auth-box { padding: 20px; max-width: 95% !important; } 
-    .auth-box h2 { font-size: 1.8rem; }
-}
 
-
-/* --- PROFILE MODAL (POLISHED & WRAPPED) --- */
+/* --- PROFILE --- */
 .profile-card {
     padding: 30px !important;
-    /* GANTI: Border Profile Dinamis */
     border: 4px solid var(--accent-color, #00d2ff) !important; 
     box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow, rgba(0,0,0,0)) !important;
     transition: all 1s ease;
 }
-
-.profile-card h2 {
-    color: #fff;
-    text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
-    margin-bottom: 15px;
-}
-
+.profile-card h2 { color: #fff; text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0)); margin-bottom: 15px; }
 .level-badge { 
-    background: #ff0044; 
-    padding: 8px 15px; 
-    border-radius: 15px; 
-    display: inline-block; 
-    margin-bottom: 25px !important; 
-    font-weight: 900 !important; 
-    font-size: 1.1rem !important; 
-    box-shadow: 0 4px 0 #990029; 
-    border: 2px solid #fff;
+    background: #ff0044; padding: 8px 15px; border-radius: 15px; display: inline-block; 
+    margin-bottom: 25px !important; font-weight: 900 !important; font-size: 1.1rem !important; 
+    box-shadow: 0 4px 0 #990029; border: 2px solid #fff;
 }
-
-/* Kunci: Membuat setiap data field menjadi kotak terpisah */
 .stats-row { 
-    display: flex; 
-    justify-content: space-between; 
-    margin: 10px 0; 
-    padding: 12px; 
-    background: #1a1a1a; 
-    border-radius: 8px;
-    border-bottom: none !important; 
-    font-weight: 600; 
-    font-size: 0.95rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex; justify-content: space-between; margin: 10px 0; padding: 12px; 
+    background: #1a1a1a; border-radius: 8px; border-bottom: none !important; 
+    font-weight: 600; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
-
-.stats-row span:first-child {
-    color: #ccc; 
-    font-weight: 500;
-}
-
-/* Kotak Best Fish */
+.stats-row span:first-child { color: #ccc; font-weight: 500; }
 .profile-card > div[style*="margin-top:15px"] {
-    margin-top: 25px !important;
-    background: #000 !important; 
-    padding: 15px !important;
+    margin-top: 25px !important; background: #000 !important; padding: 15px !important;
     border-radius: 12px !important;
-    /* GANTI: Border Kotak Ikan Dinamis */
     border: 1px solid var(--accent-color, #00d2ff); 
     box-shadow: inset 0 0 10px var(--accent-glow, rgba(0,0,0,0));
 }
-
 .profile-card > div[style*="margin-top:15px"] small {
-    color: var(--accent-color, #00d2ff); 
-    font-weight: 800;
-    display: block;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    font-size: 0.7rem;
+    color: var(--accent-color, #00d2ff); font-weight: 800; display: block;
+    margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem;
 }
 
-#prof-actions button { 
-    font-size: 0.9rem !important;
-    padding: 12px !important;
+/* ==========================================================================
+   #PC / DESKTOP MODE LAYOUT (FULL SCREEN OVERRIDES)
+   ========================================================================== */
+@media (min-width: 768px) {
+    /* HEADER: Pindah ke Atas (Menyebar) */
+    header {
+        position: fixed; /* Pakai Fixed agar nempel */
+        top: 0; left: 0; width: 100%;
+        box-sizing: border-box; 
+        padding: 25px 40px; 
+        background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+    .user-info { transform: scale(1.2); transform-origin: left top; }
+    .currency-info { gap: 20px; }
+    .curr-item { padding: 8px 15px; font-size: 1rem; }
+
+    /* FLOATING BUTTONS (MISSION/LOGIN): Pindah Kanan Atas */
+    #floating-buttons {
+        top: 120px; right: 40px; 
+        bottom: auto; transform: none;
+    }
+
+    /* NAV BAR: Pindah Bawah Tengah Melayang */
+    nav {
+        position: fixed; 
+        bottom: 30px; left: 50%; transform: translateX(-50%);
+        width: auto; min-width: 500px;
+        background: rgba(0, 0, 0, 0.85); border-radius: 50px;
+        padding: 15px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        gap: 30px; border: 2px solid rgba(255,255,255,0.1);
+    }
+    nav button { padding: 10px 25px; font-size: 0.8rem; }
+    nav button i { font-size: 1.5rem; }
+
+    /* PANEL (INVENTORY, SHOP): FULL WIDTH */
+    .panel {
+        width: 90% !important; 
+        max-width: 1400px !important; 
+        height: calc(100vh - 200px) !important; /* Hitung sisa layar */
+        margin: 100px auto 100px auto !important; 
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        padding: 30px !important;
+        box-sizing: border-box;
+    }
+
+    /* MODAL CONTENT: Jangan ikutan full screen */
+    .modal-content {
+        max-width: 500px !important;
+        border-radius: 20px;
+    }
 }

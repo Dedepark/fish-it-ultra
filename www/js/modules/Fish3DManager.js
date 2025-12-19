@@ -23,6 +23,7 @@ export const Fish3DManager = {
         loadingText.style.cssText = "position:absolute; bottom:80px; left:20px; color:rgba(255,255,255,0.5); font-size:10px; z-index:10; pointer-events:none;";
         document.body.appendChild(loadingText); 
 
+        // 1. Setup Scene & Fog (Warna Fog awal nanti ditimpa updateGodRaysColor)
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog(0x0b1026, 10, 35); 
 
@@ -40,6 +41,8 @@ export const Fish3DManager = {
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
         this.scene.add(ambientLight);
+        
+        // Directional Light Awal (Nanti diupdate warnanya)
         const dirLight = new THREE.DirectionalLight(0x00d2ff, 2.0);
         dirLight.position.set(5, 10, 5);
         this.scene.add(dirLight);
@@ -84,6 +87,16 @@ export const Fish3DManager = {
             }, undefined, (err) => console.error(err));
         });
 
+        // 2. FORCE SYNC: Ambil warna tema saat ini dari CSS Variable
+        // Ini kuncinya! Biar pas loading pertama kali langsung ngikutin warna jam.
+        setTimeout(() => {
+            const currentThemeColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+            if (currentThemeColor) {
+                console.log("🎨 Fish3D Sync Color:", currentThemeColor);
+                this.updateGodRaysColor(currentThemeColor);
+            }
+        }, 100); // Delay dikit biar CSS root bener-bener ready
+
         this.animate();
 
         window.addEventListener('resize', () => {
@@ -100,14 +113,24 @@ export const Fish3DManager = {
     // --- FUNGSI UPDATE WARNA (SINKRON KE THEME) ---
     updateGodRaysColor: function(hexColor) {
         if (!this.godRays || this.godRays.length === 0) return;
+        
+        // Update warna Batang Cahaya (God Rays)
         this.godRays.forEach(group => {
             group.children.forEach(mesh => {
                 if (mesh.material) mesh.material.color.set(hexColor);
             });
         });
-        if (this.scene && this.scene.fog) this.scene.fog.color.set(hexColor);
-        const dirLight = this.scene.children.find(c => c.type === "DirectionalLight");
-        if (dirLight) dirLight.color.set(hexColor);
+
+        // Update warna Kabut (Fog) biar menyatu
+        if (this.scene && this.scene.fog) {
+            this.scene.fog.color.set(hexColor);
+        }
+
+        // Update warna Cahaya Matahari (Directional Light)
+        if (this.scene) {
+            const dirLight = this.scene.children.find(c => c.type === "DirectionalLight");
+            if (dirLight) dirLight.color.set(hexColor);
+        }
     },
 
     updateBounds: function(width, height) {
@@ -141,6 +164,7 @@ export const Fish3DManager = {
 
     createGodRays: function() {
         const beamTexture = this.createSoftBeamTexture();
+        // Default color awal (blue) - nanti langsung ditimpa sama force sync di init()
         const material = new THREE.MeshBasicMaterial({
             map: beamTexture, color: 0x88d2ff, transparent: true,
             opacity: 0.15, blending: THREE.AdditiveBlending,

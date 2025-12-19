@@ -1,5 +1,5 @@
 // Pastikan versi ini SAMA dengan yang ada di config.js
-const CACHE_NAME = 'fish-it-v2.1.9'; 
+const CACHE_NAME = 'fish-it-v2.2.0'; 
 
 // Daftar file yang WAJIB ada. 
 // Kalau satu saja salah nama/lokasi, error "Request failed" akan muncul.

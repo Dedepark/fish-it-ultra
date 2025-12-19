@@ -282,16 +282,23 @@
         
         <header>
             <div class="user-info" onclick="app.viewProfile()">
-                <div style="display:flex; flex-direction:column; align-items:flex-start;">
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <i class="fa-solid fa-user-astronaut"></i> <b id="display-username">Player</b>
+                <div style="display:flex; flex-direction:column; align-items:flex-start; width: 100%;">
+                    
+                    <div class="user-header-row">
+                        <i class="fa-solid fa-user-astronaut user-icon"></i> 
+                        
+                        <div class="name-ticker-mask">
+                            <b id="display-username">PlayerNameYangSangatPanjang</b>
+                        </div>
+                        
                         <span id="header-level-badge" class="badge-mini">LV.1</span>
                     </div>
-                    <div style="font-size:0.7rem; color:#aaa; width:100px; height:4px; background:#444; border-radius:2px; margin-top:2px;">
+                    <div style="font-size:0.7rem; color:#aaa; width:100%; height:4px; background:#444; border-radius:2px; margin-top:2px;">
                         <div id="header-exp-bar" style="width:0%; height:100%; background:#00d2ff; border-radius:2px;"></div>
                     </div>
                 </div>
             </div>
+
             <div class="currency-info">
                 <div class="curr-item"><i class="fa-solid fa-coins" style="color:gold;"></i> <span id="display-money">0</span></div>
                 <div class="curr-item"><i class="fa-solid fa-gem" style="color:#00d2ff;"></i> <span id="display-diamonds">0</span></div>
@@ -336,6 +343,10 @@
             </div>
             
             <div id="inv-tab-fish" class="tab-content">
+                <div class="inventory-warning">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    JENIS IKAN YANG ANDA KUNCI, AKAN TERBUKA KUNCI NYA JIKA ANDA MENDAPATKAN JENIS IKAN YANG SAMA SETELAHNYA, PASTIKAN ANDA MENGECEK ULANG KOLEKSI IKAN ANDA SEBELUM BENAR BENAR MENJUAL NYA
+                </div>
                 <button onclick="app.sellAll()" class="btn-sell">JUAL SEMUA (Kecuali Terkunci)</button>
                 <div id="inventory-list" class="grid-list"></div>
                 <div id="inventory-list-sentinel" style="height:10px;"></div>

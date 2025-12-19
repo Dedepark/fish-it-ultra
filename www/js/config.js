@@ -1,7 +1,7 @@
 // ==========================================================================
 // #CONFIG & DATABASE
 // ==========================================================================
-export const CURRENT_APP_VERSION = '2.1.9';
+export const CURRENT_APP_VERSION = '2.2.0';
 export const SUPABASE_URL = 'https://neoknskpfhitqkoobxhu.supabase.co';
 export const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2tuc2twZmhpdHFrb29ieGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMDg1OTUsImV4cCI6MjA4MDY4NDU5NX0.9UQJcKAYDVUyQ4RgGRVogHRUSZ1V6DvHSSAIUjPJ62Q';
 
@@ -158,7 +158,17 @@ export const FISH_MASTER = {
         { name: "Kepiting Penakluk Samudra", price: 32000000, class: "fish-mistis" },
         { name: "Ubur-ubur Penjelajah Galaksi", price: 45000000, class: "fish-mistis" },
         { name: "Hiu Pembawa Tsunami", price: 48000000, class: "fish-mistis" },
-        { name: "Ikan Penakluk Naga", price: 50000000, class: "fish-mistis" }
+        { name: "Ikan Penakluk Naga", price: 50000000, class: "fish-mistis" },
+        { name: "Shadow Leviathan", price: 45000000, class: "fish-mistis" },
+{ name: "Celestial Stingray", price: 41000000, class: "fish-mistis" },
+{ name: "Vampire Squid Lord", price: 39000000, class: "fish-mistis" },
+{ name: "Abyssal Dragon King", price: 48000000, class: "fish-mistis" },
+{ name: "Thunder Kraken", price: 44000000, class: "fish-mistis" },
+{ name: "Spectral Dolphin", price: 36000000, class: "fish-mistis" },
+{ name: "Inferno Shark", price: 43000000, class: "fish-mistis" },
+{ name: "Necromancer Eel", price: 38000000, class: "fish-mistis" },
+{ name: "Void Walker Turtle", price: 40000000, class: "fish-mistis" },
+{ name: "Galaxy Whale", price: 49000000, class: "fish-mistis" },
     ],
     
     LEGENDARY: [
@@ -217,7 +227,19 @@ export const FISH_MASTER = {
         { name: "Ikan Lele Berjenggot", price: 1350000, class: "fish-legendary" },
         { name: "Kepiting Berkepala Satu", price: 1450000, class: "fish-legendary" },
         { name: "Ikan Bawal Perak", price: 1550000, class: "fish-legendary" },
-        { name: "Ubur-ubur Berwarna Pelangi", price: 750000, class: "fish-legendary" }
+        { name: "Ubur-ubur Berwarna Pelangi", price: 750000, class: "fish-legendary" },
+        { name: "Cyborg Tuna", price: 3800000, class: "fish-legendary" },
+{ name: "Diamond Scale Betta", price: 2900000, class: "fish-legendary" },
+{ name: "Radioactive Eel", price: 3100000, class: "fish-legendary" },
+{ name: "Ancient Mosasaurus", price: 4800000, class: "fish-legendary" },
+{ name: "Platinum Arowana", price: 3500000, class: "fish-legendary" },
+{ name: "Golden Jellyfish King", price: 2200000, class: "fish-legendary" },
+{ name: "Samurai Swordfish", price: 3600000, class: "fish-legendary" },
+{ name: "Crystal Hammerhead", price: 2700000, class: "fish-legendary" },
+{ name: "Magma Piranha", price: 1900000, class: "fish-legendary" },
+{ name: "Emerald Turtle", price: 1800000, class: "fish-legendary" },
+{ name: "Mecha Crab Mk.II", price: 3300000, class: "fish-legendary" },
+{ name: "Rainbow Trout God", price: 2500000, class: "fish-legendary" },
     ],
     
     EPIC: [
@@ -286,7 +308,19 @@ export const FISH_MASTER = {
         { name: "Kuda Laut Hijau", price: 45000, class: "fish-epic" },
         { name: "Ikan Cupang Biru", price: 35000, class: "fish-epic" },
         { name: "Gurita Merah", price: 25000, class: "fish-epic" },
-        { name: "Ikan Kakap Hitam", price: 15000, class: "fish-epic" }
+        { name: "Ikan Kakap Hitam", price: 15000, class: "fish-epic" },
+        { name: "Volcanic Bass", price: 350000, class: "fish-epic" },
+{ name: "Ninja Squid", price: 290000, class: "fish-epic" },
+{ name: "Toxic Pufferfish", price: 220000, class: "fish-epic" },
+{ name: "Laser Shrimp", price: 180000, class: "fish-epic" },
+{ name: "Armored Catfish", price: 250000, class: "fish-epic" },
+{ name: "Frostbite Pike", price: 310000, class: "fish-epic" },
+{ name: "Electric Clownfish", price: 195000, class: "fish-epic" },
+{ name: "Flying Ray", price: 270000, class: "fish-epic" },
+{ name: "Iron Shell Crab", price: 210000, class: "fish-epic" },
+{ name: "Ghost Koi", price: 380000, class: "fish-epic" },
+{ name: "Sawfish Warrior", price: 330000, class: "fish-epic" },
+{ name: "Mutant Guppy", price: 150000, class: "fish-epic" },
     ],
     
     RARE: [
@@ -352,7 +386,19 @@ export const FISH_MASTER = {
         { name: "Kuda Laut Transparan", price: 5, class: "fish-rare" },
         { name: "Ikan Nila Transparan", price: 3, class: "fish-rare" },
         { name: "Gurita Transparan", price: 2, class: "fish-rare" },
-        { name: "Ikan Gabus Transparan", price: 1, class: "fish-rare" }
+        { name: "Ikan Gabus Transparan", price: 1, class: "fish-rare" },
+        { name: "Zebra Shark", price: 38000, class: "fish-rare" },
+{ name: "Neon Tetra Giant", price: 12000, class: "fish-rare" },
+{ name: "Discus Fish", price: 18000, class: "fish-rare" },
+{ name: "Lionfish", price: 25000, class: "fish-rare" },
+{ name: "Boxfish", price: 9000, class: "fish-rare" },
+{ name: "Sea Snake", price: 22000, class: "fish-rare" },
+{ name: "Garden Eel", price: 15000, class: "fish-rare" },
+{ name: "Stonefish", price: 28000, class: "fish-rare" },
+{ name: "Moonfish", price: 32000, class: "fish-rare" },
+{ name: "Flying Fish", price: 7000, class: "fish-rare" },
+{ name: "Spiked Puffer", price: 11000, class: "fish-rare" },
+{ name: "Glass Catfish", price: 5000, class: "fish-rare" },
     ],
     
     COMMON: [
@@ -431,7 +477,21 @@ export const FISH_MASTER = {
         { name: "Kodok Putih", price: 250, class: "fish-common" },
         { name: "Jangkrik Putih", price: 40, class: "fish-common" },
         { name: "Lumba-lumba Putih", price: 6000, class: "fish-common" },
-        { name: "Lumba-lumba Biru", price: 6000, class: "fish-common" }
+        { name: "Lumba-lumba Biru", price: 6000, class: "fish-common" },
+        { name: "Ikan Sarden", price: 1500, class: "fish-common" },
+{ name: "Ikan Kembung", price: 1800, class: "fish-common" },
+{ name: "Ikan Cere", price: 300, class: "fish-common" },
+{ name: "Plastik Kresek", price: 1, class: "fish-common" },
+{ name: "Ban Bocor", price: 5, class: "fish-common" },
+{ name: "Kaleng Sarden", price: 10, class: "fish-common" },
+{ name: "Sandal Jepit Kiri", price: 2, class: "fish-common" },
+{ name: "Sandal Jepit Kanan", price: 2, class: "fish-common" },
+{ name: "Ranting Pohon", price: 20, class: "fish-common" },
+{ name: "Keong Racun", price: 500, class: "fish-common" },
+{ name: "Tulang Ikan", price: 1, class: "fish-common" },
+{ name: "Kaset Rusak", price: 5, class: "fish-common" },
+{ name: "Batu Kali", price: 1, class: "fish-common" },
+{ name: "Undur-undur Laut", price: 100, class: "fish-common" }
     ]
 };
 
