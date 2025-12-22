@@ -1,78 +1,54 @@
 /* ==========================================================================
-   #_LAYOUT.CSS: HEADER, NAVIGASI, FLOATING, SIDEBAR, AUTH, MODAL LAYOUT
+   #_LAYOUT.CSS: HEADER, NAVIGASI, FLOATING, SIDEBAR, AUTH (SAFE AREA FIX)
    ========================================================================== */
 
 /* --- HEADER & NAVIGATION --- */
 header { 
+    /* FIX: Padding atas menyesuaikan Notch HP */
     padding-top: calc(15px + env(safe-area-inset-top)); 
     padding-bottom: 15px;
     padding-left: 15px;
     padding-right: 15px;
+    
     background: var(--panel-bg, rgba(0,0,0,0.6)); 
     border: none; 
     display: flex; justify-content: space-between; align-items: center; 
-    flex-shrink: 0; 
+    
+    flex-shrink: 0; /* Header DILARANG mengecil */
     transition: background 1s ease;
     z-index: 50; 
+    width: 100%;
 }
 
-/* --- UPDATE: STRUKTUR USERNAME RUNNING TEXT --- */
-
-/* Wrapper Utama Tombol Profil */
+/* --- USER INFO STYLES (ASLI) --- */
 .user-info { 
     display: flex; gap: 8px; align-items: center; font-size: 0.9rem; 
     cursor: pointer; text-shadow: 1px 1px 0 #000;
-    overflow: visible; /* Biarkan container dalam yang mengatur overflow */
+    overflow: visible; 
 }
 
-/* Container Baris Header (Membatasi Lebar & Mengatur Posisi) */
 .user-header-row {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    width: 130px; /* Lebar tetap agar tidak mendorong elemen lain */
-    max-width: 130px;
-    overflow: hidden; 
-    position: relative;
+    display: flex; align-items: center; gap: 5px;
+    width: 130px; max-width: 130px;
+    overflow: hidden; position: relative;
 }
 
-/* Ikon User (Diam) */
-.user-icon {
-    flex-shrink: 0; /* Mencegah ikon mengecil */
-    font-size: 0.9rem;
-    color: #fff;
-}
+.user-icon { flex-shrink: 0; font-size: 0.9rem; color: #fff; }
 
-/* Topeng Nama (Area pembatas teks berjalan) */
 .name-ticker-mask {
-    flex: 1; /* Mengisi ruang sisa antara Ikon dan Badge */
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative;
-    /* Efek Fade Out di kiri-kanan agar rapi */
+    flex: 1; overflow: hidden; white-space: nowrap; position: relative;
     mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
 }
 
-/* Teks Nama (Yang Bergerak) */
 .name-ticker-mask b {
-    display: inline-block;
-    white-space: nowrap;
-    color: #fff;
-    
-    /* Animasi Jalan: Durasi 4s, Bolak-Balik, Selamanya */
-    animation: textScroll 4s ease-in-out infinite alternate;
-    padding-left: 0;
+    display: inline-block; white-space: nowrap; color: #fff;
+    animation: textScroll 4s ease-in-out infinite alternate; padding-left: 0;
 }
 
-/* Logika Animasi Gerak */
 @keyframes textScroll {
-    0%, 20% { 
-        transform: translateX(0); /* Diam sebentar di awal */
-    }
-    80%, 100% { 
-        transform: translateX(-50%); /* Geser ke kiri */
-    }
+    0%, 20% { transform: translateX(0); }
+    80%, 100% { transform: translateX(-50%); }
 }
 
 .btn-icon { 
@@ -94,23 +70,23 @@ header {
 
 .badge-mini { 
     background: #ff003c; padding: 2px 6px; font-size: 0.6rem; border-radius: 4px; font-weight: 800; margin-left: auto; 
-    box-shadow: 0 2px 0 #990024;
-    
-    /* FIX: Agar Badge Keras Kepala (Tidak Mengecil/Terdorong) */
-    flex-shrink: 0; 
-    z-index: 2;
+    box-shadow: 0 2px 0 #990024; flex-shrink: 0; z-index: 2;
 }
 
-/* Nav Bar */
+/* --- NAV BAR --- */
 nav {
-    flex-shrink: 0; 
+    flex-shrink: 0; /* Navigasi DILARANG mengecil */
     background: rgba(5, 5, 10, 0.95);
     border: none; box-shadow: none;
     display: flex; justify-content: space-around; align-items: center; 
     z-index: 50;
-    padding-bottom: env(safe-area-inset-bottom);
-    height: calc(55px + env(safe-area-inset-bottom));
+    
+    /* FIX: Padding bawah menyesuaikan garis gesture HP */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
+    padding-top: 10px;
+    height: auto; /* Biarkan tinggi otomatis menyesuaikan padding */
     transition: background 1s ease;
+    width: 100%;
 }
 
 nav button { 
@@ -128,18 +104,25 @@ nav button.active {
 nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 .nav-badge { position: absolute; top: -5px; right: 20%; background: #ff0044; color: white; font-size: 0.8rem; font-weight: 900; min-width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; padding: 0 5px; z-index: 10; box-shadow: 0 2px 0 #990029; border: 2px solid #fff; }
 
-/* --- PANELS & TABS --- */
-.panel { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 15px; background: transparent; }
+/* --- PANELS (AREA KONTEN TENGAH) --- */
+.panel { 
+    flex-grow: 1; /* Mengisi sisa ruang antara Header dan Nav */
+    height: 100%; /* Pastikan mengisi parent */
+    overflow-y: auto; /* SCROLL HANYA DI SINI */
+    display: flex; flex-direction: column; 
+    padding: 15px; background: transparent; 
+    -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
+}
 
 .panel h3 { 
     color: var(--accent-color, #00d2ff); 
     border-bottom: 3px solid var(--accent-glow, #333); 
     text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
     padding-bottom: 10px; margin-top: 0; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; 
-    transition: all 1s ease;
+    transition: all 1s ease; flex-shrink: 0;
 }
 
-.tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+.tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-shrink: 0; }
 .tab-btn { 
     flex: 1; padding: 12px; background: #222; border: 1px solid transparent; 
     color: #888; border-radius: 12px; font-size: 0.9rem; font-weight: 800; 
@@ -151,12 +134,12 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
     border-color: var(--accent-color, #00d2ff);
 }
 .tab-btn:active, .tab-btn.active:active { transform: translateY(4px); box-shadow: none; }
-.tab-content, .shop-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
+.tab-content, .shop-content { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
 
 /* --- FLOATING BUTTONS --- */
 #floating-buttons { 
-    position: absolute; top: 50%; right: 15px; 
-    transform: translateY(-50%); bottom: auto; 
+    position: absolute; top: 120px; right: 10px; /* Geser sedikit agar aman */
+    bottom: auto; 
     display: flex; flex-direction: column; gap: 20px; z-index: 60; 
 }
 .float-btn { 
@@ -173,7 +156,7 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 .float-label { 
     position: absolute; bottom: -22px; font-size: 0.7rem; font-weight: 900; 
     text-shadow: 1px 1px 0 #000; white-space: nowrap; background: #000; 
-    padding: 2px 6px; border-radius: 4px; border: 1px solid #555;
+    padding: 2px 6px; border-radius: 4px; border: 1px solid #555; right: 0;
 }
 @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
@@ -194,11 +177,14 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
     box-shadow: 10px 0 50px var(--accent-glow, rgba(0,0,0,0.8)); 
     transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     z-index: 1000; display: flex; flex-direction: column; 
+    /* Tambahkan padding safe area untuk sidebar */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 #event-sidebar.active { transform: translateX(0); }
 .close-sidebar-btn { align-self: flex-end; background: #333; border: none; color: #fff; font-size: 1.5rem; padding: 10px 15px; margin: 10px; cursor: pointer; box-shadow: 0 4px 0 #000; border-radius: 8px; }
 .close-sidebar-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #000; }
-.event-content { padding: 20px; color: #fff; display: flex; flex-direction: column; height: 100%; }
+.event-content { padding: 20px; color: #fff; display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
 .event-title { 
     font-size: 2rem; font-weight: 900; 
     color: var(--accent-color, #00d2ff); 
@@ -224,6 +210,7 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 /* --- AUTHENTICATION --- */
 #auth-screen { 
     justify-content: center; align-items: center; background: transparent; padding: 20px; display: flex;
+    flex-grow: 1; overflow-y: auto;
 }
 .auth-box { 
     width: 100% !important; max-width: 380px !important; min-height: 450px; 
@@ -261,6 +248,7 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
     border: 4px solid var(--accent-color, #00d2ff) !important; 
     box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow, rgba(0,0,0,0)) !important;
     transition: all 1s ease;
+    margin-bottom: 20px; /* Jarak bawah agar tidak nempel nav */
 }
 .profile-card h2 { color: #fff; text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0)); margin-bottom: 15px; }
 .level-badge { 
@@ -291,7 +279,7 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
 @media (min-width: 768px) {
     /* HEADER: Pindah ke Atas (Menyebar) */
     header {
-        position: fixed; /* Pakai Fixed agar nempel */
+        position: fixed; 
         top: 0; left: 0; width: 100%;
         box-sizing: border-box; 
         padding: 25px 40px; 
@@ -315,6 +303,7 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
         background: rgba(0, 0, 0, 0.85); border-radius: 50px;
         padding: 15px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         gap: 30px; border: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px; /* Reset padding safe area di PC */
     }
     nav button { padding: 10px 25px; font-size: 0.8rem; }
     nav button i { font-size: 1.5rem; }
@@ -323,7 +312,8 @@ nav button i { font-size: 1.2rem; margin-bottom: 3px; }
     .panel {
         width: 90% !important; 
         max-width: 1400px !important; 
-        height: calc(100vh - 200px) !important; /* Hitung sisa layar */
+        height: auto !important; /* Tinggi auto di PC karena scroll body dihandle terpisah jika perlu */
+        max-height: calc(100vh - 200px); /* Batasi tinggi panel di PC */
         margin: 100px auto 100px auto !important; 
         background: rgba(0, 0, 0, 0.7);
         border-radius: 20px;

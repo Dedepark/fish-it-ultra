@@ -14,65 +14,45 @@ export const DatabaseManager = {
             .from('game_data')
             .select('*')
             .eq('user_id', userId);
-            
         return data;
     },
     
-async saveGameData(userId, gameData) {
-    try {
-        console.log("DatabaseManager: Preparing to save game data for user:", userId);
-        console.log("DatabaseManager: Full gameData object to be saved:", gameData);
+    async saveGameData(userId, gameData) {
+        try {
+            const dataToSave = {
+                money: gameData.money,
+                level: gameData.level,
+                owned_rods: gameData.owned_rods,
+                current_rod: gameData.current_rod,
+                unlocked_fish: gameData.unlocked_fish,
+                best_fish: gameData.best_fish,
+                diamonds: gameData.diamonds,
+                current_exp: gameData.current_exp,
+                inventory_items: gameData.inventory_items,
+                rod_levels: gameData.rod_levels,
+                last_login_date: gameData.last_login_date,
+                mission_data: gameData.mission_data,
+                activeBuffs: gameData.activeBuffs
+            };
 
-        // --- SIAPKAN DATA YANG AKAN DIKIRIM ---
-        // Kita hanya mengirim field yang ada di skema database
-        // Ini mencegah masalah jika ada properti tambahan di state
-        const dataToSave = {
-            money: gameData.money,
-            level: gameData.level,
-            owned_rods: gameData.owned_rods,
-            current_rod: gameData.current_rod,
-            unlocked_fish: gameData.unlocked_fish,
-            best_fish: gameData.best_fish,
-            diamonds: gameData.diamonds,
-            current_exp: gameData.current_exp,
-            inventory_items: gameData.inventory_items,
-            rod_levels: gameData.rod_levels,
-            last_login_date: gameData.last_login_date,
-            mission_data: gameData.mission_data,
-            activeBuffs: gameData.activeBuffs // Pastikan ini termasuk
-        };
+            const { data, error } = await this.client
+                .from('game_data')
+                .update(dataToSave)
+                .eq('user_id', userId)
+                .select();
 
-        console.log("DatabaseManager: Data to be sent to Supabase:", dataToSave);
+            if (error) throw error;
+            return data;
 
-        const { data, error } = await this.client
-            .from('game_data')
-            .update(dataToSave)
-            .eq('user_id', userId)
-            .select(); // Tambahkan .select() untuk melihat data yang dikembalikan
-
-        if (error) {
-            console.error("DatabaseManager: Supabase error details:", error);
-            throw error; // Lempar kembali error untuk ditangkap di catch
+        } catch (error) {
+            console.error("DatabaseManager: Failed to save game data.", error);
+            throw error;
         }
-
-        console.log("DatabaseManager: Save successful. Returned data:", data);
-        return data;
-
-    } catch (error) {
-        console.error("DatabaseManager: Failed to save game data.", error);
-        // Kita bisa menampilkan pesan error yang lebih spesifik ke user
-        // Tapi untuk saat ini, kita log saja untuk debugging
-        throw error; // Lempar error agar bisa ditangkap di pemanggil (misalnya di GameStateManager)
-    }
-},
+    },
     
     // Inventory methods
     async loadInventory(userId) {
-        const { data } = await this.client
-            .from('fish_inventory')
-            .select('*')
-            .eq('user_id', userId);
-            
+        const { data } = await this.client.from('fish_inventory').select('*').eq('user_id', userId);
         return data;
     },
     
@@ -86,7 +66,6 @@ async saveGameData(userId, gameData) {
                 price: fish.price
             })
             .select();
-            
         return { data, error };
     },
     
@@ -114,17 +93,24 @@ async saveGameData(userId, gameData) {
             .select('*')
             .order('created_at', { ascending: false })
             .limit(limit);
-            
         return data;
     },
     
-    async sendChatMessage(userId, username, message) {
+    // UPDATE: Menambahkan parameter replyTo (default null)
+    async sendChatMessage(userId, username, message, replyTo = null) {
+        const payload = {
+            user_id: userId,
+            username: username,
+            message: message
+        };
+
+        // Jika ada reply data, tambahkan ke payload
+        if (replyTo) {
+            payload.reply_to = replyTo; // Pastikan kolom 'reply_to' tipe JSONB sudah dibuat di database
+        }
+
         return await this.client
             .from('chat_messages')
-            .insert({
-                user_id: userId,
-                username: username,
-                message: message
-            });
+            .insert(payload);
     }
 };

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   #_BASE.CSS: RESET & GLOBAL STYLES (DYNAMIC THEME)
+   #_BASE.CSS: RESET & GLOBAL STYLES (MOBILE FIT EDITION)
    ========================================================================== */
 :root {
     --bg-gradient: linear-gradient(180deg, #0b1026 0%, #2b32b2 100%);
@@ -11,6 +11,7 @@
 
 html {
     height: 100%;
+    width: 100%;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -21,20 +22,33 @@ body {
     color: var(--text-primary); 
     font-family: 'Poppins', sans-serif;
     margin: 0;
-    height: 100%;
-    min-height: 100%;
-    overflow: hidden;
-    overscroll-behavior-y: none;
-    display: flex; justify-content: center; align-items: center;
+    padding: 0;
+    
+    /* FIX: Gunakan 100dvh agar pas dengan browser mobile (Chrome/Safari) */
+    height: 100dvh; 
+    width: 100vw;
+    
+    overflow: hidden; /* Mencegah scroll pada body utama */
+    overscroll-behavior-y: none; /* Mencegah refresh tarik-turun */
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
     transition: background 3s ease;
 }
 
 .screen {
-    width: 100%; max-width: 450px; height: 100%;
+    width: 100%; 
+    max-width: 450px; 
+    height: 100%; /* Mengikuti tinggi body (100dvh) */
+    
     background: var(--panel-bg); 
     backdrop-filter: blur(5px);
+    
+    /* FIX: Flex Column untuk membagi Header (Atas) - Konten (Tengah) - Nav (Bawah) */
     display: flex;
-    flex-direction: column; position: relative;
+    flex-direction: column; 
+    position: relative;
+    
     box-shadow: 0 0 30px #000;
     transition: background 3s ease;
 }
@@ -50,6 +64,7 @@ body {
     -webkit-touch-callout: none; 
     -webkit-user-select: none; 
     user-select: none; 
+    box-sizing: border-box; /* Penting agar padding tidak melebarkan elemen */
 }
 
 /* ==========================================================================
@@ -58,9 +73,10 @@ body {
 #loading-screen {
     position: fixed !important;
     top: 0; left: 0;
-    width: 100%; height: 100%;
+    width: 100vw; height: 100dvh; /* Full layar device */
     z-index: 10000;
     background: #0b1026; 
+    display: flex; /* Ganti ke Flex agar terpusat sempurna */
     justify-content: center;
     align-items: center;
     transition: opacity 2s ease-out, visibility 2s ease-out;
@@ -119,12 +135,11 @@ body {
    #PC / DESKTOP MODE (RESPONSIVE FULL SCREEN FIX)
    ========================================================================== */
 @media (min-width: 768px) {
-    /* JEBOL BATAS HP DI SINI */
     .screen {
         max-width: none !important; 
         width: 100vw !important;
-        height: 100vh !important;
-        position: fixed !important; /* Paksa diam di tempat */
+        height: 100dvh !important;
+        position: fixed !important; 
         top: 0; left: 0;
         margin: 0;
         box-shadow: none !important;

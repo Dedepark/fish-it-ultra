@@ -91,7 +91,8 @@ const LeaderboardManager = {
                 .order('updated_at', { ascending: false });
         }
 
-        const { data, error } = await query.limit(50); 
+        // [EDITED] Ubah limit dari 50 ke 100
+        const { data, error } = await query.limit(100); 
 
         if (error) {
             console.error("LB Error:", error);
@@ -111,7 +112,9 @@ const LeaderboardManager = {
 
     renderData(players) {
         const top3 = [players[0], players[1], players[2]];
-        const others = players.slice(3, 50); // Tampilkan semua sisa sampai 50
+        
+        // [EDITED] Slice sampai 100
+        const others = players.slice(3, 100); 
 
         // Update Podium
         this.fillPodium('p-first', top3[0]);

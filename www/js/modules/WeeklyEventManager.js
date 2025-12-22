@@ -7,6 +7,7 @@ import { DatabaseManager } from './DatabaseManager.js';
 const WeeklyEventManager = {
     activeTab: 'fish', // Default Fish
     isSpinning: false,
+    isDataLoaded: false, // [FIX] Penanda status data agar tidak save sembarangan
     
     // Data Default
     data: {
@@ -50,7 +51,7 @@ const WeeklyEventManager = {
         ]
     },
 
-    // --- LOAD DATA ---
+    // --- LOAD DATA (DIPERBAIKI) ---
     async loadEventData() {
         if (!GameStateManager.state.user) return;
         try {
@@ -79,6 +80,8 @@ const WeeklyEventManager = {
                 this.data.dailyFishCount = data.daily_fish_count;
                 this.data.claimedMissions = data.claimed_missions || [];
                 this.data.lastResetDate = data.last_reset_date;
+                
+                this.isDataLoaded = true; // [FIX] Data berhasil dimuat, izinkan save
                 this.checkDailyReset();
             }
         } catch (e) {
@@ -86,9 +89,11 @@ const WeeklyEventManager = {
         }
     },
 
-    // --- SAVE DATA ---
+    // --- SAVE DATA (DIPERBAIKI) ---
     async saveEventData() {
-        if (!GameStateManager.state.user) return;
+        // [FIX] JANGAN SAVE JIKA DATA BELUM DIMUAT (Mencegah Overwrite 0)
+        if (!GameStateManager.state.user || !this.isDataLoaded) return;
+        
         const updatePayload = {
             blue_tokens: this.data.tokens.blue,
             red_tokens: this.data.tokens.red,
@@ -102,21 +107,36 @@ const WeeklyEventManager = {
             .eq('user_id', GameStateManager.state.user.id);
     },
 
-    // --- RESET HARIAN ---
+    // --- RESET HARIAN (DIPERBAIKI) ---
     checkDailyReset() {
+        // [FIX] Jangan reset kalau data belum siap (mencegah reset palsu)
+        if (!this.isDataLoaded) return;
+
         const today = new Date().toISOString().split('T')[0];
         if (this.data.lastResetDate !== today) {
+            console.log("Melakukan Reset Harian Event...");
             this.data.dailyFishCount = 0;
+            // Token TIDAK di-reset di sini (aman)
             this.data.claimedMissions = this.data.claimedMissions.filter(id => !id.startsWith('fish_'));
             this.data.lastResetDate = today;
             this.saveEventData();
         }
     },
 
-    onFishCaught() {
+    // [FIX] FUNGSI INI DIBUAT ASYNC DAN MENUNGGU LOAD DATA
+    async onFishCaught() {
+        // Pastikan data dimuat dulu sebelum nambah counter
+        if (!this.isDataLoaded) {
+             await this.loadEventData();
+        }
+        
+        // Cek lagi, kalau masih gagal load (misal error sinyal), jangan lanjut save
+        if (!this.isDataLoaded) return;
+
         this.checkDailyReset();
         this.data.dailyFishCount++;
         this.saveEventData();
+        
         const modal = document.getElementById('modal-weekly-event');
         if (modal && this.activeTab === 'fish') {
             this.renderTabContent('fish');
@@ -451,7 +471,6 @@ const WeeklyEventManager = {
         document.body.insertAdjacentHTML('beforeend', html);
     },
 
-    // (Fungsi renderMissionCard, renderRankMission, claimMission, updateCounters, closeEvent SAMA)
     renderMissionCard(id, icon, title, current, target) {
         const isClaimed = this.data.claimedMissions.includes(id);
         const progress = Math.min(100, (current / target) * 100);

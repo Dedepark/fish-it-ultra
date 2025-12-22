@@ -1,5 +1,5 @@
 /* ==========================================================================
-   #_INVENTORY.CSS: INVENTORY, SHOP, FISH CARDS & ITEM CARDS (FIXED TAB THEME)
+   #_INVENTORY.CSS: INVENTORY, SHOP, FISH CARDS & ITEM CARDS (FIXED SCROLL)
    ========================================================================== */
 
 /* --- GENERAL LAYOUT & TABS --- */
@@ -27,18 +27,19 @@
 
 .tab-content, .shop-content { 
     flex: 1; overflow-y: auto; display: flex; flex-direction: column; 
-    gap: 10px; padding-bottom: 100px; padding: 0 5px;
+    gap: 10px; padding-bottom: 30px; /* Jarak aman bawah */
+    padding-left: 5px; padding-right: 5px;
 }
 #panel-inventory { padding: 15px 10px 0 10px; }
 
 /* --- WARNING BANNER (NEW) --- */
 .inventory-warning {
     background: rgba(255, 193, 7, 0.1);
-    border: 2px dashed #ffc107; /* Border Mencolok */
+    border: 2px dashed #ffc107; 
     color: #ffc107;
     padding: 10px;
     border-radius: 8px;
-    font-size: 0.65rem; /* Tulisan Kecil */
+    font-size: 0.65rem; 
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
@@ -141,10 +142,17 @@
 .fish-epic { background: #0077b6 !important; border: 2px solid #00b4d8 !important; box-shadow: 0 4px 0 #023e8a !important; color: #caf0f8 !important; }
 .fish-legendary { background: #ffaa00 !important; border: 2px solid #ffea00 !important; box-shadow: 0 4px 0 #cc8800 !important; color: #fff !important; text-shadow: 1px 1px 0 #b37400; }
 .fish-mistis { background: #d00000 !important; border: 2px solid #ff0000 !important; box-shadow: 0 4px 0 #9d0208 !important; color: #fff !important; animation: mistisPulse 2s infinite alternate !important; }
-.fish-astral { background: linear-gradient(135deg, #000000, #0f0c29, #302b63, #24243e) !important; border: 2px solid #00d2ff !important; box-shadow: 0 0 15px #00d2ff, inset 0 0 10px #00d2ff !important; color: #00d2ff !important; font-weight: 900 !important; position: relative; overflow: hidden; }
-.fish-astral::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.5), transparent); transform: rotate(45deg); animation: astralShine 3s infinite linear; pointer-events: none; }
+
+.fish-astral { 
+    background: linear-gradient(135deg, #000000, #0f0c29, #302b63, #24243e) !important; 
+    border: 2px solid #00d2ff !important; 
+    box-shadow: 0 4px 0 #005f73 !important; 
+    color: #00d2ff !important; 
+    font-weight: 900 !important; 
+    position: relative; 
+    overflow: hidden; 
+}
 @keyframes mistisPulse { 0% {box-shadow: 0 0 10px #ff0000;} 100% {box-shadow: 0 0 25px #ff0000;} } 
-@keyframes astralShine { 0% {top: -150%; left: -150%;} 100% {top: 150%; left: 150%;} }
 
 /* Index & Shop Default (Mobile) */
 #panel-index:not(.hidden) { display: flex !important; flex-direction: column !important; overflow: hidden !important; padding: 0 !important; height: 100% !important; max-height: 100% !important; }
@@ -153,14 +161,14 @@
 #index-list { 
     display: grid !important; grid-template-columns: repeat(2, 1fr) !important; 
     gap: 10px !important; grid-auto-rows: 1fr !important; flex-grow: 1; 
-    overflow-y: auto !important; padding: 15px; padding-bottom: 100px; height: auto !important; 
+    overflow-y: auto !important; padding: 15px; padding-bottom: 30px; height: auto !important; 
 }
 
 .shop-content.hidden { display: none !important; }
 #shop-rods:not(.hidden), #shop-stones:not(.hidden), #shop-potions:not(.hidden) {
     display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
     gap: 8px !important; width: 100% !important; box-sizing: border-box !important;
-    padding: 10px !important; padding-bottom: 100px !important; overflow-x: hidden !important; 
+    padding: 10px !important; padding-bottom: 30px !important; overflow-x: hidden !important; 
     overflow-y: auto !important; align-content: start !important;
 }
 

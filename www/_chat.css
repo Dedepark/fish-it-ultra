@@ -1,19 +1,23 @@
 /* ==========================================================================
-   #_CHAT.CSS: CHAT LAYOUT, MESSAGES, NOTIFICATIONS (DYNAMIC THEME)
+   #_CHAT.CSS: CHAT LAYOUT, MESSAGES (FLEX CONTAINER)
    ========================================================================== */
-#panel-chat { padding: 0; display: flex; flex-direction: column; height: 100%; overflow: hidden; background: transparent; }
+#panel-chat { 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    overflow: hidden; /* Kontainer luar tidak scroll */
+    background: transparent; 
+}
 
 #chat-header { 
     padding: 15px; 
     background: rgba(0,0,0,0.8); 
     
-    /* GANTI: Warna Teks Header Dinamis */
     color: var(--accent-color, #00d2ff); 
     text-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
     
     border-bottom: 2px solid #333; 
-    
-    /* GANTI: Border Bawah Dinamis (opsional, biar makin kerasa temanya) */
     border-color: var(--accent-glow, #333);
 
     flex-shrink: 0; 
@@ -32,7 +36,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .online-dot {
-    width: 10px; height: 10px; background-color: #2ecc71; border-radius: 50%; /* Tetap Hijau (Status Online) */
+    width: 10px; height: 10px; background-color: #2ecc71; border-radius: 50%;
     box-shadow: 0 0 5px #2ecc71, 0 0 10px #2ecc71; animation: pulseDot 2s infinite;
 }
 @keyframes pulseDot {
@@ -42,33 +46,63 @@
 }
 #online-count { color: #2ecc71; font-weight: bold; }
 
-/* Messages */
-#chat-messages { flex-grow: 1; overflow-y: auto; padding: 15px; padding-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-.chat-row { display: flex; width: 100%; }
+/* Messages Area - SCROLL DISINI */
+#chat-messages { 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    overflow-x: hidden; /* Mencegah scroll horizontal saat swipe */
+    padding: 15px; 
+    padding-bottom: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    -webkit-overflow-scrolling: touch;
+}
+
+.chat-row { display: flex; width: 100%; position: relative; }
 .row-me { justify-content: flex-end; }
 .row-other { justify-content: flex-start; }
 
 .chat-bubble { 
     padding: 12px 16px; border-radius: 12px; max-width: 75%; word-wrap: break-word; 
     position: relative; font-size: 0.9rem; cursor: pointer; font-weight: 600;
+    transition: transform 0.2s ease-out; /* Untuk animasi swipe */
+    z-index: 2;
+    touch-action: pan-y; /* Membiarkan scroll vertikal, tapi JS akan handle horizontal */
 }
 
-/* BUBBLE SAYA (WARNA DINAMIS) */
+/* Indikator Reply saat swipe (di belakang bubble) */
+.reply-indicator-icon {
+    position: absolute;
+    left: -40px; /* Default disembunyikan di kiri */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.2s, left 0.2s;
+    z-index: 1;
+}
+.chat-row.swiping .reply-indicator-icon {
+    opacity: 1;
+    left: 10px;
+}
+
+/* BUBBLE SAYA */
 .bubble-me { 
-    /* GANTI: Background Bubble Saya Dinamis */
     background: var(--accent-color, #00d2ff); 
-    color: #000; /* Teks hitam biar kontras sama warna tema yang cerah */
-    
+    color: #000; 
     border-bottom-right-radius: 0; 
-    
-    /* GANTI: Shadow Bubble Dinamis */
     box-shadow: 0 4px 10px var(--accent-glow, rgba(0,0,0,0.3));
-    
     transition: background 1s ease, box-shadow 1s ease;
 }
 .bubble-me .chat-meta { color: rgba(0,0,0,0.6); }
 
-/* BUBBLE ORANG LAIN (PUTIH) */
+/* BUBBLE ORANG LAIN */
 .bubble-other { background: #fff; color: #000; border-bottom-left-radius: 0; box-shadow: 0 4px 0 #bdc3c7; }
 .bubble-other .chat-meta { color: #555; }
 
@@ -86,7 +120,53 @@
 .chat-shared-card div div { font-size: 0.8rem !important; line-height: 1.1 !important; }
 
 /* Chat Input */
-.chat-input-wrapper { flex-shrink: 0; background: rgba(0,0,0,0.9); border-top: 2px solid #333; z-index: 20; }
+.chat-input-wrapper { 
+    flex-shrink: 0; 
+    background: rgba(0,0,0,0.9); 
+    border-top: 2px solid #333; 
+    z-index: 20; 
+    position: relative;
+}
+
+/* REPLY PREVIEW BOX (Di atas input) */
+#chat-reply-preview {
+    background: #222;
+    border-left: 4px solid var(--accent-color, #00d2ff);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    border-bottom: 1px solid #333;
+    animation: slideUp 0.2s ease-out;
+}
+#chat-reply-preview.hidden { display: none; }
+@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.reply-content { flex: 1; overflow: hidden; }
+.reply-sender { font-size: 0.7rem; color: var(--accent-color, #00d2ff); font-weight: bold; margin-bottom: 2px; }
+.reply-text { font-size: 0.8rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#btn-cancel-reply { background: transparent; border: none; color: #666; font-size: 1.2rem; padding: 0 10px; }
+
+/* QUOTED MESSAGE INSIDE BUBBLE */
+.reply-quote-block {
+    background: rgba(0,0,0,0.1);
+    border-left: 3px solid rgba(0,0,0,0.3);
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    display: flex; flex-direction: column;
+}
+/* Warna khusus quote di bubble sendiri */
+.bubble-me .reply-quote-block { background: rgba(0,0,0,0.1); border-left-color: rgba(0,0,0,0.4); }
+/* Warna khusus quote di bubble orang lain */
+.bubble-other .reply-quote-block { background: rgba(0,0,0,0.05); border-left-color: var(--accent-color, #00d2ff); }
+
+.quote-sender { font-weight: bold; font-size: 0.7rem; margin-bottom: 2px; opacity: 0.8; }
+.quote-text { opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+
 .chat-input-area { display: flex; gap: 10px; padding: 10px; }
 .chat-input-area input { 
     flex-grow: 1; padding: 12px; border-radius: 12px; background: #222; 
@@ -94,19 +174,15 @@
 }
 .chat-input-area input:focus {
     outline: none;
-    /* GANTI: Border Input saat Focus Dinamis */
     border-color: var(--accent-color, #00d2ff);
     box-shadow: 0 0 10px var(--accent-glow, rgba(0,0,0,0));
 }
 
 .chat-input-area button { 
     width: 48px; height: 48px; border-radius: 12px; 
-    
-    /* GANTI: Tombol Kirim Dinamis */
     background: var(--accent-color, #00d2ff); 
     color: #000; 
     box-shadow: 0 4px 10px var(--accent-glow, rgba(0,0,0,0.3));
-    
     display: flex; align-items: center; justify-content: center; border: none;
     transition: all 0.1s ease, background 1s ease;
 }
@@ -135,7 +211,6 @@
    #PC / DESKTOP MODE (CHAT)
    ========================================================================== */
 @media (min-width: 768px) {
-    /* PANEL CHAT PENUHI KONTAINER */
     #panel-chat {
         height: 100% !important;
         border-radius: 20px;
@@ -144,37 +219,20 @@
 
     #chat-messages {
         padding: 30px;
-        /* SCROLLBAR CUSTOM (TRANSPARAN) */
         scrollbar-width: thin; 
-        scrollbar-color: rgba(255, 255, 255, 0.1) transparent; /* Thumb Track (Firefox) */
+        scrollbar-color: rgba(255, 255, 255, 0.1) transparent; 
     }
 
-    /* SCROLLBAR WEBKIT (Chrome, Edge, Safari) */
-    #chat-messages::-webkit-scrollbar {
-        width: 8px; /* Lebar Scrollbar */
-        display: block; /* Pastikan muncul di PC */
-    }
+    #chat-messages::-webkit-scrollbar { width: 8px; display: block; }
+    #chat-messages::-webkit-scrollbar-track { background: transparent; }
+    #chat-messages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+    #chat-messages::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
-    #chat-messages::-webkit-scrollbar-track {
-        background: transparent; /* Track Bening */
-    }
-
-    #chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15); /* Thumb Putih Transparan */
-        border-radius: 10px; /* Membulat */
-    }
-
-    #chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3); /* Sedikit lebih terang pas di-hover */
-    }
-
-    .chat-bubble { 
-        font-size: 1rem; 
-        max-width: 70%; 
-        padding: 12px 20px;
-    }
-
+    .chat-bubble { font-size: 1rem; max-width: 70%; padding: 12px 20px; }
     .chat-input-wrapper { padding: 20px; }
+    /* Penyesuaian reply box di desktop */
+    #chat-reply-preview { margin: -20px -20px 20px -20px; border-left-width: 6px; }
+    
     .chat-input-area input { font-size: 1.1rem; }
     .chat-input-area button { width: 60px; height: auto; font-size: 1.2rem; }
 }

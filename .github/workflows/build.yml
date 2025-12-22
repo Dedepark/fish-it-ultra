@@ -1,4 +1,4 @@
-name: Bikin APK & Release Sultan (Signed)
+name: BUILD APK RELEASE (Signed)
 
 on:
   push:

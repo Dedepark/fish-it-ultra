@@ -60,10 +60,8 @@
                 <div id="enchant-rod-name" style="font-size: 1.2rem; font-weight: bold;"></div>
                 <div id="enchant-rod-level" style="color: gold;">Level: 1</div>
             </div>
-            
             <h4 style="margin-top: 0; color: #00d2ff;">Pilih Batu Enchant:</h4>
             <div id="enchant-stones-list" class="grid-list" style="max-height: 200px; overflow-y: auto;"></div>
-            
             <button onclick="app.closeModal('modal-enchant-rod')" class="btn-close-modal">Tutup</button>
         </div>
     </div>
@@ -95,25 +93,20 @@
         <div class="modal-content">
             <h3 style="color:#fff; border-bottom:none; margin-bottom:10px;">PENGATURAN</h3>
             <p style="font-size:0.7rem; color:#888; margin-top:0;">FISH IT ULTRA</p>
-            
             <div class="settings-grid">
                 <button onclick="app.showLatestNews()" class="setting-icon-btn btn-set-news" title="Info Update">
                     <i class="fa-solid fa-scroll"></i>
                 </button>
-
                 <a href="mailto:zadpropc@gmail.com?subject=Support Fish It Ultra" style="text-decoration:none;">
                     <button class="setting-icon-btn btn-set-help" title="Bantuan">
                         <i class="fa-solid fa-headset"></i>
                     </button>
                 </a>
-
                 <button onclick="app.manualCheckUpdate()" class="setting-icon-btn btn-set-update" title="Cek Update">
                     <i class="fa-solid fa-sync"></i>
                 </button>
             </div>
-
             <div style="border-top: 1px dashed #333; margin: 15px 0;"></div>
-
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <button onclick="app.installPWA()" style="background:#222; color:#ccc; padding:10px; font-size:0.8rem;">
                     <i class="fa-solid fa-download"></i> Install App
@@ -122,14 +115,11 @@
                     <i class="fa-solid fa-power-off"></i> Logout
                 </button>
             </div>
-
             <div class="player-id-box">
                 <span id="setting-player-id">ID: Memuat...</span>
                 <button onclick="app.copyPlayerId()" class="btn-copy-id"><i class="fa-regular fa-copy"></i></button>
             </div>
-            
             <p id="setting-version-text" style="font-size:0.7rem; color:#00ff88; margin-top:10px; font-weight:800; text-shadow:0 0 5px rgba(0, 255, 136, 0.5); letter-spacing:1px;">Ver: ...</p>
-            
             <button onclick="app.closeModal('modal-settings')" class="btn-close-modal" style="margin-top:10px;">TUTUP</button>
         </div>
     </div>
@@ -138,7 +128,6 @@
         <div class="modal-content">
             <h3 id="modal-fish-name" style="margin:0; font-size:1.5rem;">Nama Ikan</h3>
             <div id="modal-fish-icon" class="fish-detail-icon"><i class="fa-solid fa-fish"></i></div>
-            
             <div class="fish-detail-info">
                 <div id="modal-fish-rarity">RARITY</div>
                 <div id="modal-fish-price" style="color:#00d2ff; font-weight:bold; font-size:1.2rem;">Rp 0</div>
@@ -158,7 +147,6 @@
             <div class="level-badge" id="prof-level-badge">LV. 1</div>
             <div class="stats-row"><span>Uang:</span><span id="prof-money" style="color:#FFD700">Rp 0</span></div>
             <div class="stats-row"><span>Berlian:</span><span id="prof-diamonds" style="color:#00d2ff"><i class="fa-solid fa-gem"></i> 0</span></div>
-            
             <div class="stats-row"><span>Pancingan:</span><span id="prof-rod" style="color:#00d2ff">-</span></div>
             <div style="margin-top:15px; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
                 <small>Tangkapan Terbaik:</small>
@@ -190,9 +178,7 @@
                 <h3 style="margin:0;">KIRIM IKAN</h3>
                 <p style="margin:5px 0 0 0;">Ke: <b id="give-fish-target" style="color:#00d2ff">Player</b></p>
             </div>
-
             <div id="give-fish-list" class="grid-list" style="flex-grow:1; overflow-y:auto; padding:15px; width:auto;"></div>
-
             <div class="modal-actions" style="padding:15px; margin:0; background:#111; border-top:1px solid #333; flex-shrink:0; box-sizing:border-box;">
                 <button id="btn-give-fish-submit" onclick="app.processGiveFish()" class="btn-confirm">KIRIM</button>
                 <button onclick="app.closeModal('modal-give-fish')" class="btn-cancel">BATAL</button>
@@ -206,14 +192,12 @@
                 <div class="custom-alert-header" style="background: transparent; border: none; padding-bottom: 0; margin-bottom: 10px;">
                     <h3 style="margin: 0;"><i class="fa-solid fa-trophy" style="color: gold;"></i> GLOBAL RANKING</h3>
                 </div>
-
                 <div class="tabs" style="margin-bottom: 10px;">
                     <button class="tab-btn active" onclick="app.leaderboard.switchTab('money')">SULTAN</button>
                     <button class="tab-btn" onclick="app.leaderboard.switchTab('level')">LEVEL</button>
                     <button class="tab-btn" onclick="app.leaderboard.switchTab('fish')">FISH</button>
                 </div>
             </div>
-
             <div id="lb-podium" class="podium-container" style="flex-shrink: 0; background: #0a0a0a; margin-bottom: 0; padding-top: 10px; border-bottom: 2px solid #333; z-index: 10;">
                 <div class="podium-item p-second">
                     <div class="podium-avatar-box">
@@ -240,14 +224,12 @@
                     <div class="podium-block p-block-3">3</div>
                 </div>
             </div>
-
             <div id="leaderboard-container" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.3);">
                 <div id="lb-list" class="lb-list-container"></div>
                 <div style="text-align: center; color: #ff0000; font-size: 0.7rem; margin-top: 20px; padding-bottom: 20px;">
                     • Leaderboard Live
                 </div>
             </div>
-
             <div style="padding: 15px; background: #0a0a0a; border-top: 1px solid #333; flex-shrink: 0;">
                 <button class="btn-close-modal" onclick="app.leaderboard.close(); app.closeModal('modal-leaderboard')" style="width: 100%; margin: 0;">TUTUP</button>
             </div>
@@ -283,14 +265,11 @@
         <header>
             <div class="user-info" onclick="app.viewProfile()">
                 <div style="display:flex; flex-direction:column; align-items:flex-start; width: 100%;">
-                    
                     <div class="user-header-row">
                         <i class="fa-solid fa-user-astronaut user-icon"></i> 
-                        
                         <div class="name-ticker-mask">
-                            <b id="display-username">PlayerNameYangSangatPanjang</b>
+                            <b id="display-username">PlayerName</b>
                         </div>
-                        
                         <span id="header-level-badge" class="badge-mini">LV.1</span>
                     </div>
                     <div style="font-size:0.7rem; color:#aaa; width:100%; height:4px; background:#444; border-radius:2px; margin-top:2px;">
@@ -298,7 +277,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="currency-info">
                 <div class="curr-item"><i class="fa-solid fa-coins" style="color:gold;"></i> <span id="display-money">0</span></div>
                 <div class="curr-item"><i class="fa-solid fa-gem" style="color:#00d2ff;"></i> <span id="display-diamonds">0</span></div>
@@ -323,12 +301,10 @@
             <div id="rod-info">
                 <span id="rod-name">Pancingan</span> <span style="color:gold" id="rod-power-display">Power: 1x</span>
             </div>
-            
             <div id="game-visuals" style="position:relative; width:100%; height:300px; display:flex; justify-content:center; align-items:center;">
                 <div id="bobber" class="hidden"><i class="fa-solid fa-fish-fins"></i></div>
                 <div id="status-text">SIAP MANCING</div>
             </div>
-
             <div class="controls">
                 <button id="btn-cast" onclick="app.handleCastBtn()">CAST</button>
                 <button id="btn-auto" onclick="app.toggleAutoFishing()">AUTO: OFF</button>
@@ -341,7 +317,6 @@
                 <button class="tab-btn active" onclick="app.switchInvTab('fish')">IKAN</button>
                 <button class="tab-btn" onclick="app.switchInvTab('items')">ALAT</button>
             </div>
-            
             <div id="inv-tab-fish" class="tab-content">
                 <div class="inventory-warning">
                     <i class="fa-solid fa-circle-exclamation"></i>
@@ -351,7 +326,6 @@
                 <div id="inventory-list" class="grid-list"></div>
                 <div id="inventory-list-sentinel" style="height:10px;"></div>
             </div>
-
             <div id="inv-tab-items" class="tab-content hidden">
                 <div id="items-list" class="grid-list"></div>
             </div>
@@ -378,16 +352,23 @@
         <div id="panel-chat" class="panel hidden">
             <div id="chat-header">
                 <span>GLOBAL CHAT</span>
-                
                 <div id="online-counter-wrapper" onclick="app.leaderboard.open()" style="cursor: pointer;" title="Klik untuk lihat Leaderboard">
                     <div class="online-dot"></div>
                     <span id="online-text">Online = <span id="online-count">0</span></span>
                 </div>
-
             </div>
             
             <div id="chat-messages"></div>
+            
             <div class="chat-input-wrapper">
+                <div id="chat-reply-preview" class="hidden">
+                    <div class="reply-content">
+                        <div class="reply-sender">Balas ke: <span id="reply-target-name">Nama</span></div>
+                        <div class="reply-text" id="reply-target-msg">Pesan...</div>
+                    </div>
+                    <button id="btn-cancel-reply"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
                 <div class="chat-input-area">
                     <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="50">
                     <button onclick="app.sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -405,18 +386,14 @@
     </div>
 
     <div id="modal-custom-alert" class="modal hidden" style="position:fixed !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; transform:none !important; background-color:rgba(0,0,0,0.6) !important; z-index:2147483647 !important; display:flex; align-items:center; justify-content:center;">
-        
         <div class="modal-content custom-alert-content" style="background:#1a1a1a; width:90%; max-width:400px; border: 3px solid #e74c3c; padding:0; overflow:hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8); border-radius:12px; position:relative;">
-            
             <div class="custom-alert-header" style="background:#e74c3c; padding:15px; color:white; font-weight:900; display:flex; align-items:center; gap:10px;">
                 <i class="fa-solid fa-circle-exclamation"></i> 
                 <span id="custom-alert-title">INFO</span>
             </div>
-            
             <div style="padding:25px 20px;">
                 <p id="custom-alert-message" style="color:#eee; margin:0; text-align:center; font-size:1rem; line-height:1.5;">Pesan</p>
             </div>
-            
             <div class="custom-alert-actions" style="padding:0 20px 20px 20px; display:flex; gap:10px;">
                 <button id="custom-alert-cancel" class="btn-cancel hidden" style="flex:1; padding:12px; border-radius:8px; border:1px solid #555; background:transparent; color:#ccc; font-weight:bold; cursor:pointer;">BATAL</button>
                 <button id="custom-alert-confirm" class="btn-confirm" style="flex:1; padding:12px; border-radius:8px; border:none; background:linear-gradient(to right, #e74c3c, #c0392b); color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(231, 76, 60, 0.4);">OK</button>

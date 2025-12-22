@@ -318,7 +318,7 @@ const initializeApp = async () => {
 
     // 2. FINISHING TOUCH: Penuhi Bar ke 100%
     if(progressBar) progressBar.style.width = '100%';
-    if(loadingText) loadingText.textContent = "MEMBUKA GERBANG...";
+    if(loadingText) loadingText.textContent = "MENYIAPKAN JORAN...";
 
     // 3. TAHAN SEBENTAR
     await new Promise(r => setTimeout(r, 800));
