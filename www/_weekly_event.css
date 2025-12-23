@@ -24,14 +24,20 @@
 
 .event-body { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
 
-/* Tombol Keluar Pengganti Navigasi */
+/* Tombol Keluar Pengganti Navigasi - FIXED SAFE AREA */
 .event-exit-nav {
     position: fixed; bottom: 0; left: 0; width: 100%;
-    height: calc(55px + env(safe-area-inset-bottom));
+    /* Gunakan padding untuk mendorong teks ke atas, bukan sekadar height */
+    height: auto;
+    padding: 15px;
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
     background: #e74c3c; color: white; border: none;
     font-weight: 900; font-size: 1.2rem; letter-spacing: 2px;
     z-index: 10001;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
 }
+.event-exit-nav:active { background: #c0392b; transform: none !important; }
 
 /* UI Elements inside Event */
 .mission-card-event {

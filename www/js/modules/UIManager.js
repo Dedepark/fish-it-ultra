@@ -68,12 +68,31 @@ export const UIManager = {
         document.getElementById(modalId).classList.remove('hidden');
     },
     
+    // --- MODIFIKASI FUNGSI CLOSE MODAL (ANIMASI TUTUP) ---
     closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
+        const modal = document.getElementById(modalId);
+        
+        // KHUSUS CUSTOM ALERT: Handle Animasi Tutup
+        if (modalId === 'modal-custom-alert') {
+            // Jika sudah hidden, abaikan
+            if (modal.classList.contains('hidden')) return;
+
+            // Tambahkan kelas animasi tutup
+            modal.classList.add('alert-closing');
+            
+            // Tunggu animasi CSS selesai (500ms) baru sembunyikan total
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('alert-closing'); // Reset untuk pemakaian berikutnya
+            }, 500); // Waktu harus sinkron dengan durasi animasi CSS
+            
+        } else {
+            // Modal biasa langsung tutup
+            modal.classList.add('hidden');
+        }
     },
     
     nav(page) {
-        // Update Nav Buttons
         document.querySelectorAll('nav button').forEach(btn => {
             btn.classList.remove('active');
         });
@@ -86,7 +105,6 @@ export const UIManager = {
             activeBtn.classList.add('active');
         }
         
-        // Hide all panels & fishing area
         document.querySelectorAll('.panel').forEach(panel => {
             panel.classList.add('hidden');
         });
@@ -95,24 +113,21 @@ export const UIManager = {
             fishingArea.classList.add('hidden');
         }
 
-        // --- LOGIKA VISIBILITAS TOMBOL FLOAT & SIDEBAR ---
         const floatBtns = document.getElementById('floating-buttons');
         const sidebarBtn = document.getElementById('event-sidebar-toggle'); 
 
         if (page === 'fishing') {
             document.getElementById('fishing-area').classList.remove('hidden');
-            if (floatBtns) floatBtns.classList.remove('hidden'); // Tampilkan Tombol Misi
-            if (sidebarBtn) sidebarBtn.classList.remove('hidden'); // Tampilkan Tombol Sidebar
+            if (floatBtns) floatBtns.classList.remove('hidden');
+            if (sidebarBtn) sidebarBtn.classList.remove('hidden');
         } else {
-            if (floatBtns) floatBtns.classList.add('hidden'); // Sembunyikan Tombol Misi
-            if (sidebarBtn) sidebarBtn.classList.add('hidden'); // Sembunyikan Tombol Sidebar
+            if (floatBtns) floatBtns.classList.add('hidden');
+            if (sidebarBtn) sidebarBtn.classList.add('hidden');
             
-            // Tutup sidebar jika terbuka saat pindah halaman
             if (GameStateManager.state.eventSidebarOpen) {
                 EventManager.toggleEventSidebar();
             }
             
-            // Render Panel Content
             const targetPanel = document.getElementById(`panel-${page}`);
             if (targetPanel) {
                 targetPanel.classList.remove('hidden');
@@ -131,7 +146,6 @@ export const UIManager = {
             }
         }
         
-        // Special Page Handling
         if (page === 'index') {
             this.renderIndex();
         } else if (page === 'chat') {
@@ -155,7 +169,6 @@ export const UIManager = {
             return;
         }
         
-        // Header Updates
         document.getElementById('display-username').textContent = GameStateManager.state.username;
         document.getElementById('header-level-badge').textContent = `LV.${GameStateManager.state.gameData.level}`;
         document.getElementById('header-exp-bar').style.width = 
@@ -164,10 +177,8 @@ export const UIManager = {
         document.getElementById('display-money').textContent = formatMoney(GameStateManager.state.gameData.money);
         document.getElementById('display-diamonds').textContent = GameStateManager.state.gameData.diamonds;
         
-        // --- FIX: AMBIL DATA JORAN BY ID UNTUK TAMPILAN HEADER ---
         const currentRodId = GameStateManager.state.gameData.current_rod;
         const rod = RODS_DB.find(r => r.id === currentRodId) || RODS_DB[0];
-        // --------------------------------------------------------
 
         const rodLvl = GameStateManager.state.gameData.rod_levels[rod.id] || 0;
         const totalPower = rod.power + (rodLvl * 0.5);
@@ -175,7 +186,6 @@ export const UIManager = {
         const rodNameEl = document.getElementById('rod-name');
         rodNameEl.textContent = rod.name;
         
-        // Efek Visual untuk Joran Event
         if (rod.id >= 100) {
             rodNameEl.style.color = rod.color || '#00ff88';
             rodNameEl.style.textShadow = `0 0 5px ${rod.color}`;
@@ -215,12 +225,22 @@ export const UIManager = {
         const modal = document.getElementById('modal-custom-alert');
         const titleEl = document.getElementById('custom-alert-title');
         const messageEl = document.getElementById('custom-alert-message');
+        const scrollBox = document.querySelector('.alert-msg-scroll-box');
         const confirmBtn = document.getElementById('custom-alert-confirm');
         const cancelBtn = document.getElementById('custom-alert-cancel');
+        
+        // Reset state bersih (jaga-jaga jika dipanggil beruntun)
+        modal.classList.remove('alert-closing');
         
         titleEl.textContent = title;
         messageEl.textContent = message;
         
+        if (message.length > 25) { 
+            scrollBox.classList.add('is-long-text');
+        } else {
+            scrollBox.classList.remove('is-long-text');
+        }
+
         modal.className = 'modal';
         if (type === 'success') {
             modal.classList.add('alert-success');
@@ -259,9 +279,20 @@ export const UIManager = {
             }
         }
         
+        // --- KLIK DI LUAR KONTEN UNTUK MENUTUP ---
+        // Kita pasang event di wrapper 'modal' (area transparan/kosong)
+        modal.onclick = (e) => {
+            // Cek apakah yang diklik benar-benar area kosong (modal wrapper)
+            // Bukan konten alert atau anaknya
+            if (e.target === modal) {
+                this.closeModal('modal-custom-alert');
+            }
+        };
+        
         this.showModal('modal-custom-alert');
     },
     
+    // ... (Sisa fungsi renderIndex, viewProfile, dsb tetap sama) ...
     renderIndex() {
         const container = document.getElementById('index-list');
         const counter = document.getElementById('fish-counter');
@@ -341,10 +372,8 @@ export const UIManager = {
             money.textContent = formatMoney(GameStateManager.state.gameData.money);
             diamonds.textContent = `💎 ${GameStateManager.state.gameData.diamonds}`;
             
-            // --- FIX: AMBIL JORAN BY ID ---
             const currentRodId = GameStateManager.state.gameData.current_rod;
             const currentRod = RODS_DB.find(r => r.id === currentRodId) || RODS_DB[0];
-            // -----------------------------
 
             const rodLvl = GameStateManager.state.gameData.rod_levels[currentRod.id] || 0;
             rod.textContent = `${currentRod.name} (Lv.${rodLvl})`;
@@ -505,7 +534,6 @@ export const UIManager = {
         
         let groupedArray = Object.values(groupedFish);
 
-        // LOGIKA SORTING (Rarity Tertinggi di Atas)
         groupedArray.sort((a, b) => {
             const rankA = getRank(a.rarity);
             const rankB = getRank(b.rarity);
@@ -555,7 +583,7 @@ export const UIManager = {
         }
         
         try {
-            // 1. DEDUKSI UANG DARI STATE PENGIRIM (Optimistic Update)
+            // Optimistic Update
             GameStateManager.state.gameData.money -= amount; 
             
             const { error } = await DatabaseManager.client.rpc('give_money', {
@@ -569,14 +597,20 @@ export const UIManager = {
             
             await GameStateManager.saveState();
             
-            // 2. UPDATE UI HEADER SECARA REAL-TIME (setelah transaksi sukses)
+            // --- FIX BROADCAST UANG ---
+            // Panggil broadcast manual karena RPC mungkin tidak mengirim pesan chat
+            await ChatManager.broadcastGiveMoney(
+                GameStateManager.state.username,
+                GameStateManager.state.targetUsername,
+                amount
+            );
+
             this.updateUI(); 
-            
             this.closeModal('modal-give-money');
             this.showCustomAlert("BERHASIL", `Berhasil kirim ${formatMoney(amount)} ke ${GameStateManager.state.targetUsername}.`, [{ text: "OK" }], 'success');
         } catch (error) {
             console.error("Error giving money:", error);
-            // KEMBALIKAN UANG jika transaksi gagal
+            // Rollback
             GameStateManager.state.gameData.money += amount;
             this.updateUI(); 
             this.showCustomAlert("ERROR", "Gagal: " + error.message, [{ text: "OK" }]);
@@ -590,7 +624,7 @@ export const UIManager = {
         }
         
         const selectedFish = GameStateManager.state.selectedGiveFish;
-        const fishIdToDelete = selectedFish.idToDelete; // ID IKAN YANG AKAN DIHAPUS DARI DATABASE SENDER
+        const fishIdToDelete = selectedFish.idToDelete; 
         
         this.showCustomAlert(
             "KONFIRMASI",
@@ -602,7 +636,9 @@ export const UIManager = {
                     isConfirm: true,
                     onClick: async () => {
                         try {
-                            // --- PANGGIL RPC DENGAN ID IKAN YANG AKAN DIHAPUS ---
+                            // Panggil RPC
+                            // NOTE: Error PGRST203 biasanya karena ketidakcocokan parameter DB.
+                            // Pastikan di SQL Database fungsi 'give_fish' memiliki parameter 'fish_id_to_delete' (bigint).
                             const { error } = await DatabaseManager.client.rpc('give_fish', {
                                 target_user_id: GameStateManager.state.targetUserId,
                                 fish_name: selectedFish.fish_name,
@@ -610,34 +646,41 @@ export const UIManager = {
                                 price: selectedFish.price,
                                 sender_username: GameStateManager.state.username,
                                 target_username: GameStateManager.state.targetUsername,
-                                
-                                // PARAMETER PENTING UNTUK PENGHAPUSAN DI SISI SERVER
                                 fish_id_to_delete: fishIdToDelete 
                             });
                             
                             if (error) throw error;
                             
-                            // --- OPTIMISTIC UPDATE: HAPUS HANYA 1 IKAN DARI STATE LOKAL ---
+                            // Hapus ikan dari inventory lokal (JS)
                             const indexToRemove = GameStateManager.state.inventory.findIndex(fish => fish.id === fishIdToDelete);
-
                             if (indexToRemove !== -1) {
                                 GameStateManager.state.inventory.splice(indexToRemove, 1);
                             }
                             
-                            // Kelompokkan ulang inventory lokal dan update tampilan
                             GameStateManager.groupInventoryItems();
-                            // Panggil render inventory di InventoryManager untuk me-refresh tab Tas
                             InventoryManager.renderInventory(); 
-                            
-                            // Simpan state game_data (misalnya best_fish)
                             await GameStateManager.saveState();
+                            
+                            // --- FIX BROADCAST IKAN ---
+                            // Panggil broadcast manual
+                            await ChatManager.broadcastGiveFish(
+                                GameStateManager.state.username,
+                                GameStateManager.state.targetUsername,
+                                selectedFish.fish_name,
+                                selectedFish.rarity
+                            );
                             
                             this.closeModal('modal-give-fish');
                             this.showCustomAlert("BERHASIL", "Ikan terkirim!", [{ text: "OK" }], 'success');
                             
                         } catch (error) {
                             console.error("Error giving fish:", error);
-                            this.showCustomAlert("ERROR", "Gagal kirim ikan. Pastikan RPC 'give_fish' di server telah diupdate untuk menerima dan memproses 'fish_id_to_delete'.", [{ text: "OK" }]);
+                            // Pesan error spesifik jika masalah parameter DB
+                            let errMsg = error.message;
+                            if (error.code === 'PGRST203') {
+                                errMsg = "Server Error: Fungsi database tidak cocok. Mohon hubungi admin untuk update fungsi 'give_fish'.";
+                            }
+                            this.showCustomAlert("ERROR", errMsg, [{ text: "OK" }]);
                         }
                     }
                 }

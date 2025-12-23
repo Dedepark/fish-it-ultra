@@ -35,50 +35,174 @@ button:hover { transform: translateY(-2px); }
 .btn-close-modal { margin-top: 20px; width: 100%; padding: 12px; background: #e74c3c; color: white; border: none; border-radius: 10px; box-shadow: 0 5px 0 #c0392b; }
 .btn-close-modal:active { transform: translateY(5px); box-shadow: none; }
 
-/* --- CUSTOM ALERT --- */
-#modal-custom-alert { z-index: 1000; }
-.custom-alert-content { background: #111; padding: 0; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 3px solid #e74c3c; box-shadow: 0 10px 40px rgba(0,0,0,0.8); overflow: hidden; }
-.custom-alert-header { background: #e74c3c; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 3px solid #c0392b; }
-.custom-alert-header i, .custom-alert-header h3 { color: #fff; font-weight: 900; }
-#custom-alert-message { padding: 25px; color: #fff; font-size: 1rem; line-height: 1.5; margin: 0; font-weight: 600; }
-.custom-alert-actions { display: flex; padding: 0 20px 20px 20px; gap: 10px; }
-.custom-alert-actions button { flex: 1; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+/* ========================================================= */
+/* --- CUSTOM ALERT: DYNAMIC ISLAND (FINAL PERFECTED) --- */
+/* ========================================================= */
 
-.btn-confirm { background: #2ecc71; color: white; border: none; box-shadow: 0 5px 0 #219150; }
-.btn-confirm:hover { background: #2ecc71; transform: translateY(-2px); box-shadow: 0 7px 0 #219150; }
-.btn-confirm:active { transform: translateY(5px); box-shadow: 0 0 0 #219150; }
+#modal-custom-alert { 
+    z-index: 20000;
+    align-items: flex-start; /* Mulai dari atas */
+    padding-top: calc(10px + env(safe-area-inset-top)); /* Jarak dari poni HP */
+    
+    /* FIX: Aktifkan pointer-events agar bisa mendeteksi klik di area kosong (backdrop) */
+    pointer-events: auto !important; 
+    
+    /* FIX: Hilangkan Blur & Background Gelap TOTAL */
+    background: transparent !important; 
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    
+    display: flex;
+    justify-content: center;
+}
 
-.btn-cancel { background: #95a5a6; color: white; border: none; box-shadow: 0 5px 0 #7f8c8d; }
-.btn-cancel:hover { background: #95a5a6; box-shadow: 0 7px 0 #7f8c8d; }
-.btn-cancel:active { transform: translateY(5px); box-shadow: 0 0 0 #7f8c8d; }
+#modal-custom-alert .custom-alert-content {
+    /* Konten tetap bisa diklik */
+    pointer-events: auto;
+    
+    background: #000;
+    padding: 0;
+    margin: 0 2px; /* Jarak 2px dari kiri dan kanan */
+    
+    display: flex;
+    flex-direction: column;
+    
+    /* BENTUK & UKURAN */
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    overflow: hidden;
+    
+    /* ANIMASI BUKA (Pop & Stretch) */
+    width: 40px; 
+    opacity: 0;
+    transform-origin: top center;
+    animation: islandStretch 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
 
-.alert-success .custom-alert-content { border-color: #2ecc71 !important; }
-.alert-success .custom-alert-header { background: #2ecc71 !important; border-bottom: 3px solid #27ae60 !important; }
-.alert-success .custom-alert-header i, .alert-success .custom-alert-header h3 { color: #fff !important; }
+/* Keyframes Buka */
+@keyframes islandStretch {
+    0% { width: 40px; min-height: 40px; opacity: 0; transform: translateY(-20px) scale(0.8); }
+    30% { width: 60px; opacity: 1; transform: translateY(0) scale(1); }
+    100% { width: calc(100% - 4px); opacity: 1; transform: scale(1); }
+}
 
-/* --- INPUT FIELD STYLING (Digunakan di Modal Kirim Uang) --- */
-.input-dark {
+/* --- ANIMASI TUTUP (Reverse) --- */
+.alert-closing .custom-alert-content {
+    /* Timpa animasi buka dengan animasi tutup */
+    animation: islandShrink 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+/* Konten dalam hilang duluan saat tutup */
+.alert-closing .custom-alert-content > * {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease-out;
+}
+
+/* Keyframes Tutup */
+@keyframes islandShrink {
+    0% { width: calc(100% - 4px); opacity: 1; transform: scale(1); }
+    40% { width: 60px; opacity: 1; transform: translateY(0); }
+    100% { width: 40px; min-height: 40px; opacity: 0; transform: translateY(-20px) scale(0.8); }
+}
+
+/* --- ANIMASI KONTEN (FADE IN) --- */
+.custom-alert-header,
+.alert-msg-scroll-box,
+.custom-alert-actions {
+    opacity: 0; 
+    animation: contentFadeIn 0.3s ease-out forwards;
+    animation-delay: 0.5s; 
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- STYLING HEADER --- */
+.custom-alert-header { 
+    background: transparent; 
+    padding: 15px 20px 5px 20px; 
+    display: flex; align-items: center; justify-content: center; gap: 8px; 
+    border-bottom: none;
+    white-space: nowrap; 
+    flex-shrink: 0;
+}
+.custom-alert-header i { color: #e74c3c; font-size: 1.2rem; }
+.custom-alert-header h3, #custom-alert-title { color: #fff; font-weight: 900; font-size: 0.9rem; letter-spacing: 1px; }
+
+/* --- MESSAGE BOX --- */
+.alert-msg-scroll-box {
     width: 100%;
-    padding: 15px;
-    margin: 10px 0 20px 0; /* Margin bawah lebih besar untuk jarak dengan tombol */
-    background: #222;
-    border: 2px solid #444;
-    color: white;
-    border-radius: 12px;
-    font-weight: 600;
+    position: relative;
+    padding: 0 20px;
     box-sizing: border-box;
-    font-size: 1rem; /* Ukuran font standar */
-    text-align: center; /* Teks di tengah agar terlihat rapi */
+    margin-bottom: 15px;
+    flex-grow: 1;
+    text-align: center; 
+    white-space: normal;
 }
 
-.input-dark:focus { 
-    outline: none; 
-    border-color: #00d2ff; 
-    background: #000; 
-    box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+#custom-alert-message { 
+    display: inline-block;
+    color: #ccc; 
+    font-size: 0.9rem; 
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
 }
 
-/* --- SETTINGS MODAL --- */
+/* --- RUNNING TEXT (Rata Kiri) --- */
+.alert-msg-scroll-box.is-long-text {
+    text-align: left; 
+    white-space: nowrap;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+}
+
+.alert-msg-scroll-box.is-long-text #custom-alert-message {
+    padding-left: 0;
+    min-width: 100%;
+    animation: marquee-pingpong 8s ease-in-out infinite alternate; 
+}
+
+@keyframes marquee-pingpong {
+    0%, 15% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% + 100vw - 60px)); } 
+}
+
+/* --- ACTIONS --- */
+.custom-alert-actions { 
+    display: flex; padding: 0 10px 10px 10px; gap: 8px; justify-content: center; flex-shrink: 0;
+}
+.custom-alert-actions button { 
+    flex: 1; padding: 12px; border-radius: 18px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
+}
+
+.btn-confirm { background: #fff; color: #000; border: none; }
+.btn-confirm:hover { background: #ddd; }
+.btn-confirm:active { background: #bbb; transform: scale(0.96); }
+
+.btn-cancel { background: #222; color: #888; border: none; }
+.btn-cancel:hover { background: #333; color: #fff; }
+.btn-cancel:active { transform: scale(0.96); }
+
+/* Tema Sukses */
+.alert-success .custom-alert-content { border-color: rgba(46, 204, 113, 0.5) !important; box-shadow: 0 10px 40px rgba(46, 204, 113, 0.15) !important; }
+.alert-success .custom-alert-header i { color: #2ecc71 !important; }
+
+/* Input Field Styling */
+.input-dark {
+    width: 100%; padding: 15px; margin: 10px 0 20px 0;
+    background: #222; border: 2px solid #444; color: white;
+    border-radius: 12px; font-weight: 600; box-sizing: border-box;
+    font-size: 1rem; text-align: center;
+}
+.input-dark:focus { outline: none; border-color: #00d2ff; background: #000; box-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+
+/* Settings Modal */
 .setting-icon-btn:active { transform: scale(0.9); }
 .setting-icon-btn:hover { transform: translateY(-5px); }
 .btn-set-update { background: #e74c3c; box-shadow: 0 5px 0 #c0392b; border: 2px solid #fff; }
@@ -89,3 +213,40 @@ button:hover { transform: translateY(-2px); }
 .player-id-box { background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; font-family: monospace; color: #00ff88; font-size: 0.85rem; }
 .btn-copy-id { background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; margin-left: 10px; }
 .btn-copy-id:active { background: #555; }
+
+/* ========================================================= */
+/* --- CUSTOM ALERT: CLOSING ANIMATION --- */
+/* ========================================================= */
+
+/* Kelas ini ditambahkan via JS saat tutup */
+.alert-closing .custom-alert-content {
+    /* Override animasi buka dengan animasi tutup */
+    animation: islandShrink 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+/* Konten harus hilang duluan agar terlihat rapi saat pulau mengecil */
+.alert-closing .custom-alert-content > * {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease-out; /* Hilang cepat */
+}
+
+/* Keyframes: Kebalikan dari islandStretch */
+@keyframes islandShrink {
+    0% {
+        width: calc(100% - 4px); 
+        opacity: 1;
+        transform: scale(1);
+    }
+    40% {
+        /* Sedikit delay sebelum mengecil drastis */
+        width: 60px; 
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        width: 40px; 
+        min-height: 40px;
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+}

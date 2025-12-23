@@ -385,18 +385,20 @@
         </nav>
     </div>
 
-    <div id="modal-custom-alert" class="modal hidden" style="position:fixed !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; transform:none !important; background-color:rgba(0,0,0,0.6) !important; z-index:2147483647 !important; display:flex; align-items:center; justify-content:center;">
-        <div class="modal-content custom-alert-content" style="background:#1a1a1a; width:90%; max-width:400px; border: 3px solid #e74c3c; padding:0; overflow:hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8); border-radius:12px; position:relative;">
-            <div class="custom-alert-header" style="background:#e74c3c; padding:15px; color:white; font-weight:900; display:flex; align-items:center; gap:10px;">
+    <div id="modal-custom-alert" class="modal hidden">
+        <div class="modal-content custom-alert-content">
+            <div class="custom-alert-header">
                 <i class="fa-solid fa-circle-exclamation"></i> 
                 <span id="custom-alert-title">INFO</span>
             </div>
-            <div style="padding:25px 20px;">
-                <p id="custom-alert-message" style="color:#eee; margin:0; text-align:center; font-size:1rem; line-height:1.5;">Pesan</p>
+            
+            <div class="alert-msg-scroll-box">
+                <p id="custom-alert-message">Pesan</p>
             </div>
-            <div class="custom-alert-actions" style="padding:0 20px 20px 20px; display:flex; gap:10px;">
-                <button id="custom-alert-cancel" class="btn-cancel hidden" style="flex:1; padding:12px; border-radius:8px; border:1px solid #555; background:transparent; color:#ccc; font-weight:bold; cursor:pointer;">BATAL</button>
-                <button id="custom-alert-confirm" class="btn-confirm" style="flex:1; padding:12px; border-radius:8px; border:none; background:linear-gradient(to right, #e74c3c, #c0392b); color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(231, 76, 60, 0.4);">OK</button>
+
+            <div class="custom-alert-actions">
+                <button id="custom-alert-cancel" class="btn-cancel hidden">BATAL</button>
+                <button id="custom-alert-confirm" class="btn-confirm">OK</button>
             </div>
         </div>
     </div>

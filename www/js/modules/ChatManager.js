@@ -15,17 +15,15 @@ const RARITY_COLORS = {
 
 export const ChatManager = {
     chatChannel: null,
-    replyingTo: null, // State untuk menyimpan data pesan yang sedang di-reply
+    replyingTo: null, 
     
     init: function() {
         const chatInput = document.getElementById('chat-input');
         const sendButton = chatInput.nextElementSibling;
         const cancelReplyBtn = document.getElementById('btn-cancel-reply');
         
-        // 1. Klik Tombol Pesawat
         sendButton.addEventListener('click', () => { this.sendMessage(); });
         
-        // 2. Tekan ENTER di Keyboard
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -34,7 +32,6 @@ export const ChatManager = {
             }
         });
         
-        // 3. Tombol Batal Reply
         if (cancelReplyBtn) {
             cancelReplyBtn.addEventListener('click', () => {
                 this.cancelReply();
@@ -85,7 +82,6 @@ export const ChatManager = {
                 GameStateManager.state.lastChatMessageId = messages[messages.length - 1].id;
             }
             GameStateManager.state.chatMessagesLoaded = true;
-            
             this.renderChatMessages(messages); 
         }
     },
@@ -105,7 +101,7 @@ export const ChatManager = {
     },
     
     addMessageToChat(message, isHistorical = false) {
-        // Abaikan notifikasi ASTRAL & JACKPOT di chat biasa
+        // Filter notifikasi broadcast dari chat bubble biasa agar tidak spam
         if (message.message.includes('mendapatkan ikan langka ASTRAL')) return;
         if (message.message.includes('[SISTEM] JACKPOT!')) return;
 
@@ -116,7 +112,6 @@ export const ChatManager = {
         const messageRow = document.createElement('div');
         messageRow.className = `chat-row ${isMe && !isSystem ? 'row-me' : 'row-other'}`;
         
-        // Ikon indikator reply (muncul saat swipe)
         if (!isMe && !isSystem) {
             const replyIcon = document.createElement('div');
             replyIcon.className = 'reply-indicator-icon';
@@ -127,26 +122,15 @@ export const ChatManager = {
         const messageBubble = document.createElement('div');
         messageBubble.className = `chat-bubble ${isMe && !isSystem ? 'bubble-me' : 'bubble-other'} ${isSystem ? 'system-bubble' : ''}`;
 
-        // Handler Klik Profil (jika bukan saya & bukan sistem)
-        if (!isMe && !isSystem) {
-            // Kita pisahkan logic click vs swipe di handleSwipe
-        }
-        
-        // --- LOGIKA SWIPE TO REPLY ---
         if (!isSystem) {
             this.attachSwipeHandler(messageBubble, messageRow, message);
         }
 
-        // --- RENDER KONTEN PESAN ---
         let bubbleContent = '';
-
-        // 1. Render Header Nama
         bubbleContent += `<div class="chat-meta">${message.username}</div>`;
 
-        // 2. Render Quote (Jika ini adalah balasan)
         if (message.reply_to) {
             try {
-                // Handle jika reply_to disimpan sebagai string JSON atau object langsung
                 const replyData = typeof message.reply_to === 'string' 
                     ? JSON.parse(message.reply_to) 
                     : message.reply_to;
@@ -164,16 +148,16 @@ export const ChatManager = {
             }
         }
 
-        // 3. Render Isi Pesan Utama
+        // --- REGEX MATCHERS ---
         const fishShareMatch = message.message.match(/Saya dapat (.+) \((.+)\)!/);
-        const giveMatch = isSystem && message.message.match(/PENGIRIM:(.+)\|PENERIMA:(.+)\|IKAN:(.+)\|RARITY:(.+)/);
+        const giveFishMatch = isSystem && message.message.match(/PENGIRIM:(.+)\|PENERIMA:(.+)\|IKAN:(.+)\|RARITY:(.+)/);
+        const giveMoneyMatch = isSystem && message.message.match(/PENGIRIM:(.+)\|PENERIMA:(.+)\|UANG:(.+)/);
         
-        if (giveMatch) {
-             // ... Logika GIVE FISH (Sama seperti sebelumnya) ...
-             const sender = giveMatch[1];
-             const target = giveMatch[2];
-             const fishName = giveMatch[3];
-             const fishRarity = giveMatch[4];
+        if (giveFishMatch) {
+             const sender = giveFishMatch[1];
+             const target = giveFishMatch[2];
+             const fishName = giveFishMatch[3];
+             const fishRarity = giveFishMatch[4];
              const originalFishData = FISH_MASTER[fishRarity]?.find(f => f.name === fishName);
              const cssClass = originalFishData ? originalFishData.class : `fish-${fishRarity.toLowerCase()}`;
              const price = originalFishData ? formatMoney(originalFishData.price) : '???';
@@ -191,8 +175,24 @@ export const ChatManager = {
                     </div>
                  </div>
              `;
+        } else if (giveMoneyMatch) {
+             const sender = giveMoneyMatch[1];
+             const target = giveMoneyMatch[2];
+             const amount = parseInt(giveMoneyMatch[3]);
+
+             messageBubble.classList.add('system-bubble');
+             bubbleContent = `
+                 <div class="chat-meta">[SISTEM] TRANSFER UANG</div>
+                 <div><span style="color:#00e5ff;font-weight:bold;">${sender}</span> mengirim uang ke <span style="color:#00e5ff;font-weight:bold;">${target}</span>!</div>
+                 <div class="chat-shared-card" style="margin-top:5px; border:1px solid #00ff88; background:rgba(0,255,136,0.1);">
+                    <i class="fa-solid fa-coins" style="color:#00ff88;"></i>
+                    <div>
+                        <div style="font-weight:bold; color:#00ff88;">${formatMoney(amount)}</div>
+                        <div style="font-size:0.8rem; color:#ccc;">Donasi</div>
+                    </div>
+                 </div>
+             `;
         } else if (fishShareMatch && !isSystem) {
-             // ... Logika SHARE FISH (Sama seperti sebelumnya) ...
              const fishName = fishShareMatch[1];
              const fishRarity = fishShareMatch[2];
              const fishColor = RARITY_COLORS[fishRarity] || 'inherit'; 
@@ -209,7 +209,6 @@ export const ChatManager = {
                  </div>
              `;
         } else {
-            // Pesan Biasa
             bubbleContent += `<div>${message.message}</div>`;
         }
         
@@ -217,33 +216,30 @@ export const ChatManager = {
         messageRow.appendChild(messageBubble);
         container.appendChild(messageRow);
         
-        // Auto scroll
         if (container.scrollTop + container.clientHeight >= container.scrollHeight - 100) {
             container.scrollTop = container.scrollHeight;
         }
         
-        // Update badge notifikasi
         if (document.getElementById('panel-chat').classList.contains('hidden') && !isHistorical) {
             GameStateManager.state.unreadChatCount++;
             UIManager.updateChatBadge(GameStateManager.state.unreadChatCount);
         }
     },
 
-    // --- FUNGSI BARU: SWIPE TO REPLY HANDLER ---
     attachSwipeHandler(element, row, messageData) {
         let touchStartX = 0;
         let touchStartY = 0;
         let currentTranslate = 0;
         let isSwiping = false;
         let isVerticalScroll = false;
-        const THRESHOLD = 60; // Jarak swipe minimal untuk trigger reply
+        const THRESHOLD = 60; 
 
         element.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
             isSwiping = false;
             isVerticalScroll = false;
-            element.style.transition = 'none'; // Disable transisi saat drag
+            element.style.transition = 'none'; 
         }, { passive: true });
 
         element.addEventListener('touchmove', (e) => {
@@ -254,23 +250,17 @@ export const ChatManager = {
             const deltaX = currentX - touchStartX;
             const deltaY = currentY - touchStartY;
 
-            // Cek apakah user mencoba scroll vertikal
             if (!isSwiping && Math.abs(deltaY) > Math.abs(deltaX)) {
                 isVerticalScroll = true;
                 return;
             }
 
-            // Batasi swipe hanya ke kanan (untuk pesan orang lain) atau kiri (opsional)
-            // Di WA biasanya swipe kanan untuk reply pesan orang lain
             if (deltaX > 0 && deltaX < 150) { 
                 isSwiping = true;
-                e.preventDefault(); // Stop browser scroll/back navigation
+                e.preventDefault(); 
                 currentTranslate = deltaX;
-                
-                // Efek visual elastis
                 const resistance = 0.5; 
                 const translateX = deltaX * resistance;
-                
                 element.style.transform = `translateX(${translateX}px)`;
                 
                 if (translateX > 30) {
@@ -286,14 +276,10 @@ export const ChatManager = {
             element.style.transform = 'translateX(0)';
             row.classList.remove('swiping');
 
-            // Jika swipe cukup jauh, trigger reply
             if (isSwiping && currentTranslate > THRESHOLD) {
                 this.activateReplyMode(messageData);
-                // Vibrate jika device support
                 if (navigator.vibrate) navigator.vibrate(20);
             } else if (!isSwiping && !isVerticalScroll) {
-                // Ini dianggap 'Click' biasa
-                // Jika bukan pesan sendiri, buka profil
                 if (messageData.user_id !== GameStateManager.state.user.id) {
                     UIManager.viewOtherUserProfile(messageData.user_id, messageData.username);
                 }
@@ -350,22 +336,20 @@ export const ChatManager = {
         
         if (!customMessage) input.value = '';
 
-        // Siapkan data reply jika ada
         let replyData = null;
         if (this.replyingTo) {
             replyData = this.replyingTo;
-            this.cancelReply(); // Reset UI reply setelah kirim
+            this.cancelReply(); 
         }
 
         await DatabaseManager.sendChatMessage(
             GameStateManager.state.user.id,
             GameStateManager.state.username,
             message,
-            replyData // Pass reply data ke DB Manager
+            replyData 
         );
     },
     
-    // --- BROADCAST FUNCTIONS (Tidak Berubah) ---
     async broadcastAstralCatch(username, fishName) {
         const message = `[SISTEM]&nbsp;<span style="color:#00d2ff;font-weight:bold;">${username}</span> mendapatkan ikan langka ASTRAL <span style="color:#ff0055;font-weight:bold;">${fishName}</span>!`;
         await DatabaseManager.sendChatMessage(GameStateManager.state.user.id, 'SISTEM', message);
@@ -376,25 +360,56 @@ export const ChatManager = {
         await DatabaseManager.sendChatMessage(GameStateManager.state.user.id, 'SISTEM', message);
     },
     
-    // --- RUNNING TEXT GLOBAL (Tidak Berubah) ---
+    async broadcastGiveFish(sender, target, fishName, rarity) {
+        const message = `PENGIRIM:${sender}|PENERIMA:${target}|IKAN:${fishName}|RARITY:${rarity}`;
+        await DatabaseManager.sendChatMessage(GameStateManager.state.user.id, 'SISTEM', message);
+    },
+
+    async broadcastGiveMoney(sender, target, amount) {
+        const message = `PENGIRIM:${sender}|PENERIMA:${target}|UANG:${amount}`;
+        await DatabaseManager.sendChatMessage(GameStateManager.state.user.id, 'SISTEM', message);
+    },
+    
+    // --- UPDATE PERBAIKAN RUNNING TEXT ---
     showSystemNotification(message) {
-        // ... (Kode showSystemNotification sama seperti sebelumnya) ...
         const container = document.getElementById('global-notification-container');
         if (!container) return;
         
-        // Logika parsing pesan sistem untuk notifikasi (sama seperti file asli)
-        // Saya persingkat di sini agar tidak terlalu panjang, tapi pastikan copy logika asli Anda jika perlu.
-        // Asumsi: Logika notifikasi tidak berubah karena fitur reply tidak mempengaruhi sistem notif.
+        // 1. FIX: Hapus notifikasi sebelumnya agar tidak bertumpuk
+        container.innerHTML = '';
         
         let bannerContent = message;
-        // ... Logika parsing ... (gunakan logika lama Anda)
         
+        // Style Helper
+        const userStyle = 'color:#00e5ff; font-weight:bold;'; // Biru Neon
+        const itemStyle = 'color:#ffd700; font-weight:bold; text-shadow:0 0 5px #ff8800;'; // Emas Glowing
+
+        // 2. FIX: Parsing dan Coloring (Ditambah &nbsp; agar SPASI JELAS dan tidak berdempet)
+        if (message.includes('PENGIRIM:')) {
+            if (message.includes('IKAN:')) {
+                const parts = message.match(/PENGIRIM:(.+)\|PENERIMA:(.+)\|IKAN:(.+)\|RARITY:(.+)/);
+                if (parts) {
+                    const [_, sender, target, fish, rarity] = parts;
+                    // Perhatikan penggunaan &nbsp; di sini:
+                    bannerContent = `<span style="${userStyle}">${sender}</span>&nbsp;memberi&nbsp;<span style="${itemStyle}">${fish} (${rarity})</span>&nbsp;ke&nbsp;<span style="${userStyle}">${target}</span>`;
+                }
+            } else if (message.includes('UANG:')) {
+                const parts = message.match(/PENGIRIM:(.+)\|PENERIMA:(.+)\|UANG:(.+)/);
+                if (parts) {
+                    const [_, sender, target, amount] = parts;
+                    // Perhatikan penggunaan &nbsp; di sini:
+                    bannerContent = `<span style="${userStyle}">${sender}</span>&nbsp;transfer&nbsp;<span style="${itemStyle}">${formatMoney(amount)}</span>&nbsp;ke&nbsp;<span style="${userStyle}">${target}</span>`;
+                }
+            }
+        }
+
         container.style.display = 'block';
         const banner = document.createElement('div');
         banner.className = 'global-notif-banner';
         banner.innerHTML = bannerContent; 
         container.appendChild(banner);
         
+        // Hapus elemen setelah animasi selesai (15 detik)
         setTimeout(() => {
             banner.remove();
             if (container.children.length === 0) {
